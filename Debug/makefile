@@ -22,19 +22,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: ECG\ Project
+all: ECG-Project
 
 # Tool invocations
-ECG\ Project: $(OBJS) $(USER_OBJS)
+ECG-Project: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc  -o "ECG Project" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc  -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) "ECG Project"
+	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) ECG-Project
 	-@echo ' '
 
 .PHONY: all clean dependents
