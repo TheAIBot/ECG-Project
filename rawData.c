@@ -1,6 +1,6 @@
 #include "includes/rawData.h"
 
-#define RAW_DATA_SIZE 12
+#define RAW_DATA_SIZE 13
 
 short rawData[RAW_DATA_SIZE];
 short arrayStartIndex1 = 0;
