@@ -3,18 +3,22 @@
 
 FILE* startInputData(char* fileName)
 {
-	return fopen(fileName, "r");
+	FILE* file = fopen(fileName, "r");
+	if(file == NULL)
+	{
+		fprintf(stderr, "ERROR: Cannot open file %s.\n", fileName);
+	}
 }
 
 short hasMoreData(FILE* file)
 {
-	return !feof (file);
+	return !feof(file);
 }
 
 short getNextData(FILE* file)
 {
 	short data;
-	fscanf(file, "%d", &data);
+	fscanf(file, "%hd", &data);
 	return data;
 }
 
