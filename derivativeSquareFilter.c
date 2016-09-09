@@ -24,7 +24,8 @@ short derivativeSquareFilter(int x, int x_1, int x_3, int x_4)
 	moveArrayStartIndex4();
 
 	short newY = (2 * x + x_1 - x_3 - 2 * x_4) / 8;
-	rawSquare[arrayStartIndex4] = newY * newY;
-	return newY * newY;
+	newY = newY * newY;
+	rawSquare[arrayStartIndex4] = newY;
+	return newY;
 }
 

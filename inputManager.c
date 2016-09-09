@@ -8,6 +8,7 @@ FILE* startInputData(char* fileName)
 	{
 		fprintf(stderr, "ERROR: Cannot open file %s.\n", fileName);
 	}
+	return file;
 }
 
 char hasMoreData(FILE* file)

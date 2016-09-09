@@ -34,7 +34,6 @@ short movingWindowFilter(short x[N])
 	{
 		newY += x[i];
 	}
-	printf("%d\n", newY);
 	newY /= N;
 	rawMovingWindow[arrayStartIndex5] = (short)newY;
 	return newY;
