@@ -7,6 +7,7 @@
 #include "includes/highPassFilter.h"
 #include "includes/derivativeSquareFilter.h"
 #include "includes/movingWindowFilter.h"
+#include "includes/filter.h"
 
 #define ECG_10800K_LENGTH 10800000 /* 10.800.000 */
 
@@ -81,6 +82,17 @@ void benchmarkMovingWindowFilter(int* data)
 	printBenchmarkData(result, BENCHMARK_TIME(startTime), "Moving window");
 }
 
+void benchmarhWholeFilter(int* data)
+{
+	long startTime = BENCHMARK_START;
+	long result = 0;
+	for(int i = 0; i < ECG_10800K_LENGTH; i++)
+	{
+		result += filterData(data[i], NULL, NULL, NULL, NULL);
+	}
+	printBenchmarkData(result, BENCHMARK_TIME(startTime), "Whole filter");
+}
+
 void benchmarkAll()
 {
 	int* data = loadECGArray();
@@ -89,6 +101,7 @@ void benchmarkAll()
 	benchmarkHighPassFilter(data);
 	benchmarkDerivativeSquareFilter(data);
 	benchmarkMovingWindowFilter(data);
+	benchmarhWholeFilter(data);
 
 	free(data);
 	exit(1);
