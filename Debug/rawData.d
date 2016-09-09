@@ -1,3 +1,3 @@
-rawData.d: ../rawData.c ../includes/rawData.h
+rawData.o: ../rawData.c ../includes/rawData.h
 
 ../includes/rawData.h:

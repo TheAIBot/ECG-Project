@@ -1,3 +1,3 @@
-lowPassFilter.d: ../lowPassFilter.c ../includes/lowPassFilter.h
+lowPassFilter.o: ../lowPassFilter.c ../includes/lowPassFilter.h
 
 ../includes/lowPassFilter.h:

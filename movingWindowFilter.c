@@ -30,7 +30,8 @@ short movingWindowFilter(short x[N])
 	moveArrayStartIndex5();
 
 	int newY = 0;
-	for(int i = 0; i < N; i++)
+	int i = 0;
+	for(i = 0; i < N; i++)
 	{
 		newY += x[i];
 	}

@@ -8,6 +8,7 @@
 
 int main(int argc, char *argv[])
 {
+	printf("kage\n");
 	FILE* inputFile = startInputData("ECG.txt");
 	FILE* x_low = startInputData("verification_files/x_low.txt");
 	FILE* x_high = startInputData("verification_files/x_high.txt");
