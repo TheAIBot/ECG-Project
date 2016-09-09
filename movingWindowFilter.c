@@ -1,7 +1,6 @@
 #include "includes/movingWindowFilter.h"
 
 #define RAW_DATA_SIZE_MOVING_WINDOW 13
-#define N 30
 
 short rawMovingWindow[RAW_DATA_SIZE_MOVING_WINDOW];
 short arrayStartIndex5 = 0;
@@ -25,17 +24,14 @@ void moveArrayStartIndex5()
 	}
 }
 
-short movingWindowFilter(short x[N])
+short movingWindowFilter(short sqrDiffrence)
 {
 	moveArrayStartIndex5();
+	static int totalValue = 0;
+	totalValue += sqrDiffrence;
 
-	int newY = 0;
-	for(int i = 0; i < N; i++)
-	{
-		newY += x[i];
-	}
-	newY /= N;
-	rawMovingWindow[arrayStartIndex5] = (short)newY;
+	short newY = totalValue / N;
+	rawMovingWindow[arrayStartIndex5] = newY;
 	return newY;
 }
 

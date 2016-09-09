@@ -8,7 +8,9 @@
 #ifndef MOVINGWINDOWFILTER_H_
 #define MOVINGWINDOWFILTER_H_
 
+#define N 30
+
 short getMovingWindowValue(int offset);
-short movingWindowFilter(short x[]);
+short movingWindowFilter(short sqrDiffrence);
 
 #endif /* MOVINGWINDOWFILTER_H_ */

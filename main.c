@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 		short filteredData = filterData(data, x_low, x_high, x_sqr, x_mwi);
+		//printf("%d\n", filteredData);
 	}
 
 	printf("done\n");

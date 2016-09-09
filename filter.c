@@ -65,12 +65,12 @@ short filterData(short rawData, FILE* x_low, FILE* x_high, FILE* x_sqr, FILE* x_
 	}
 
 	short dataDerSqrFiltered = derivativeSquareFilter(dataHighFiltered, getHighPassValue(-1), getHighPassValue(-3), getHighPassValue(-4));
-	if(checkFilter(dataDerSqrFiltered, x_sqr, "dersqr"))
+	if(checkFilter(getSqrValue(0), x_sqr, "dersqr"))
 	{
 		exit(1);
 	}
 
-	short dataMovingWindowFilter = movingWindowFilter(getSquareArray());
+	short dataMovingWindowFilter = movingWindowFilter(dataDerSqrFiltered);
 	if(checkFilter(dataMovingWindowFilter, x_mwi, "moving window"))
 	{
 		exit(1);
