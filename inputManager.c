@@ -10,15 +10,15 @@ FILE* startInputData(char* fileName)
 	}
 }
 
-short hasMoreData(FILE* file)
+char hasMoreData(FILE* file)
 {
 	return !feof(file);
 }
 
-short getNextData(FILE* file)
+int getNextData(FILE* file)
 {
-	short data;
-	fscanf(file, "%hd", &data);
+	signed int data;
+	fscanf(file, "%d", &data);
 	return data;
 }
 

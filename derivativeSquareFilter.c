@@ -1,6 +1,6 @@
 #include "includes/derivativeSquareFilter.h"
 
-#define RAW_DATA_SIZE_DERIVATIVE 31
+#define RAW_DATA_SIZE_DERIVATIVE 30
 
 short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
 short arrayStartIndex4 = 0;
@@ -19,7 +19,7 @@ void moveArrayStartIndex4()
 	}
 }
 
-short derivativeSquareFilter(short x, short x_1, short x_3, short x_4)
+short derivativeSquareFilter(int x, int x_1, int x_3, int x_4)
 {
 	moveArrayStartIndex4();
 

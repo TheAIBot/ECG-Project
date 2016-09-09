@@ -9,6 +9,6 @@
 #define DERIVATIVESQUAREFILTER_H_
 
 short* getSquareArray();
-short derivativeSquareFilter(short x, short x_1, short x_3, short x_4);
+short derivativeSquareFilter(int x, int x_1, int x_3, int x_4);
 
 #endif /* DERIVATIVESQUAREFILTER_H_ */

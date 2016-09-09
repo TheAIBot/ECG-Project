@@ -10,8 +10,8 @@
 #define INPUTMANAGER_H_
 
 FILE* startInputData(char* fileName);
-short hasMoreData(FILE* file);
-short getNextData(FILE* file);
+char hasMoreData(FILE* file);
+int getNextData(FILE* file);
 void stopInputData(FILE* file);
 
 
