@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../derivativeSquareFilter.c \
+../filter.c \
 ../highPassFilter.c \
 ../inputManager.c \
 ../lowPassFilter.c \
@@ -14,6 +15,7 @@ C_SRCS += \
 
 OBJS += \
 ./derivativeSquareFilter.o \
+./filter.o \
 ./highPassFilter.o \
 ./inputManager.o \
 ./lowPassFilter.o \
@@ -23,6 +25,7 @@ OBJS += \
 
 C_DEPS += \
 ./derivativeSquareFilter.d \
+./filter.d \
 ./highPassFilter.d \
 ./inputManager.d \
 ./lowPassFilter.d \
