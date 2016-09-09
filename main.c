@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "includes/inputManager.h"
 #include "includes/filter.h"
+#include "includes/benchmarkTimer.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,17 +21,33 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	while(1)
+	short inputArray[10000];
+	for(int i = 0; i < 10000; i++)
 	{
-		short data = getNextData(inputFile);
+		inputArray[i] = getNextData(inputFile);
+	}
+
+
+	long startTime = BENCHMARK_START;
+	long result = 0;
+	int i = 0;
+	while(i < 10000)
+	{
+		/*short data = getNextData(inputFile);
 		if(!hasMoreData(inputFile))
 		{
 			break;
 		}
-		short filteredData = filterData(data, x_low, x_high, x_sqr, x_mwi);
+		*/
+		short data = inputArray[i];
+		//short filteredData = filterData(data, x_low, x_high, x_sqr, x_mwi);
+		result += filterData(data, NULL, NULL, NULL, NULL);
 		//printf("%d\n", filteredData);
+		i++;
 	}
+	BENCHMARK_STOP_PRINT(startTime);
 
+	printf("%ld\n", result);
 	printf("done\n");
 
 
