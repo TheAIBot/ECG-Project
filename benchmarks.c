@@ -90,7 +90,7 @@ void benchmarhWholeFilter(int* data)
 	{
 		result += filterData(data[i], NULL, NULL, NULL, NULL);
 	}
-	printBenchmarkData(result, BENCHMARK_TIME(startTime), "Whole filter");
+	printBenchmarkData(result, BENCHMARK_TIME(startTime), "Whole");
 }
 
 void benchmarkAll()
@@ -101,7 +101,10 @@ void benchmarkAll()
 	benchmarkHighPassFilter(data);
 	benchmarkDerivativeSquareFilter(data);
 	benchmarkMovingWindowFilter(data);
-	benchmarhWholeFilter(data);
+	for(int i = 0; i < 100; i++)
+	{
+		benchmarhWholeFilter(data);
+	}
 
 	free(data);
 	exit(1);
