@@ -2,12 +2,12 @@
 
 #define RAW_DATA_SIZE_HIGH 5
 
-short rawHigh[RAW_DATA_SIZE_HIGH];
-short arrayStartIndex3 = 0;
+static short rawHigh[RAW_DATA_SIZE_HIGH];
+static short arrayStartIndex = 0;
 
 short getHighPassValue(int offset)
 {
-	short correctIndex = arrayStartIndex3 + offset;
+	short correctIndex = arrayStartIndex + offset;
 	if(correctIndex < 0)
 	{
 		correctIndex += RAW_DATA_SIZE_HIGH;
@@ -15,18 +15,18 @@ short getHighPassValue(int offset)
 	return rawHigh[correctIndex];
 }
 
-void moveArrayStartIndex3()
+static void moveArrayStartIndex()
 {
-	arrayStartIndex3++;
-	if(arrayStartIndex3 == RAW_DATA_SIZE_HIGH)
+	arrayStartIndex++;
+	if(arrayStartIndex == RAW_DATA_SIZE_HIGH)
 	{
-		arrayStartIndex3 = 0;
+		arrayStartIndex = 0;
 	}
 }
 
 short highPassFilter(int x, int x_16, int x_17, int x_32)
 {
-	moveArrayStartIndex3();
+	moveArrayStartIndex();
 
 	short y_1 = getHighPassValue(-1);
 	//printf("%hd\n", y_1);
@@ -36,7 +36,7 @@ short highPassFilter(int x, int x_16, int x_17, int x_32)
 	//printf("%d\n", x_32);
 
 	short newY = y_1 - (x / 32) + x_16 - x_17 + (x_32 / 32);
-	rawHigh[arrayStartIndex3] = newY;
+	rawHigh[arrayStartIndex] = newY;
 	return newY;
 }
 

@@ -12,6 +12,5 @@ int getBenchmarkDataValue(int data[], int index, int arraySize, int offset)
 
 void insertBenchmarkData(int data[], int newData, int index)
 {
-	moveArrayStartIndex1();
 	data[index] = newData;
 }

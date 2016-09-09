@@ -3,8 +3,8 @@
 
 #define RAW_DATA_SIZE_DERIVATIVE 31
 
-short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
-short arrayStartIndex4 = 0;
+static short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
+static short arrayStartIndex = 0;
 
 short* getSquareArray()
 {
@@ -13,7 +13,7 @@ short* getSquareArray()
 
 short getSqrValue(int offset)
 {
-	short correctIndex = arrayStartIndex4 + offset;
+	short correctIndex = arrayStartIndex + offset;
 	if(correctIndex < 0)
 	{
 		correctIndex += RAW_DATA_SIZE_DERIVATIVE;
@@ -21,22 +21,22 @@ short getSqrValue(int offset)
 	return rawSquare[correctIndex];
 }
 
-void moveArrayStartIndex4()
+static void moveArrayStartIndex()
 {
-	arrayStartIndex4++;
-	if(arrayStartIndex4 == RAW_DATA_SIZE_DERIVATIVE)
+	arrayStartIndex++;
+	if(arrayStartIndex == RAW_DATA_SIZE_DERIVATIVE)
 	{
-		arrayStartIndex4 = 0;
+		arrayStartIndex = 0;
 	}
 }
 
 short derivativeSquareFilter(int x, int x_1, int x_3, int x_4)
 {
-	moveArrayStartIndex4();
+	moveArrayStartIndex();
 
 	short newY = (2 * x + x_1 - x_3 - 2 * x_4) / 8;
 	newY = newY * newY;
-	rawSquare[arrayStartIndex4] = newY;
+	rawSquare[arrayStartIndex] = newY;
 	return newY - getSqrValue(-N);
 }
 

@@ -2,12 +2,12 @@
 
 #define RAW_DATA_SIZE_MOVING_WINDOW 13
 
-short rawMovingWindow[RAW_DATA_SIZE_MOVING_WINDOW];
-short arrayStartIndex5 = 0;
+static short rawMovingWindow[RAW_DATA_SIZE_MOVING_WINDOW];
+static short arrayStartIndex = 0;
 
 short getMovingWindowValue(int offset)
 {
-	short correctIndex = arrayStartIndex5 + offset;
+	short correctIndex = arrayStartIndex + offset;
 	if(correctIndex < 0)
 	{
 		correctIndex += RAW_DATA_SIZE_MOVING_WINDOW;
@@ -15,23 +15,23 @@ short getMovingWindowValue(int offset)
 	return rawMovingWindow[correctIndex];
 }
 
-void moveArrayStartIndex5()
+static void moveArrayStartIndex()
 {
-	arrayStartIndex5++;
-	if(arrayStartIndex5 == RAW_DATA_SIZE_MOVING_WINDOW)
+	arrayStartIndex++;
+	if(arrayStartIndex == RAW_DATA_SIZE_MOVING_WINDOW)
 	{
-		arrayStartIndex5 = 0;
+		arrayStartIndex = 0;
 	}
 }
 
 short movingWindowFilter(short sqrDiffrence)
 {
-	moveArrayStartIndex5();
+	moveArrayStartIndex();
 	static int totalValue = 0;
 	totalValue += sqrDiffrence;
 
 	short newY = totalValue / N;
-	rawMovingWindow[arrayStartIndex5] = newY;
+	rawMovingWindow[arrayStartIndex] = newY;
 	return newY;
 }
 

@@ -2,12 +2,12 @@
 
 #define RAW_DATA_SIZE 13
 
-short rawData[RAW_DATA_SIZE];
-short arrayStartIndex1 = 0;
+static short rawData[RAW_DATA_SIZE];
+static short arrayStartIndex = 0;
 
 short getRawDataValue(int offset)
 {
-	short correctIndex = arrayStartIndex1 + offset;
+	short correctIndex = arrayStartIndex + offset;
 	if(correctIndex < 0)
 	{
 		correctIndex += RAW_DATA_SIZE;
@@ -15,17 +15,17 @@ short getRawDataValue(int offset)
 	return rawData[correctIndex];
 }
 
-void moveArrayStartIndex1()
+static void moveArrayStartIndex()
 {
-	arrayStartIndex1++;
-	if(arrayStartIndex1 == RAW_DATA_SIZE)
+	arrayStartIndex++;
+	if(arrayStartIndex == RAW_DATA_SIZE)
 	{
-		arrayStartIndex1 = 0;
+		arrayStartIndex = 0;
 	}
 }
 
 void insertRawData(short data)
 {
-	moveArrayStartIndex1();
-	rawData[arrayStartIndex1] = data;
+	moveArrayStartIndex();
+	rawData[arrayStartIndex] = data;
 }
