@@ -9,7 +9,7 @@
 #include "includes/movingWindowFilter.h"
 
 
-char checkFilter(short filterOutput, short expectedOutput, char* filterName)
+char checkFilter(int filterOutput, int expectedOutput, char* filterName)
 {
 	if(filterOutput != expectedOutput)
 	{
@@ -21,11 +21,11 @@ char checkFilter(short filterOutput, short expectedOutput, char* filterName)
 
 int main(int argc, char *argv[])
 {
-	FILE* inputFile = startInputData("ECG.txt");
-	FILE* x_low = startInputData("verification_files/x_low.txt");
-	FILE* x_high = startInputData("verification_files/x_high.txt");
-	FILE* x_sqr = startInputData("verification_files/x_sqr.txt");
-	FILE* x_mwi = startInputData("verification_files/x_mwi.txt");
+	FILE* inputFile = startInputData("ECG.txt"); //max abs 1164
+	FILE* x_low = startInputData("verification_files/x_low.txt"); // max abs 2122988
+	FILE* x_high = startInputData("verification_files/x_high.txt"); // max abs 644
+	FILE* x_sqr = startInputData("verification_files/x_sqr.txt"); // max abs 21025
+	FILE* x_mwi = startInputData("verification_files/x_mwi.txt"); // max abs 5444
 
 	if(inputFile == NULL ||
 	   x_low == NULL ||
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 		//printf("%hd\n", data);
 		insertRawData(data);
 
-		short dataLowFiltered = lowPassFilter(data, getRawDataValue(-6), getRawDataValue(-12));
+		int dataLowFiltered = lowPassFilter(data, getRawDataValue(-6), getRawDataValue(-12));
 		if(checkFilter(dataLowFiltered, getNextData(x_low), "low"))
 		{
 			break;
