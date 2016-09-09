@@ -5,7 +5,6 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../derivativeSquareFilter.c \
-../filter.c \
 ../highPassFilter.c \
 ../inputManager.c \
 ../lowPassFilter.c \
@@ -16,7 +15,6 @@ C_SRCS += \
 
 OBJS += \
 ./derivativeSquareFilter.o \
-./filter.o \
 ./highPassFilter.o \
 ./inputManager.o \
 ./lowPassFilter.o \
@@ -27,7 +25,6 @@ OBJS += \
 
 C_DEPS += \
 ./derivativeSquareFilter.d \
-./filter.d \
 ./highPassFilter.d \
 ./inputManager.d \
 ./lowPassFilter.d \
@@ -41,7 +38,7 @@ C_DEPS += \
 %.o: ../%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C Compiler'
-	gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	gcc -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

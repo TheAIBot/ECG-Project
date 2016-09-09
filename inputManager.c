@@ -23,6 +23,11 @@ int getNextData(FILE* file)
 	return data;
 }
 
+void getPeakData(FILE* file, int* time, int* measurement)
+{
+	fscanf(file, "%d %d", *time, *measurement);
+}
+
 void stopInputData(FILE* file)
 {
 	fclose(file);
