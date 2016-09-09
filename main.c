@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include "includes/inputManager.h"
 #include "includes/filter.h"
-#include "includes/benchmarkTimer.h"
+#include "includes/benchmarks.h"
 
 int main(int argc, char *argv[])
 {
+	benchmarkAll();
 	FILE* inputFile = startInputData("ECG.txt"); //max abs 1164
 	FILE* x_low = startInputData("verification_files/x_low.txt"); // max abs 2122988
 	FILE* x_high = startInputData("verification_files/x_high.txt"); // max abs 644
@@ -21,33 +22,18 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	short inputArray[10000];
-	for(int i = 0; i < 10000; i++)
+	while(1)
 	{
-		inputArray[i] = getNextData(inputFile);
-	}
-
-
-	long startTime = BENCHMARK_START;
-	long result = 0;
-	int i = 0;
-	while(i < 10000)
-	{
-		/*short data = getNextData(inputFile);
+		short data = getNextData(inputFile);
 		if(!hasMoreData(inputFile))
 		{
 			break;
 		}
-		*/
-		short data = inputArray[i];
-		//short filteredData = filterData(data, x_low, x_high, x_sqr, x_mwi);
-		result += filterData(data, NULL, NULL, NULL, NULL);
-		//printf("%d\n", filteredData);
-		i++;
-	}
-	BENCHMARK_STOP_PRINT(startTime);
 
-	printf("%ld\n", result);
+		short filteredData = filterData(data, x_low, x_high, x_sqr, x_mwi);
+		//printf("%d\n", filteredData);
+	}
+
 	printf("done\n");
 
 

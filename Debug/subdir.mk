@@ -4,6 +4,8 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../benchmarkCircularArray.c \
+../benchmarks.c \
 ../derivativeSquareFilter.c \
 ../filter.c \
 ../highPassFilter.c \
@@ -14,6 +16,8 @@ C_SRCS += \
 ../rawData.c 
 
 OBJS += \
+./benchmarkCircularArray.o \
+./benchmarks.o \
 ./derivativeSquareFilter.o \
 ./filter.o \
 ./highPassFilter.o \
@@ -24,6 +28,8 @@ OBJS += \
 ./rawData.o 
 
 C_DEPS += \
+./benchmarkCircularArray.d \
+./benchmarks.d \
 ./derivativeSquareFilter.d \
 ./filter.d \
 ./highPassFilter.d \
