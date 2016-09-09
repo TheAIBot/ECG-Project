@@ -27,8 +27,8 @@ void moveArrayStartIndex2()
 int lowPassFilter(int x, int x_6, int x_12)
 {
 	moveArrayStartIndex2();
-	short y_1 = getLowPassValue(-1);
-	short y_2 = getLowPassValue(-2);
+	int y_1 = getLowPassValue(-1);
+	int y_2 = getLowPassValue(-2);
 	/*
 	 * printf("%hd\n", x);
 	 * printf("%hd\n", x_6);

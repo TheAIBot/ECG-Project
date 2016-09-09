@@ -39,7 +39,7 @@ char checkFilter(int filterOutput, FILE* file, char* filterName)
 		int expectedOutput = getNextData(file);
 		if(filterOutput != expectedOutput)
 		{
-			printf("wrong output from %s pass filter: %hd != %hd\n", filterName, filterOutput, expectedOutput);
+			printf("wrong output from %s pass filter: %d != %d\n", filterName, filterOutput, expectedOutput);
 			return 1;
 		}
 	}
