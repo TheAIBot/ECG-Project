@@ -12,5 +12,6 @@
 
 short getMovingWindowValue(int offset);
 short movingWindowFilter(short sqrDiffrence);
+void resetMovingWindowBuffer(void);
 
 #endif /* MOVINGWINDOWFILTER_H_ */

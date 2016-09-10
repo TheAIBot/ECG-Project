@@ -40,3 +40,8 @@ short derivativeSquareFilter(int x, int x_1, int x_3, int x_4)
 	return newY - getSqrValue(-N);
 }
 
+void resetSqrBuffer()
+{
+	memset(rawSquare, 0, RAW_DATA_SIZE_DERIVATIVE * sizeof(short));
+}
+

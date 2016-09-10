@@ -1,7 +1,5 @@
 #include "includes/rawData.h"
 
-#define RAW_DATA_SIZE 13
-
 static short rawData[RAW_DATA_SIZE];
 static short arrayStartIndex = 0;
 
@@ -28,4 +26,9 @@ void insertRawData(short data)
 {
 	moveArrayStartIndex();
 	rawData[arrayStartIndex] = data;
+}
+
+void resetRawBuffer()
+{
+	memset(rawData, 0, RAW_DATA_SIZE * sizeof(short));
 }

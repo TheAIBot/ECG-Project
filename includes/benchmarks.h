@@ -8,6 +8,6 @@
 #ifndef BENCHMARKS_H_
 #define BENCHMARKS_H_
 
-void benchmarkAll();
+void runBenchmarks();
 
 #endif /* BENCHMARKS_H_ */
