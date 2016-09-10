@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 	FILE* x_high = startInputData("verification_files/x_high.txt"); /* max abs 644 */
 	FILE* x_sqr = startInputData("verification_files/x_sqr.txt"); /* max abs 21025 */
 	FILE* x_mwi = startInputData("verification_files/x_mwi_div_after.txt"); /* max abs 5444 */
+	//testerPeak();
 	printf("kage\n");
 	if(inputFile == NULL ||
 	   x_low == NULL ||
