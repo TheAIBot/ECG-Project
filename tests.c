@@ -19,7 +19,7 @@ char checkFilter(int filterOutput, FILE* file, char* filterName)
 		int expectedOutput = getNextData(file);
 		if(filterOutput != expectedOutput)
 		{
-			printf("wrong output from %s filter: Given %hd != %hd Expected\n", filterName, filterOutput, expectedOutput);
+			fprintf(stderr, "wrong output from %s filter: Given %hd != %hd Expected\n", filterName, filterOutput, expectedOutput);
 			return 1;
 		}
 	}
@@ -62,6 +62,7 @@ char testLowPassFilter(int* data)
 	}
 	stopInputData(file);
 	free(circArray.data);
+	printf("Passed low pass filter test\n");
 	return 1;
 }
 
@@ -91,6 +92,7 @@ char testHighPassFilter(int* data)
 	}
 	stopInputData(file);
 	free(circArray.data);
+	printf("Passed high pass filter test\n");
 	return 1;
 }
 
@@ -111,7 +113,7 @@ char testDerivSqrFilter(int* data)
 		insertData(&circArray, data[i]);
 
 		derivativeSquareFilter(data[i], getDataValue(&circArray, -1), getDataValue(&circArray, -3), getDataValue(&circArray, -4));
-		if(checkFilter(getSqrValue(0), file, "dersqr"))
+		if(checkFilter(getSqrValue(0), file, "derivative square"))
 		{
 			stopInputData(file);
 			free(circArray.data);
@@ -120,6 +122,7 @@ char testDerivSqrFilter(int* data)
 	}
 	stopInputData(file);
 	free(circArray.data);
+	printf("Passed derivative square filter test\n");
 	return 1;
 }
 
@@ -149,6 +152,7 @@ char testMovingwindowFilter(int* data)
 	}
 	stopInputData(file);
 	free(circArray.data);
+	printf("Passed moving window filter test\n");
 	return 1;
 }
 
@@ -172,6 +176,7 @@ char testWholeFilter(int* data)
 		}
 	}
 	stopInputData(file);
+	printf("Passed whole filter test\n");
 	return 1;
 }
 
