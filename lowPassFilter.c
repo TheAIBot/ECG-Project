@@ -4,6 +4,8 @@
 
 static int rawLow[RAW_DATA_SIZE_LOW];
 static short arrayStartIndex = 0;
+static int y_1 = 0;
+static int y_2 = 0;
 
 int getLowPassValue(int offset)
 {
@@ -26,10 +28,9 @@ static void moveArrayStartIndex()
 
 int lowPassFilter(int x, int x_6, int x_12)
 {
+	y_2 = y_1;
+	y_1 = rawLow[arrayStartIndex];
 	moveArrayStartIndex();
-
-	int y_1 = getLowPassValue(-1);
-	int y_2 = getLowPassValue(-2);
 	/*
 	printf("%d\n", y_1);
 	printf("%d\n", y_2);
@@ -46,6 +47,8 @@ int lowPassFilter(int x, int x_6, int x_12)
 void resetLowBuffer()
 {
 	memset(rawLow, 0, RAW_DATA_SIZE_LOW * sizeof(int));
+	y_1 = 0;
+	y_2 = 0;
 }
 
 
