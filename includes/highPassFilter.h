@@ -6,7 +6,7 @@ extern short high_y_3;
 extern short high_y_1;
 
 short getHighPassValue(int offset);
-short highPassFilter(int x, int x_16, int x_17, int x_32);
+short highPassFilter(int x, int x_16, int x_32);
 void resetHighBuffer(void);
 
 #endif /* HIGHPASSFILTER_H_ */

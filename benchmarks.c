@@ -35,7 +35,7 @@ void benchmarkHighPassFilter(int* data)
 	long result = 0;
 	for(int i = 0; i < ECG_10800K_LENGTH; i++)
 	{
-		result += highPassFilter(data[i], getArrayDataValue(data, i, ECG_10800K_LENGTH, -16), getArrayDataValue(data, i, ECG_10800K_LENGTH, -17), getArrayDataValue(data, i, ECG_10800K_LENGTH, -32));
+		result += highPassFilter(data[i], getArrayDataValue(data, i, ECG_10800K_LENGTH, -16), getArrayDataValue(data, i, ECG_10800K_LENGTH, -32));
 	}
 	printBenchmarkData(result, BENCHMARK_TIME(startTime), "High");
 }
@@ -96,7 +96,10 @@ void runBenchmarks()
 	benchmarkHighPassFilter(data);
 	benchmarkDerivativeSquareFilter(data);
 	benchmarkMovingWindowFilter(data);
-	benchmarhWholeFilter(data);
+	for(int i = 0; i < 100; i++)
+	{
+		benchmarhWholeFilter(data);
+	}
 
 	free(data);
 }

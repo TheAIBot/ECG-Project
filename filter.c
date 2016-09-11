@@ -42,7 +42,7 @@ short filterData(short rawData)
 	int dataLowFiltered = lowPassFilter(rawData, getRawDataValue(-6), getRawDataValue(-12));
 
 	/*high pass filter*/
-	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), getLowPassValue(-17), getLowPassValue(-32));
+	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), getLowPassValue(-32));
 
 	/*derivative and square filter*/
 	short dataDerSqrFiltered = derivativeSquareFilter(dataHighFiltered, high_y_1, high_y_3, high_y_4);

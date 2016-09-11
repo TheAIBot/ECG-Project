@@ -82,7 +82,7 @@ char testHighPassFilter(int* data)
 	{
 		insertData(&circArray, data[i]);
 
-		int dataLowFiltered = highPassFilter(data[i], getDataValue(&circArray, -16), getDataValue(&circArray, -17), getDataValue(&circArray, -32));
+		int dataLowFiltered = highPassFilter(data[i], getDataValue(&circArray, -16), getDataValue(&circArray, -32));
 		if(checkFilter(dataLowFiltered, file, "high"))
 		{
 			stopInputData(file);
