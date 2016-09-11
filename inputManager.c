@@ -34,7 +34,7 @@ int* loadDataArray(char* filename, int arrayLength)
 
 	if(inputFile == NULL)
 	{
-		printf("Failed to load %s", filename);
+		fprintf(stderr, "Failed to load %s", filename);
 		return NULL;
 	}
 
@@ -42,7 +42,7 @@ int* loadDataArray(char* filename, int arrayLength)
 
 	if(inputArray == NULL)
 	{
-		printf("Failed to allocate memory for %s array", filename);
+		fprintf(stderr, "Failed to allocate memory for %s array", filename);
 		return NULL;
 	}
 

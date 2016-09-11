@@ -1,11 +1,19 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "includes/circularArray.h"
 
-void initCircularArray(struct CircularArray* circArray, int size, int startIndex)
+char initCircularArray(struct CircularArray* circArray, int size, int startIndex)
 {
 	circArray->size = size;
 	circArray->startIndex = startIndex;
 	circArray->data = calloc(size, sizeof(int));
+
+	if(circArray->data == NULL)
+	{
+		fprintf(stderr, "Failed to allocate memory for circular array");
+		return 0;
+	}
+	return 1;
 }
 
 int getDataValue(struct CircularArray* circArray, int offset)
