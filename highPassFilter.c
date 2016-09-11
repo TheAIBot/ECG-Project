@@ -27,7 +27,6 @@ static void moveArrayStartIndex()
 
 short highPassFilter(int x, int x_16, int x_17, int x_32)
 {
-	y_1 = rawHigh[arrayStartIndex];
 	moveArrayStartIndex();
 
 	/*
@@ -40,6 +39,9 @@ short highPassFilter(int x, int x_16, int x_17, int x_32)
 
 	short newY = y_1 - (x / 32) + x_16 - x_17 + (x_32 / 32);
 	rawHigh[arrayStartIndex] = newY;
+
+	y_1 = newY;
+
 	return newY;
 }
 

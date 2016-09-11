@@ -28,8 +28,6 @@ static void moveArrayStartIndex()
 
 int lowPassFilter(int x, int x_6, int x_12)
 {
-	y_2 = y_1;
-	y_1 = rawLow[arrayStartIndex];
 	moveArrayStartIndex();
 	/*
 	printf("%d\n", y_1);
@@ -41,6 +39,10 @@ int lowPassFilter(int x, int x_6, int x_12)
 
 	int newY = (2 * y_1) - y_2 + ((x - (2 * x_6) + x_12) / 32);
 	rawLow[arrayStartIndex] = newY;
+
+	y_2 = y_1;
+	y_1 = newY;
+
 	return newY;
 }
 
