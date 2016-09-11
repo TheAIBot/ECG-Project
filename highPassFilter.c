@@ -2,53 +2,33 @@
 
 #define RAW_DATA_SIZE_HIGH 5
 
-static short rawHigh[RAW_DATA_SIZE_HIGH];
-static short arrayStartIndex = 0;
-static short y_1 = 0;
-
-short getHighPassValue(int offset)
-{
-	short correctIndex = arrayStartIndex + offset;
-	if(correctIndex < 0)
-	{
-		correctIndex += RAW_DATA_SIZE_HIGH;
-	}
-	return rawHigh[correctIndex];
-}
-
-static void moveArrayStartIndex()
-{
-	arrayStartIndex++;
-	if(arrayStartIndex == RAW_DATA_SIZE_HIGH)
-	{
-		arrayStartIndex = 0;
-	}
-}
+short high_y_4 = 0;
+short high_y_3 = 0;
+short high_y_2 = 0;
+short HIGH_Y_1_1 = 0;
+short high_y_1 = 0;
 
 short highPassFilter(int x, int x_16, int x_17, int x_32)
 {
-	moveArrayStartIndex();
 
-	/*
-	printf("%hd\n", y_1);
-	printf("%d\n", x);
-	printf("%d\n", x_16);
-	printf("%d\n", x_17);
-	printf("%d\n", x_32);
-	*/
+	short newY = HIGH_Y_1_1 - (x / 32) + x_16 - x_17 + (x_32 / 32);
 
-	short newY = y_1 - (x / 32) + x_16 - x_17 + (x_32 / 32);
-	rawHigh[arrayStartIndex] = newY;
-
-	y_1 = newY;
+	high_y_4 = high_y_3;
+	high_y_3 = high_y_2;
+	high_y_2 = high_y_1;
+	high_y_1 = HIGH_Y_1_1;
+	HIGH_Y_1_1 = newY;
 
 	return newY;
 }
 
 void resetHighBuffer()
 {
-	memset(rawHigh, 0, RAW_DATA_SIZE_HIGH * sizeof(short));
-	y_1 = 0;
+	HIGH_Y_1_1 = 0;
+	high_y_1 = 0;
+	high_y_2 = 0;
+	high_y_3 = 0;
+	high_y_4 = 0;
 }
 
 

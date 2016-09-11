@@ -45,7 +45,7 @@ short filterData(short rawData)
 	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), getLowPassValue(-17), getLowPassValue(-32));
 
 	/*derivative and square filter*/
-	short dataDerSqrFiltered = derivativeSquareFilter(dataHighFiltered, getHighPassValue(-1), getHighPassValue(-3), getHighPassValue(-4));
+	short dataDerSqrFiltered = derivativeSquareFilter(dataHighFiltered, high_y_1, high_y_3, high_y_4);
 
 	/*moving window filter*/
 	short dataMovingWindowFilter = movingWindowFilter(dataDerSqrFiltered);

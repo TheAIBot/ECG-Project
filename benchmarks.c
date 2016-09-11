@@ -44,9 +44,19 @@ void benchmarkDerivativeSquareFilter(int* data)
 {
 	long startTime = BENCHMARK_START;
 	long result = 0;
+	short y_1 = 0;
+	short y_1_1 = 0;
+	short y_2 = 0;
+	short y_3 = 0;
+	short y_4 = 0;
 	for(int i = 0; i < ECG_10800K_LENGTH; i++)
 	{
-		result += derivativeSquareFilter(data[i], getArrayDataValue(data, i, ECG_10800K_LENGTH, -1), getArrayDataValue(data, i, ECG_10800K_LENGTH, -3), getArrayDataValue(data, i, ECG_10800K_LENGTH, -4));
+		y_4 = y_3;
+		y_3 = y_2;
+		y_2 = y_1;
+		y_1 = y_1_1;
+		y_1_1 = data[i];
+		result += derivativeSquareFilter(y_1_1, y_1, y_3, y_4);
 	}
 	printBenchmarkData(result, BENCHMARK_TIME(startTime), "Deriv square");
 }
