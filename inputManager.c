@@ -27,3 +27,31 @@ void stopInputData(FILE* file)
 {
 	fclose(file);
 }
+
+int* loadDataArray(char* filename, int arrayLength)
+{
+	FILE* inputFile = startInputData(filename);
+
+	if(inputFile == NULL)
+	{
+		fprintf(stderr, "Failed to load %s", filename);
+		return NULL;
+	}
+
+	int* inputArray = malloc(arrayLength * sizeof(int));
+
+	if(inputArray == NULL)
+	{
+		fprintf(stderr, "Failed to allocate memory for %s array", filename);
+		return NULL;
+	}
+
+	for(int i = 0; i < arrayLength; i++)
+	{
+		inputArray[i] = getNextData(inputFile);
+	}
+
+	stopInputData(inputFile);
+
+	return inputArray;
+}

@@ -10,12 +10,12 @@
 
 #define FILTERED_DATA_SIZE 5
 
-short filteredData[FILTERED_DATA_SIZE];
-short arrayStartIndex6 = 0;
+static short filteredData[FILTERED_DATA_SIZE];
+static short arrayStartIndex = 0;
 
 short getFilteredValue(int offset)
 {
-	short correctIndex = arrayStartIndex6 + offset;
+	short correctIndex = arrayStartIndex + offset;
 	if(correctIndex < 0)
 	{
 		correctIndex += FILTERED_DATA_SIZE;
@@ -23,61 +23,40 @@ short getFilteredValue(int offset)
 	return filteredData[correctIndex];
 }
 
-void moveArrayStartIndex6()
+static void moveArrayStartIndex()
 {
-	arrayStartIndex6++;
-	if(arrayStartIndex6 == FILTERED_DATA_SIZE)
+	arrayStartIndex++;
+	if(arrayStartIndex == FILTERED_DATA_SIZE)
 	{
-		arrayStartIndex6 = 0;
+		arrayStartIndex = 0;
 	}
 }
 
-char checkFilter(int filterOutput, FILE* file, char* filterName)
+short filterData(short rawData)
 {
-	if(file != NULL)
-	{
-		int expectedOutput = getNextData(file);
-		if(filterOutput != expectedOutput)
-		{
-			printf("wrong output from %s pass filter: %hd != %hd\n", filterName, filterOutput, expectedOutput);
-			return 1;
-		}
-	}
-	return 0;
-}
-
-short filterData(short rawData, FILE* x_low, FILE* x_high, FILE* x_sqr, FILE* x_mwi)
-{
-	moveArrayStartIndex6();
+	moveArrayStartIndex();
 
 	insertRawData(rawData);
 
+	/*low pass filter*/
 	int dataLowFiltered = lowPassFilter(rawData, getRawDataValue(-6), getRawDataValue(-12));
-	if(checkFilter(dataLowFiltered, x_low, "low"))
-	{
-		exit(1);
-	}
 
-	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), getLowPassValue(-17), getLowPassValue(-32));
-	if(checkFilter(dataHighFiltered, x_high, "high"))
-	{
-		exit(1);
-	}
+	/*high pass filter*/
+	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), getLowPassValue(-32));
 
-	short dataDerSqrFiltered = derivativeSquareFilter(dataHighFiltered, getHighPassValue(-1), getHighPassValue(-3), getHighPassValue(-4));
-	if(checkFilter(dataDerSqrFiltered, x_sqr, "dersqr"))
-	{
-		exit(1);
-	}
+	/*derivative and square filter*/
+	short dataDerSqrFiltered = derivativeSquareFilter(dataHighFiltered, GET_HIGH_PASS_VALUE(X_1_INDEX), GET_HIGH_PASS_VALUE(X_3_INDEX), GET_HIGH_PASS_VALUE(X_4_INDEX));
 
-	short dataMovingWindowFilter = movingWindowFilter(getSquareArray());
-	if(checkFilter(dataMovingWindowFilter, x_mwi, "moving window"))
-	{
-		exit(1);
-	}
+	/*moving window filter*/
+	short dataMovingWindowFilter = movingWindowFilter(dataDerSqrFiltered);
 
-	filteredData[arrayStartIndex6] = dataMovingWindowFilter;
+	filteredData[arrayStartIndex] = dataMovingWindowFilter;
 	return dataMovingWindowFilter;
+}
+
+void resetFilteredBuffer()
+{
+	memset(filteredData, 0, FILTERED_DATA_SIZE * sizeof(short));
 }
 
 

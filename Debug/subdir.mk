@@ -4,6 +4,8 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../benchmarks.c \
+../circularArray.c \
 ../derivativeSquareFilter.c \
 ../filter.c \
 ../highPassFilter.c \
@@ -11,9 +13,12 @@ C_SRCS += \
 ../lowPassFilter.c \
 ../main.c \
 ../movingWindowFilter.c \
-../rawData.c 
+../rawData.c \
+../tests.c 
 
 OBJS += \
+./benchmarks.o \
+./circularArray.o \
 ./derivativeSquareFilter.o \
 ./filter.o \
 ./highPassFilter.o \
@@ -21,9 +26,12 @@ OBJS += \
 ./lowPassFilter.o \
 ./main.o \
 ./movingWindowFilter.o \
-./rawData.o 
+./rawData.o \
+./tests.o 
 
 C_DEPS += \
+./benchmarks.d \
+./circularArray.d \
 ./derivativeSquareFilter.d \
 ./filter.d \
 ./highPassFilter.d \
@@ -31,7 +39,8 @@ C_DEPS += \
 ./lowPassFilter.d \
 ./main.d \
 ./movingWindowFilter.d \
-./rawData.d 
+./rawData.d \
+./tests.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
