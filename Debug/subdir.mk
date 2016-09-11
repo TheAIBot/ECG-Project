@@ -12,6 +12,7 @@ C_SRCS += \
 ../main.c \
 ../movingWindowFilter.c \
 ../peakSearcher.c \
+../rPeakFinder.c \
 ../rawData.c 
 
 OBJS += \
@@ -23,6 +24,7 @@ OBJS += \
 ./main.o \
 ./movingWindowFilter.o \
 ./peakSearcher.o \
+./rPeakFinder.o \
 ./rawData.o 
 
 C_DEPS += \
@@ -34,6 +36,7 @@ C_DEPS += \
 ./main.d \
 ./movingWindowFilter.d \
 ./peakSearcher.d \
+./rPeakFinder.d \
 ./rawData.d 
 
 

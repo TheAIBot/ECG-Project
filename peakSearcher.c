@@ -16,6 +16,9 @@ int peaksVal[NUMBER_PEAKS_STORED];
 int peaksTime[NUMBER_PEAKS_STORED];
 int allVal[PEAK_AREA];
 
+/*For use by the latter R peak detection. Boolean. Starts at false*/
+_Bool newPeak;
+
 void testerPeak(){
 	int kage[] = {20,19,18,23,22,26,18,2,50,60,60,20,3,3,3,3,3,3,3,3,3,3};
 	int i = 0;
@@ -26,7 +29,9 @@ void testerPeak(){
 	printf("done");
 }
 
-/*Finds if a data point is a peak, by checking if it is as large as or bigger than the two numbers before and after it.*/
+/*Finds if a data point is a peak, by checking TODO add better describtion, when changes are finished
+ * Returns 1 if a peak is found, else 1.
+ * */
 void searchPeak(int newDataPoint){ /*A delay by two data points. Can be changed by changing the constant PEAK_AREA*/
 	/*TODO Fix recording first data point as a peak.
 	 *  Needs to be discussed with the teacher or the teaching assistants. - Jesper
@@ -41,6 +46,7 @@ void searchPeak(int newDataPoint){ /*A delay by two data points. Can be changed 
 		printf("Peak is: %d \n",peaksVal[currentPeakIndex]);
 		currentPeakIndex = nextIndexCirk(NUMBER_PEAKS_STORED, currentPeakIndex);
 		currentTimeSinceLastPeak = 0;
+		newPeak = "TRUE";
 	}
 	currentAllValIndex = nextIndexCirk(PEAK_AREA, currentAllValIndex);
 	currentTimeSinceLastPeak++;	
@@ -48,7 +54,7 @@ void searchPeak(int newDataPoint){ /*A delay by two data points. Can be changed 
 
 int isCurrentAPeak(){
 	static int formerDifferentValue = 0;
-	if (FORMER_ALL_VAL(-1) != CURRENT_ALL_VAL){ //To avoid registrating a peak in case of a fall, then a plateu, then a fall in values.
+	if (FORMER_ALL_VAL(-1) != CURRENT_ALL_VAL){ /*To avoid registrating a peak in case of a fall, then a plateu, then a fall in values.*/
 				formerDifferentValue = FORMER_ALL_VAL(-1);
 			} else {
 				printf("Not different, formerDifferent value is %d and former (by one) is %d \n", formerDifferentValue, FORMER_ALL_VAL(-1));
@@ -58,13 +64,16 @@ int isCurrentAPeak(){
 			if (LATER_ALL_VAL(1) < CURRENT_ALL_VAL){
 				if (LATER_ALL_VAL(2) < CURRENT_ALL_VAL){
 					if (formerDifferentValue < CURRENT_ALL_VAL){
-						return 1;
+						/*TODO Talk about the following extra check with the teachers*/
+						if ((peaksVal[formerPlaceCirkArray(NUMBER_PEAKS_STORED,currentPeakIndex, -1)] < CURRENT_ALL_VAL || 15 <= currentTimeSinceLastPeak)  &&  CURRENT_ALL_VAL > 50){
+							return 1;
+						}
 					}
 				}
 			}
 		}
 	}
-	return 0;
+	return (0);
 }
 
 int formerPlaceCirkArray(int size, int current, int offset){
@@ -78,7 +87,24 @@ int nextPlaceCirkArray(int size, int current, int offset){
 		return (current + offset - size);
 	} else  return (current + offset);
 }
+
 int nextIndexCirk(int size, int current){
 	if (current == (size - 1) ) return (0);
 	else return (current+1);
+}
+
+int getPeakValue(int offsetCurrent){ /*For use by other files. Only works backwards from current peak*/
+	/*Minus 1 to currentPeakIndex, as it is incremented once a peak is found.*/
+	return (peaksVal[formerPlaceCirkArray(NUMBER_PEAKS_STORED, currentPeakIndex -1, offsetCurrent)]);
+}
+
+int getPeakTime(int offsetCurrent){ /*For use by other files. Only works backwards from current peak*/
+	return (peaksTime[formerPlaceCirkArray(NUMBER_PEAKS_STORED, currentPeakIndex-1, offsetCurrent)]);
+}
+
+int hasNewPeak(){
+	if (newPeak){
+		newPeak = 0;
+		return (1);
+	} else return (newPeak);
 }

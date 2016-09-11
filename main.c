@@ -38,6 +38,9 @@ int main(int argc, char *argv[])
 		short filteredData = filterData(data, x_low, x_high, x_sqr, x_mwi);
 
 		searchPeak(filteredData);
+		if (hasNewPeak() ){
+			isRPeak(getPeakValue(0), getPeakTime(0), getPeakTime(-7));
+		}
 	}
 
 	printf("done\n");
