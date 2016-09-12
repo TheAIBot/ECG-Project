@@ -9,6 +9,7 @@
 #define FILTER_H_
 
 short getFilteredValue(int offset);
-short filterData(short rawData, FILE* x_low, FILE* x_high, FILE* x_sqr, FILE* x_mwi);
+short filterData(short rawData);
+void resetFilteredBuffer(void);
 
 #endif /* FILTER_H_ */

@@ -1,14 +1,14 @@
 #include "includes/movingWindowFilter.h"
 
 #define RAW_DATA_SIZE_MOVING_WINDOW 13
-#define N 30
 
-short rawMovingWindow[RAW_DATA_SIZE_MOVING_WINDOW];
-short arrayStartIndex5 = 0;
+static short rawMovingWindow[RAW_DATA_SIZE_MOVING_WINDOW];
+static short arrayStartIndex = 0;
+static int totalValue = 0;
 
 short getMovingWindowValue(int offset)
 {
-	short correctIndex = arrayStartIndex5 + offset;
+	short correctIndex = arrayStartIndex + offset;
 	if(correctIndex < 0)
 	{
 		correctIndex += RAW_DATA_SIZE_MOVING_WINDOW;
@@ -16,27 +16,28 @@ short getMovingWindowValue(int offset)
 	return rawMovingWindow[correctIndex];
 }
 
-void moveArrayStartIndex5()
+static void moveArrayStartIndex()
 {
-	arrayStartIndex5++;
-	if(arrayStartIndex5 == RAW_DATA_SIZE_MOVING_WINDOW)
+	arrayStartIndex++;
+	if(arrayStartIndex == RAW_DATA_SIZE_MOVING_WINDOW)
 	{
-		arrayStartIndex5 = 0;
+		arrayStartIndex = 0;
 	}
 }
 
-short movingWindowFilter(short x[N])
+short movingWindowFilter(short sqrDiffrence)
 {
-	moveArrayStartIndex5();
-
-	int newY = 0;
-	int i = 0;
-	for(; i < N; i++){
-		newY += x[i];
-	}
-	newY /= N;
-	rawMovingWindow[arrayStartIndex5] = (short)newY;
+	moveArrayStartIndex();
+	totalValue += sqrDiffrence;
+	short newY = totalValue / N;
+	rawMovingWindow[arrayStartIndex] = newY;
 	return newY;
+}
+
+void resetMovingWindowBuffer()
+{
+	memset(rawMovingWindow, 0, RAW_DATA_SIZE_MOVING_WINDOW * sizeof(short));
+	totalValue = 0;
 }
 
 

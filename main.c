@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "includes/inputManager.h"
 #include "includes/filter.h"
+<<<<<<< HEAD
 #include "includes/rawData.h"
 #include "includes/lowPassFilter.h"
 #include "includes/highPassFilter.h"
@@ -50,5 +51,18 @@ int main(int argc, char *argv[])
 	stopInputData(x_high);
 	stopInputData(x_sqr);
 	stopInputData(x_mwi);
+=======
+#include "includes/benchmarks.h"
+#include "includes/tests.h"
+
+int main(int argc, char *argv[])
+{
+	testAll();
+	exit(1);
+
+	runBenchmarks();
+	exit(1);
+
+>>>>>>> d27204af3f1a45d7d4460bcf75c99bc94050ee17
 	return 0;
 }
