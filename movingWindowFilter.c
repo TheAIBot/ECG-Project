@@ -31,8 +31,7 @@ short movingWindowFilter(short x[N])
 
 	int newY = 0;
 	int i = 0;
-	for(i = 0; i < N; i++)
-	{
+	for(; i < N; i++){
 		newY += x[i];
 	}
 	newY /= N;

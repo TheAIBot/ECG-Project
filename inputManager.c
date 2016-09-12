@@ -23,11 +23,14 @@ int getNextData(FILE* file)
 	return data;
 }
 
+/*
+ * TODO
+ * Might be needed, merge conflict.
 void getPeakData(FILE* file, int* time, int* measurement)
 {
 	fscanf(file, "%d %d", *time, *measurement);
 }
-
+*/
 void stopInputData(FILE* file)
 {
 	fclose(file);

@@ -84,11 +84,13 @@ void recordNewProperRPeak(int peakValue, int peakTime_0, int peakTime_7){
 
 int searchBack(){
 	printf("Beginning searchback protocols");
-	for(int i = indexAllPeaks - 1; i >= 0; i--){
+	int i = indexAllPeaks - 1;
+	for(; i >= 0; i--){
 		if (checkSearchBack(i))
 			return (1);
 	}
-	for(int i = SIZE_R_ARRAYS - 1; i != indexAllPeaks; i--){
+	i = SIZE_R_ARRAYS - 1;
+	for(; i != indexAllPeaks; i--){
 		if (checkSearchBack(i))
 			return (1);
 	}
