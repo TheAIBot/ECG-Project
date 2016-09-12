@@ -28,7 +28,7 @@ all: ECG-Project
 ECG-Project: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc  -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -pg -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
