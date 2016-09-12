@@ -53,8 +53,8 @@ int* loadDataArray(char* filename, int arrayLength)
 		fprintf(stderr, "Failed to allocate memory for %s array", filename);
 		return NULL;
 	}
-
-	for(int i = 0; i < arrayLength; i++)
+	int i = 0;
+	for(; i < arrayLength; i++)
 	{
 		inputArray[i] = getNextData(inputFile);
 	}

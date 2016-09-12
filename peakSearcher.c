@@ -108,3 +108,8 @@ int hasNewPeak(){
 		return (1);
 	} else return (newPeak);
 }
+
+void addRRTimeFromFormer(){
+	currentTimeSinceLastPeak += peaksTime[formerPlaceCirkArray(NUMBER_PEAKS_STORED, currentPeakIndex, -1)];
+}
+

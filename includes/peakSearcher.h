@@ -18,5 +18,6 @@ int nextIndexCirk(int size, int current);
 int getPeakValue(int offsetCurrent);
 int getPeakTime(int offsetCurrent);
 int hasNewPeak();
+void addRRTimeFromFormer();
 
 #endif /* INCLUDES_PEAKSEARCHER_H_ */

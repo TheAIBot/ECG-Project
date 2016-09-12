@@ -7,7 +7,8 @@
 /*Storing*/
 int rPeaks[SIZE_R_ARRAYS]; /*TODO make circular*/
 int RRIntervalOk[SIZE_R_ARRAYS]; /*TODO make circular*/
-int allPeaks[SIZE_R_ARRAYS]; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
+int allPeaksVal[SIZE_R_ARRAYS]; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
+int allPeaksRR[SIZE_R_ARRAYS]; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
 
 /*Indexes for the storing*/
 int indexRPeaks = 0; /*Can be used for both rPeaks and RRInterval*/
@@ -33,7 +34,8 @@ int RR_Miss = 0;
 int isRPeak(int peakValue, int peakTime_0, int peakTime_7){ /*peakTime=RR*/
 	/*Checks if it is an RPeak*/
 
-	allPeaks[indexAllPeaks] = peakValue;
+	allPeaksVal[indexAllPeaks] = peakValue;
+	allPeaksRR[indexAllPeaks] = peakTime_0;
 	indexAllPeaks++; /*TODO Change. Is a temp solution for testing.*/
 
 
@@ -67,9 +69,10 @@ int isRPeak(int peakValue, int peakTime_0, int peakTime_7){ /*peakTime=RR*/
 	if (RR_Low < peakTime_0 && peakTime_0 < RR_High){
 		recordNewProperRPeak(peakValue, peakTime_0, peakTime_7);
 		return (1);
-	} else if(peakTime_0 < RR_Miss){
+	} else if(peakTime_0 > RR_Miss){
 		return (searchBack());
 	}
+	addRRTimeFromFormer();
 	return (0);
 }
 
@@ -77,6 +80,7 @@ void recordNewProperRPeak(int peakValue, int peakTime_0, int peakTime_7){
 	Spkf = peakValue/8 + 7*Spkf/8;
 	Threshold1 = Npkf + (Spkf-Npkf)/4;
 	Threshold2 = Threshold1/2;
+	rPeaks[indexRPeaks] = peakValue;
 	RRIntervalOk[indexRPeaks] = peakTime_0;
 	indexRPeaks = forwardCircularArray(SIZE_R_ARRAYS, indexRPeaks, 1);
 	/*TODO Depending on the occurrence of the below check, it might pay to not calculate it here at all.*/
@@ -99,20 +103,26 @@ int searchBack(){
 }
 
 int checkSearchBack(int indexPeak){
-	if (allPeaks[indexPeak] > Threshold2){
+	if (allPeaksVal[indexPeak] > Threshold2){
 		/*When it gets classified as an R-peak, what must be done?
 		 *  See removing from the average.
 		 *  What if it is an already seen R-peak?
 		   */
-		Spkf = allPeaks[indexPeak]/4 + 3*Spkf/4;
+		Spkf = allPeaksVal[indexPeak]/4 + 3*Spkf/4;
 		Threshold1 = Npkf + (Spkf-Npkf)/4;
 		Threshold2 = Threshold1/2;
 		RR_Low = 23*RR_Average1/25; /*23/25= 0.92*/
 		RR_High = 29*RR_Average1/25; /*29/25= 1.16*/
 		RR_Miss = 83*RR_Average1/50; /*83/50 = 1.66*/
 
+		/*Recording it as an proper R-peak:*/
+		rPeaks[indexRPeaks] = allPeaksVal[indexPeak];
+		RRIntervalOk[indexRPeaks] = allPeaksRR[indexPeak];
+		indexRPeaks = forwardCircularArray(SIZE_R_ARRAYS, indexRPeaks, 1);
 
-	} else return (0);
+	} else {
+		return (0);
+	}
 }
 
 int backwardCircularArray(int size, int currentIndex, int offset){
