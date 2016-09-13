@@ -101,15 +101,7 @@ void runBenchmarks()
 	benchmarkHighPassFilter(data);
 	benchmarkDerivativeSquareFilter(data);
 	benchmarkMovingWindowFilter(data);
-<<<<<<< HEAD
-	//for(int i = 0; i < 5; i++)
-	//{
-=======
-	/*for(int i = 0; i < 100; i++)*/
-	/*{*/
->>>>>>> 48a47abfecfa058fba4bf62e6248e0a498aad29b
-		benchmarhWholeFilter(data);
-	/*}*/
+	benchmarhWholeFilter(data);
 
 	free(data);
 }
