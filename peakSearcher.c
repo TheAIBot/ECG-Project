@@ -8,6 +8,7 @@
 #define FORMER_ALL_VAL(offset) allVal[formerPlaceCirkArray(PEAK_AREA, currentAllValIndex, offset)]
 #define LATER_ALL_VAL(offset) allVal[nextPlaceCirkArray(PEAK_AREA, currentAllValIndex, offset)]
 
+/*TODO Think about removing the value below, and calcultating it on the go. Discuss with Andreas - don't remove - Jesper*/
 int currentTimeSinceLastPeak = -(PEAK_AREA - 1)/2; /*It starts at -(PEAK_AREA - 1)/2, because of the delay of (PEAK_AREA - 1)/2*/
 int currentPeakIndex = 0;
 int currentAllValIndex = 0;
@@ -94,11 +95,13 @@ int nextIndexCirk(int size, int current){
 }
 
 int getPeakValue(int offsetCurrent){ /*For use by other files. Only works backwards from current peak*/
+	/*TODO Check if it only used to get the latest, when done with the program*/
 	/*Minus 1 to currentPeakIndex, as it is incremented once a peak is found.*/
 	return (peaksVal[formerPlaceCirkArray(NUMBER_PEAKS_STORED, currentPeakIndex -1, offsetCurrent)]);
 }
 
 int getPeakTime(int offsetCurrent){ /*For use by other files. Only works backwards from current peak*/
+	/*TODO Check if it only used to get the latest, when done with the program*/
 	return (peaksTime[formerPlaceCirkArray(NUMBER_PEAKS_STORED, currentPeakIndex-1, offsetCurrent)]);
 }
 

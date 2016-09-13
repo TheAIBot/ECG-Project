@@ -191,7 +191,7 @@ char testWholeFilter(int* data)
 
 		searchPeak(dataLowFiltered);
 		if (hasNewPeak())
-			isRPeak(getPeakValue(0), getPeakTime(0), getPeakTime(-7));
+			isRPeak(getPeakValue(0), getPeakTime(0));
 
 	}
 	stopInputData(file);
