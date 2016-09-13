@@ -1,3 +1,4 @@
+#include <string.h>
 #include "includes/derivativeSquareFilter.h"
 #include "includes/movingWindowFilter.h"
 

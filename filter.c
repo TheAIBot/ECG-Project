@@ -35,7 +35,6 @@ static void moveArrayStartIndex()
 short filterData(short rawData)
 {
 	moveArrayStartIndex();
-
 	insertRawData(rawData);
 
 	/*low pass filter*/
