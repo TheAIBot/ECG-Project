@@ -36,7 +36,6 @@ int lowPassFilter(int x, int x_6, int x_12)
 	printf("%d\n", x_6);
 	printf("%d\n", x_12);
 	*/
-
 	int newY = (2 * y_1) - y_2 + ((x - (2 * x_6) + x_12) / 32);
 	rawLow[arrayStartIndex] = newY;
 

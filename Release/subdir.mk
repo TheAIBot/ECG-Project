@@ -13,6 +13,8 @@ C_SRCS += \
 ../lowPassFilter.c \
 ../main.c \
 ../movingWindowFilter.c \
+../peakSearcher.c \
+../rPeakFinder.c \
 ../rawData.c \
 ../tests.c 
 
@@ -26,6 +28,8 @@ OBJS += \
 ./lowPassFilter.o \
 ./main.o \
 ./movingWindowFilter.o \
+./peakSearcher.o \
+./rPeakFinder.o \
 ./rawData.o \
 ./tests.o 
 
@@ -39,6 +43,8 @@ C_DEPS += \
 ./lowPassFilter.d \
 ./main.d \
 ./movingWindowFilter.d \
+./peakSearcher.d \
+./rPeakFinder.d \
 ./rawData.d \
 ./tests.d 
 

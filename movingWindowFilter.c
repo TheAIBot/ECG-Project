@@ -29,7 +29,6 @@ short movingWindowFilter(short sqrDiffrence)
 {
 	moveArrayStartIndex();
 	totalValue += sqrDiffrence;
-
 	short newY = totalValue / N;
 	rawMovingWindow[arrayStartIndex] = newY;
 	return newY;

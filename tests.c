@@ -186,6 +186,13 @@ char testWholeFilter(int* data)
 			stopInputData(file);
 			return 0;
 		}
+
+		/*TODO. Temp test of peaksearcher. To be removed.*/
+
+		searchPeak(dataLowFiltered);
+		if (hasNewPeak())
+			isRPeak(getPeakValue(0), getPeakTime(0), getPeakTime(-7));
+
 	}
 	stopInputData(file);
 	printf("Passed whole filter test\n");
@@ -232,8 +239,6 @@ void testAll()
 		return;
 	}
 	free(ecgData);
-
-
 	printf("All tests finished successfully");
 }
 
