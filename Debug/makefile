@@ -42,13 +42,8 @@ all: ECG-Project
 # Tool invocations
 ECG-Project: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-<<<<<<< HEAD
-	@echo 'Invoking: GCC C Linker'
-	gcc -pg -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS)
-=======
 	@echo 'Invoking: GCC C++ Linker'
 	g++  -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS)
->>>>>>> 48a47abfecfa058fba4bf62e6248e0a498aad29b
 	@echo 'Finished building target: $@'
 	@echo ' '
 
