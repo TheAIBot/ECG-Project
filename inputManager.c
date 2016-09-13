@@ -23,6 +23,14 @@ int getNextData(FILE* file)
 	return data;
 }
 
+/*
+ * TODO
+ * Might be needed, merge conflict.
+void getPeakData(FILE* file, int* time, int* measurement)
+{
+	fscanf(file, "%d %d", *time, *measurement);
+}
+*/
 void stopInputData(FILE* file)
 {
 	fclose(file);
@@ -45,8 +53,8 @@ int* loadDataArray(char* filename, int arrayLength)
 		fprintf(stderr, "Failed to allocate memory for %s array", filename);
 		return NULL;
 	}
-
-	for(int i = 0; i < arrayLength; i++)
+	int i = 0;
+	for(; i < arrayLength; i++)
 	{
 		inputArray[i] = getNextData(inputFile);
 	}

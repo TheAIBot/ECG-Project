@@ -13,6 +13,8 @@ C_SRCS += \
 ../lowPassFilter.c \
 ../main.c \
 ../movingWindowFilter.c \
+../peakSearcher.c \
+../rPeakFinder.c \
 ../rawData.c \
 ../tests.c 
 
@@ -26,6 +28,8 @@ OBJS += \
 ./lowPassFilter.o \
 ./main.o \
 ./movingWindowFilter.o \
+./peakSearcher.o \
+./rPeakFinder.o \
 ./rawData.o \
 ./tests.o 
 
@@ -39,6 +43,8 @@ C_DEPS += \
 ./lowPassFilter.d \
 ./main.d \
 ./movingWindowFilter.d \
+./peakSearcher.d \
+./rPeakFinder.d \
 ./rawData.d \
 ./tests.d 
 
@@ -47,7 +53,7 @@ C_DEPS += \
 %.o: ../%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C Compiler'
-	gcc -O3 -std=c99 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
