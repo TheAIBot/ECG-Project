@@ -19,5 +19,6 @@ char initCircArray(struct CircularArray* circArray, int size, int startIndex);
 int getCircArrayValue(struct CircularArray* circArray, int offset);
 int getArrayDataValue(int data[], int startIndex, int arraySize, int offset);
 void insertCircArrayData(struct CircularArray* circArray, int newData);
+void freeCircArray(struct CircularArray* circArray);
 
 #endif /* CIRCULARARRAY_H_ */

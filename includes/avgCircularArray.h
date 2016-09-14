@@ -22,5 +22,6 @@ int getAvgCircValue(struct AvgCircularArray* avgCirc, int offset);
 void insertAvgCircData(struct AvgCircularArray* avgCirc, int newData);
 int getAvgCircAverage(struct AvgCircularArray* avgCirc);
 void moveAvgCircStartIndex(struct AvgCircularArray* circArray);
+void freeAvgCirc(struct AvgCircularArray* avgCirc);
 
 #endif /* INCLUDES_AVGCIRCULARARRAY_H_ */

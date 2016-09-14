@@ -65,7 +65,7 @@ char testLowPassFilter(int* data)
 		}
 	}
 	stopInputData(file);
-	free(circArray.data);
+	freeCircArray(&circArray);
 	printf("Passed low pass filter test\n");
 	return 1;
 }
@@ -98,7 +98,7 @@ char testHighPassFilter(int* data)
 		}
 	}
 	stopInputData(file);
-	free(circArray.data);
+	freeCircArray(&circArray);
 	printf("Passed high pass filter test\n");
 	return 1;
 }
@@ -131,7 +131,7 @@ char testDerivSqrFilter(int* data)
 		}
 	}
 	stopInputData(file);
-	free(circArray.data);
+	freeCircArray(&circArray);
 	printf("Passed derivative square filter test\n");
 	return 1;
 }
@@ -163,7 +163,7 @@ char testMovingwindowFilter(int* data)
 		}
 	}
 	stopInputData(file);
-	free(circArray.data);
+	freeCircArray(&circArray);
 	printf("Passed moving window filter test\n");
 	return 1;
 }

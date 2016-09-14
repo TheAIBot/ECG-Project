@@ -46,6 +46,11 @@ void moveCircArrayStartIndex(struct CircularArray* circArray)
 	}
 }
 
+void freeCircArray(struct CircularArray* circArray)
+{
+	free(circArray->data);
+}
+
 
 
 

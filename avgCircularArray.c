@@ -39,12 +39,17 @@ int getAvgCircAverage(struct AvgCircularArray* avgCirc)
 	return avgCirc->averageSum / avgCirc->averageLength;
 }
 
-void moveAvgCircStartIndex(struct AvgCircularArray* circArray)
+void moveAvgCircStartIndex(struct AvgCircularArray* avgCirc)
 {
-	circArray->startIndex++;
-	if(circArray->startIndex == circArray->size)
+	avgCirc->startIndex++;
+	if(avgCirc->startIndex == avgCirc->size)
 	{
-		circArray->startIndex = 0;
+		avgCirc->startIndex = 0;
 	}
+}
+
+void freeAvgCirc(struct AvgCircularArray* avgCirc)
+{
+	free(avgCirc->data);
 }
 
