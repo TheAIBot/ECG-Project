@@ -189,14 +189,23 @@ char testWholeFilter(int* data)
 
 		/*TODO. Temp test of peaksearcher. To be removed.*/
 
-		searchPeak(dataLowFiltered);
-		if (hasNewPeak())
-			isRPeak(getPeakValue(0), getPeakTime(0));
-
 	}
 	stopInputData(file);
 	printf("Passed whole filter test\n");
 	return 1;
+}
+
+char testPeakSeacher(int* data)
+{
+	for(int i = 0; i < TEST_DATA_LENGTH; i++)
+	{
+		short filteredData = data[i];
+		searchPeak(filteredData);
+		if (hasNewPeak())
+			isRPeak(getPeakValue(0), getPeakTime(0));
+	}
+	return 1;
+
 }
 
 void testAll()
@@ -213,6 +222,7 @@ void testAll()
 	if(lowData == NULL ||
 	   !testHighPassFilter(lowData))
 	{
+		free(lowData);
 		return;
 	}
 	free(lowData);
@@ -221,6 +231,7 @@ void testAll()
 	if(highData == NULL ||
 	   !testDerivSqrFilter(highData))
 	{
+		free(highData);
 		return;
 	}
 	free(highData);
@@ -229,6 +240,7 @@ void testAll()
 	if(sqrData == NULL ||
 	   !testMovingwindowFilter(sqrData))
 	{
+		free(sqrData);
 		return;
 	}
 	free(sqrData);
@@ -236,9 +248,22 @@ void testAll()
 	if(ecgData == NULL ||
 	   !testWholeFilter(ecgData))
 	{
+		free(ecgData);
 		return;
 	}
 	free(ecgData);
+
+	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
+	if(mwi_after == NULL ||
+	   !testPeakSeacher(mwi_after))
+	{
+		free(mwi_after);
+		return;
+	}
+	free(mwi_after);
+
+
+
 	printf("All tests finished successfully");
 }
 
