@@ -9,6 +9,7 @@
 #include "includes/derivativeSquareFilter.h"
 #include "includes/movingWindowFilter.h"
 #include "includes/filter.h"
+#include "includes/rPeakFinder.h"
 
 #define TEST_DATA_LENGTH 10000 /* 10.000 */
 
@@ -143,7 +144,6 @@ char testMovingwindowFilter(int* data)
 	{
 		return 0;
 	}
-
 	struct CircularArray circArray;
 	if(!initCircularArray(&circArray, 31, 0))
 	{
@@ -252,7 +252,7 @@ void testAll()
 		return;
 	}
 	free(ecgData);
-
+/*
 	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
 	if(mwi_after == NULL ||
 	   !testPeakSeacher(mwi_after))
@@ -260,7 +260,7 @@ void testAll()
 		free(mwi_after);
 		return;
 	}
-	free(mwi_after);
+	free(mwi_after);*/
 
 
 
