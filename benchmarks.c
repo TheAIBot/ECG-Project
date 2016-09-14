@@ -9,6 +9,8 @@
 #include "includes/derivativeSquareFilter.h"
 #include "includes/movingWindowFilter.h"
 #include "includes/filter.h"
+#include "includes/peakSearcher.h"
+#include "includes/rPeakFinder.h"
 
 #define ECG_10800K_LENGTH 10800000 /* 10.800.000 */
 static long result = 0;
@@ -104,19 +106,37 @@ static int benchmarhWholeFilter(int* data)
 	return BENCHMARK_TIME(startTime);
 }
 
+static int benchmarkPeakSearcher(int* data)
+{
+	long startTime = BENCHMARK_START;
+	result = 0;
+	int i = 0;
+	for(; i < ECG_10800K_LENGTH; i++)
+	{
+		searchPeak(data[i] * data[i]);
+	}
+	return BENCHMARK_TIME(startTime);
+}
+
+static int benchmarkRPeakFinder(int* data)
+{
+	return 0;
+}
+
 void runBenchmarks()
 {
 	int* data = loadDataArray("benchmark_files/ECG10800K.txt", ECG_10800K_LENGTH);
-
-	if(data == NULL)
+	if(data != NULL)
 	{
+		benchmarkXTimes(&benchmarkLowPassFilter, 20, data, "low");
+		benchmarkXTimes(&benchmarkHighPassFilter, 20, data, "high");
+		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 20, data, "derivative square");
+		benchmarkXTimes(&benchmarkMovingWindowFilter, 20, data, "moving window");
+		benchmarkXTimes(&benchmarhWholeFilter, 20, data, "whole");
+		//benchmarkXTimes(&benchmarkPeakSearcher, 20, data, "peak searcher");
+		//benchmarkXTimes(&benchmarkPeakFinder, 20, data, "r peak finder");
 		return;
 	}
-	benchmarkXTimes(&benchmarkLowPassFilter, 20, data, "low");
-	benchmarkXTimes(&benchmarkHighPassFilter, 20, data, "high");
-	benchmarkXTimes(&benchmarkDerivativeSquareFilter, 20, data, "derivative square");
-	benchmarkXTimes(&benchmarkMovingWindowFilter, 20, data, "moving window");
-	benchmarkXTimes(&benchmarhWholeFilter, 20, data, "whole");
 
 	free(data);
 }

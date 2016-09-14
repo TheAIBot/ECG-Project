@@ -39,15 +39,15 @@ void searchPeak(int newDataPoint){ /*A delay by two data points. Can be changed 
 	 */
 	 /*Places the new data point two forwards from the current one.*/
 	allVal[nextPlaceCirkArray(PEAK_AREA, currentAllValIndex, 2)] = newDataPoint;
-	printf("%d \n", newDataPoint);
+	//printf("%d \n", newDataPoint);
 	if (isCurrentAPeak()){
 		/*Records the value of the detected peak, and the time since the last peak.*/
 		peaksTime[currentPeakIndex] = currentTimeSinceLastPeak;
 		peaksVal[currentPeakIndex] = allVal[currentAllValIndex];
-		printf("Peak is: %d \n",peaksVal[currentPeakIndex]);
+		//printf("Peak is: %d \n",peaksVal[currentPeakIndex]);
 		currentPeakIndex = nextIndexCirk(NUMBER_PEAKS_STORED, currentPeakIndex);
 		currentTimeSinceLastPeak = 0;
-		newPeak = "TRUE";
+		newPeak = 1;
 	}
 	currentAllValIndex = nextIndexCirk(PEAK_AREA, currentAllValIndex);
 	currentTimeSinceLastPeak++;	
@@ -58,7 +58,7 @@ int isCurrentAPeak(){
 	if (FORMER_ALL_VAL(-1) != CURRENT_ALL_VAL){ /*To avoid registrating a peak in case of a fall, then a plateu, then a fall in values.*/
 				formerDifferentValue = FORMER_ALL_VAL(-1);
 			} else {
-				printf("Not different, formerDifferent value is %d and former (by one) is %d \n", formerDifferentValue, FORMER_ALL_VAL(-1));
+				//printf("Not different, formerDifferent value is %d and former (by one) is %d \n", formerDifferentValue, FORMER_ALL_VAL(-1));
 	}
 	if (FORMER_ALL_VAL(-2) <= CURRENT_ALL_VAL){
 		if (FORMER_ALL_VAL(-1) <= CURRENT_ALL_VAL){

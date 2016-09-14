@@ -8,7 +8,7 @@
 #ifndef INCLUDES_RPEAKFINDER_H_
 #define INCLUDES_RPEAKFINDER_H_
 
-int isRPeak(int peakValue, int peakTime_0, int peakTime_7);
+int isRPeak(int peakValue, int peakTime_0);
 void recordNewProperRRPeak(int peakValue, int peakTime_0, int peakTime_7);
 void searchBack();
 int backwardCircularArray(int size, int currentIndex, int offset);
