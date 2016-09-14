@@ -34,6 +34,80 @@ int RR_Miss = 0;
 /*Variables used for the searchback*/
 /*TODO make searchback.*/
 
+void recordNewProperRPeak(int peakValue, int peakTime_0, int rPeakTime_7){
+	Spkf = peakValue/8 + 7*Spkf/8;
+	RR_Average2_Sum = RR_Average2_Sum + peakTime_0 - rPeakTime_7;
+	RR_Average2 = RR_Average2_Sum/8;
+	RR_Low = 23*RR_Average2/25; /*23/25= 0.92*/
+	RR_High = 29*RR_Average2/25; /*29/25= 1.16*/
+	RR_Miss = 83*RR_Average2/50; /*83/50 = 1.66*/
+	Threshold1 = Npkf + (Spkf-Npkf)/4;
+	Threshold2 = Threshold1/2;
+	trueRRPeakVal[indexTrueRPeaks] = peakValue;
+	trueRRPeakRR[indexTrueRPeaks] = peakTime_0;
+	indexTrueRPeaks++; /*TODO Temp. To make circular*/
+	/*TODO Depending on the occurrence of the below check, it might pay to not calculate it here at all.*/
+}
+
+int backwardCircularArray(int size, int currentIndex, int offset){
+	currentIndex += offset;
+	return ( (currentIndex  < 0)? currentIndex + size: currentIndex);
+
+}
+
+int getPeakTimeAnyRPeak(int offsetCurrent){
+	return (threshold1PassRR[backwardCircularArray(SIZE_R_ARRAYS, indexThreshold1PassPeak, offsetCurrent)]);
+}
+
+int getPeakTimeAnyPeak(int offsetCurrent){
+	return (allPeaksRR[backwardCircularArray(SIZE_R_ARRAYS, indexAllPeaks, offsetCurrent)]);
+}
+
+int checkSearchBack(int indexPeak){
+	if (allPeaksVal[indexPeak] > Threshold2){
+		/*When it gets classified as an R-peak, what must be done?
+		 *  See removing from the average.
+		 *  What if it is an already seen R-peak?
+		 *  TODO
+		   */
+		Spkf = allPeaksVal[indexPeak]/4 + 3*Spkf/4;
+		Threshold1 = Npkf + (Spkf-Npkf)/4;
+		Threshold2 = Threshold1/2;
+		RR_Low = 23*RR_Average1/25; /*23/25= 0.92*/
+		RR_High = 29*RR_Average1/25; /*29/25= 1.16*/
+		RR_Miss = 83*RR_Average1/50; /*83/50 = 1.66*/
+
+		/*Recording it as an proper R-peak. Will always be later than the current RPeaks*/
+		/*Alse updating RR_Average_2, despite the flowchart, so it can be done one by one as they come,
+		 * instead of running through the array	 * */
+		RR_Average2_Sum = RR_Average2_Sum + allPeaksRR[indexPeak] - getPeakTimeAnyRPeak(-7);
+		RR_Average2 = RR_Average2_Sum/8;
+		trueRRPeakVal[indexTrueRPeaks] = allPeaksVal[indexPeak];
+		trueRRPeakRR[indexTrueRPeaks] = allPeaksRR[indexPeak];
+		indexTrueRPeaks++; /*TODO Temp. To make circular*/
+		/*TODO Ask. Should the later RR values be updated so that this is the latest RR peak?*/
+		return 0;
+	} else {
+		return 0;
+	}
+}
+
+int searchBack(){
+	printf("Beginning searchback protocols");
+	int i = indexAllPeaks - 1;
+	for(; i >= 0; i--){
+		if (checkSearchBack(i))
+			return (1);
+	}
+	i = SIZE_R_ARRAYS - 1;
+	for(; i != indexAllPeaks; i--){
+		if (checkSearchBack(i))
+			return (1);
+	}
+	/*No proper search back peak found*/
+	return (0);
+}
+
 int isRPeak(int peakValue, int peakTime_0){ /*peakTime=RR*/
 	/*Checks if it is an RPeak*/
 
@@ -82,81 +156,8 @@ int isRPeak(int peakValue, int peakTime_0){ /*peakTime=RR*/
 	}
 }
 
-void recordNewProperRPeak(int peakValue, int peakTime_0, int rPeakTime_7){
-	Spkf = peakValue/8 + 7*Spkf/8;
-	RR_Average2_Sum = RR_Average2_Sum + peakTime_0 - rPeakTime_7;
-	RR_Average2 = RR_Average2_Sum/8;
-	RR_Low = 23*RR_Average2/25; /*23/25= 0.92*/
-	RR_High = 29*RR_Average2/25; /*29/25= 1.16*/
-	RR_Miss = 83*RR_Average2/50; /*83/50 = 1.66*/
-	Threshold1 = Npkf + (Spkf-Npkf)/4;
-	Threshold2 = Threshold1/2;
-	trueRRPeakVal[indexTrueRPeaks] = peakValue;
-	trueRRPeakRR[indexTrueRPeaks] = peakTime_0;
-	indexTrueRPeaks++; /*TODO Temp. To make circular*/
-	/*TODO Depending on the occurrence of the below check, it might pay to not calculate it here at all.*/
-}
-
-int searchBack(){
-	printf("Beginning searchback protocols");
-	int i = indexAllPeaks - 1;
-	for(; i >= 0; i--){
-		if (checkSearchBack(i))
-			return (1);
-	}
-	i = SIZE_R_ARRAYS - 1;
-	for(; i != indexAllPeaks; i--){
-		if (checkSearchBack(i))
-			return (1);
-	}
-	/*No proper search back peak found*/
-	return (0);
-}
-
-int checkSearchBack(int indexPeak){
-	if (allPeaksVal[indexPeak] > Threshold2){
-		/*When it gets classified as an R-peak, what must be done?
-		 *  See removing from the average.
-		 *  What if it is an already seen R-peak?
-		 *  TODO
-		   */
-		Spkf = allPeaksVal[indexPeak]/4 + 3*Spkf/4;
-		Threshold1 = Npkf + (Spkf-Npkf)/4;
-		Threshold2 = Threshold1/2;
-		RR_Low = 23*RR_Average1/25; /*23/25= 0.92*/
-		RR_High = 29*RR_Average1/25; /*29/25= 1.16*/
-		RR_Miss = 83*RR_Average1/50; /*83/50 = 1.66*/
-
-		/*Recording it as an proper R-peak. Will always be later than the current RPeaks*/
-		/*Alse updating RR_Average_2, despite the flowchart, so it can be done one by one as they come,
-		 * instead of running through the array	 * */
-		RR_Average2_Sum = RR_Average2_Sum + allPeaksRR[indexPeak] - getPeakTimeAnyRPeak(-7);
-		RR_Average2 = RR_Average2_Sum/8;
-		trueRRPeakVal[indexTrueRPeaks] = allPeaksVal[indexPeak];
-		trueRRPeakRR[indexTrueRPeaks] = allPeaksRR[indexPeak];
-		indexTrueRPeaks++; /*TODO Temp. To make circular*/
-		/*TODO Ask. Should the later RR values be updated so that this is the latest RR peak?*/
-	} else {
-		return (0);
-	}
-}
-
-int backwardCircularArray(int size, int currentIndex, int offset){
-	currentIndex += offset;
-	return ( (currentIndex  < 0)? currentIndex + size: currentIndex);
-
-}
-
 int forwardCircularArray(int size, int currentIndex, int offset){
 	currentIndex += offset;
 	if (currentIndex >= size) return (currentIndex - size);
 	else return (currentIndex);
-}
-
-int getPeakTimeAnyRPeak(int offsetCurrent){
-	return (threshold1PassRR[backwardCircularArray(SIZE_R_ARRAYS, indexThreshold1PassPeak, offsetCurrent)]);
-}
-
-int getPeakTimeAnyPeak(int offsetCurrent){
-	return (allPeaksRR[backwardCircularArray(SIZE_R_ARRAYS, indexAllPeaks, offsetCurrent)]);
 }
