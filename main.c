@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[])
 {
-	//testAll();
+	testAll();
 	//exit(1);
 
 	runBenchmarks();

@@ -36,7 +36,6 @@ int RR_Miss = 0;
 
 int isRPeak(int peakValue, int peakTime_0){ /*peakTime=RR*/
 	/*Checks if it is an RPeak*/
-
 	allPeaksVal[indexAllPeaks] = peakValue;
 	allPeaksRR[indexAllPeaks] = peakTime_0;
 	indexAllPeaks++; /*TODO Change. Is a temp solution for testing.*/
@@ -48,8 +47,6 @@ int isRPeak(int peakValue, int peakTime_0){ /*peakTime=RR*/
 
 	RR_Average1_Sum = RR_Average1_Sum + peakTime_0 - peakTime_7;
 	RR_Average1 = RR_Average1_Sum/8;
-
-
 
 	/*TODO Discuss with the teacher.
 	 * Does RR_Average1 only have to updated if (RR_Low < peakTime_0 && peakTime_0 < RR_High)==True below?.
@@ -121,11 +118,12 @@ int checkSearchBack(int indexPeak){
 		 *  TODO
 		   */
 		Spkf = allPeaksVal[indexPeak]/4 + 3*Spkf/4;
-		Threshold1 = Npkf + (Spkf-Npkf)/4;
-		Threshold2 = Threshold1/2;
+		/*RR_Average_1 is already updated, in the start of isRPeak*/
 		RR_Low = 23*RR_Average1/25; /*23/25= 0.92*/
 		RR_High = 29*RR_Average1/25; /*29/25= 1.16*/
 		RR_Miss = 83*RR_Average1/50; /*83/50 = 1.66*/
+		Threshold1 = Npkf + (Spkf-Npkf)/4;
+		Threshold2 = Threshold1/2;
 
 		/*Recording it as an proper R-peak. Will always be later than the current RPeaks*/
 		/*Alse updating RR_Average_2, despite the flowchart, so it can be done one by one as they come,
