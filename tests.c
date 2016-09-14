@@ -189,13 +189,45 @@ char testWholeFilter(int* data)
 
 		/*TODO. Temp test of peaksearcher. To be removed.*/
 
-		searchPeak(dataLowFiltered);
-		if (hasNewPeak())
-			isRPeak(getPeakValue(0), getPeakTime(0));
-
 	}
 	stopInputData(file);
 	printf("Passed whole filter test\n");
+	return 1;
+}
+
+char testPeakSeacher(int* data){
+	/*TODO make.*/
+}
+
+char testRPeakSeacher(int* data)
+{
+	/*
+	FILE* file = startInputData("verification_files/Rpeak.TXT");
+	if(file == NULL)
+	{
+		return 0;
+	}
+	int timePeakFoundTeachers = -1;
+	int valPeakFoundTeachers = -1;
+	int timesTeachers[31];
+	int valTeachers[31];
+	*/
+	/*There are 31 datapoints in the file*/
+	/*
+	for(int i = 0; i < 30; i++){
+			getPeakData(file, &timesTeachers[i], &valTeachers[i]);
+	}
+	*/
+
+	for(int i = 0; i < TEST_DATA_LENGTH; i++)
+	{
+		short filteredData = data[i];
+		searchPeak(filteredData);
+		if (hasNewPeak()){
+			printf("peak is at index %d\n",i);
+			isRPeak(getPeakValue(0), getPeakTime(0));
+		}
+	}
 	return 1;
 }
 
@@ -213,6 +245,7 @@ void testAll()
 	if(lowData == NULL ||
 	   !testHighPassFilter(lowData))
 	{
+		free(lowData);
 		return;
 	}
 	free(lowData);
@@ -221,6 +254,7 @@ void testAll()
 	if(highData == NULL ||
 	   !testDerivSqrFilter(highData))
 	{
+		free(highData);
 		return;
 	}
 	free(highData);
@@ -229,6 +263,7 @@ void testAll()
 	if(sqrData == NULL ||
 	   !testMovingwindowFilter(sqrData))
 	{
+		free(sqrData);
 		return;
 	}
 	free(sqrData);
@@ -236,9 +271,21 @@ void testAll()
 	if(ecgData == NULL ||
 	   !testWholeFilter(ecgData))
 	{
+		free(ecgData);
 		return;
 	}
 	free(ecgData);
+
+	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
+	if(mwi_after == NULL ||
+	   !testRPeakSeacher(mwi_after))
+	{
+		free(mwi_after);
+		return;
+	}
+
+
+
 	printf("All tests finished successfully");
 }
 

@@ -13,24 +13,28 @@
 #define ECG_10800K_LENGTH 10800000 /* 10.800.000 */
 static long result = 0;
 
-void printBenchmarkData(long time, char* filterName)
+static void printBenchmarkData(long time, char* filterName)
 {
 	printf("%s filter %ld\n", filterName, result);
 	BENCHMARK_PRINT_TIME(time);
 }
 
-void benchmarkXTimes(int (*function) (int*), int times, int* data, char* functionName)
+static void benchmarkXTimes(int (*function) (int*), int times, int* data, char* functionName)
 {
 	int i;
-	int benchmarkTime = 0;
+	unsigned int lowestBenchmarkTime = 1 << ((sizeof(int) * 8) - 1);/*portable int max value*/
 	for(i = 0; i < times; i++)
 	{
-		benchmarkTime += (*function)(data);
+		unsigned int benchmarkTime = (*function)(data);
+		if(benchmarkTime < lowestBenchmarkTime)
+		{
+			lowestBenchmarkTime = benchmarkTime;
+		}
 	}
-	printBenchmarkData(benchmarkTime / times, functionName);
+	printBenchmarkData(lowestBenchmarkTime, functionName);
 }
 
-int benchmarkLowPassFilter(int* data)
+static int benchmarkLowPassFilter(int* data)
 {
 	long startTime = BENCHMARK_START;
 	result = 0;
@@ -42,7 +46,7 @@ int benchmarkLowPassFilter(int* data)
 	return BENCHMARK_TIME(startTime);
 }
 
-int benchmarkHighPassFilter(int* data)
+static int benchmarkHighPassFilter(int* data)
 {
 	long startTime = BENCHMARK_START;
 	result = 0;
@@ -54,7 +58,7 @@ int benchmarkHighPassFilter(int* data)
 	return BENCHMARK_TIME(startTime);
 }
 
-int benchmarkDerivativeSquareFilter(int* data)
+static int benchmarkDerivativeSquareFilter(int* data)
 {
 	long startTime = BENCHMARK_START;
 	result = 0;
@@ -76,7 +80,7 @@ int benchmarkDerivativeSquareFilter(int* data)
 	return BENCHMARK_TIME(startTime);
 }
 
-int benchmarkMovingWindowFilter(int* data)
+static int benchmarkMovingWindowFilter(int* data)
 {
 	long startTime = BENCHMARK_START;
 	result = 0;
@@ -88,7 +92,7 @@ int benchmarkMovingWindowFilter(int* data)
 	return BENCHMARK_TIME(startTime);
 }
 
-int benchmarhWholeFilter(int* data)
+static int benchmarhWholeFilter(int* data)
 {
 	long startTime = BENCHMARK_START;
 	result = 0;

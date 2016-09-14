@@ -55,20 +55,28 @@ void searchPeak(int newDataPoint){ /*A delay by two data points. Can be changed 
 
 int isCurrentAPeak(){
 	static int formerDifferentValue = 0;
-	if (FORMER_ALL_VAL(-1) != CURRENT_ALL_VAL){ /*To avoid registrating a peak in case of a fall, then a plateu, then a fall in values.*/
-				formerDifferentValue = FORMER_ALL_VAL(-1);
-			} else {
-				printf("Not different, formerDifferent value is %d and former (by one) is %d \n", formerDifferentValue, FORMER_ALL_VAL(-1));
+
+	/*TODO Talk about the following extra check with the teachers*/
+	/*Notice that currentTimeSinceLastPeak is modefied by the rPeakFinder,
+	 *so that it is always the time since the last RR peak*/
+	/*TODO write description*/
+	if ( CURRENT_ALL_VAL < 100 || currentTimeSinceLastPeak <= 20){
+		return 0;
+	}
+
+	/*To avoid registrating a peak in case of a fall, then a plateu, then a fall in values.*/
+	if (FORMER_ALL_VAL(-1) != CURRENT_ALL_VAL){
+		formerDifferentValue = FORMER_ALL_VAL(-1);
+	} else{
+		printf("Not different, formerDifferent value is %d and former (by one) is %d \n", formerDifferentValue, FORMER_ALL_VAL(-1));
+		return 0;
 	}
 	if (FORMER_ALL_VAL(-2) <= CURRENT_ALL_VAL){
 		if (FORMER_ALL_VAL(-1) <= CURRENT_ALL_VAL){
 			if (LATER_ALL_VAL(1) < CURRENT_ALL_VAL){
 				if (LATER_ALL_VAL(2) < CURRENT_ALL_VAL){
 					if (formerDifferentValue < CURRENT_ALL_VAL){
-						/*TODO Talk about the following extra check with the teachers*/
-						if ((peaksVal[formerPlaceCirkArray(NUMBER_PEAKS_STORED,currentPeakIndex, -1)] < CURRENT_ALL_VAL || 15 <= currentTimeSinceLastPeak)  &&  CURRENT_ALL_VAL > 50){
-							return 1;
-						}
+						return 1;
 					}
 				}
 			}
