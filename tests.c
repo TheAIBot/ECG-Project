@@ -47,16 +47,16 @@ char testLowPassFilter(int* data)
 	}
 
 	struct CircularArray circArray;
-	if(!initCircularArray(&circArray, 13, 0))
+	if(!initCircArray(&circArray, 13, 0))
 	{
 		return 0;
 	}
 
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
 	{
-		insertData(&circArray, data[i]);
+		insertCircArrayData(&circArray, data[i]);
 
-		int dataLowFiltered = lowPassFilter(data[i], getDataValue(&circArray, -6), getDataValue(&circArray, -12));
+		int dataLowFiltered = lowPassFilter(data[i], getCircArrayValue(&circArray, -6), getCircArrayValue(&circArray, -12));
 		if(!isFilterCorrect(dataLowFiltered, file, "low"))
 		{
 			stopInputData(file);
@@ -80,16 +80,16 @@ char testHighPassFilter(int* data)
 	}
 
 	struct CircularArray circArray;
-	if(!initCircularArray(&circArray, 33, 0))
+	if(!initCircArray(&circArray, 33, 0))
 	{
 		return 0;
 	}
 
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
 	{
-		insertData(&circArray, data[i]);
+		insertCircArrayData(&circArray, data[i]);
 
-		int dataLowFiltered = highPassFilter(data[i], getDataValue(&circArray, -16), getDataValue(&circArray, -32));
+		int dataLowFiltered = highPassFilter(data[i], getCircArrayValue(&circArray, -16), getCircArrayValue(&circArray, -32));
 		if(!isFilterCorrect(dataLowFiltered, file, "high"))
 		{
 			stopInputData(file);
@@ -113,16 +113,16 @@ char testDerivSqrFilter(int* data)
 	}
 
 	struct CircularArray circArray;
-	if(!initCircularArray(&circArray, 5, 0))
+	if(!initCircArray(&circArray, 5, 0))
 	{
 		return 0;
 	}
 
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
 	{
-		insertData(&circArray, data[i]);
+		insertCircArrayData(&circArray, data[i]);
 
-		derivativeSquareFilter(data[i], getDataValue(&circArray, -1), getDataValue(&circArray, -3), getDataValue(&circArray, -4));
+		derivativeSquareFilter(data[i], getCircArrayValue(&circArray, -1), getCircArrayValue(&circArray, -3), getCircArrayValue(&circArray, -4));
 		if(!isFilterCorrect(getSqrValue(0), file, "derivative square"))
 		{
 			stopInputData(file);
@@ -145,16 +145,16 @@ char testMovingwindowFilter(int* data)
 		return 0;
 	}
 	struct CircularArray circArray;
-	if(!initCircularArray(&circArray, 31, 0))
+	if(!initCircArray(&circArray, 31, 0))
 	{
 		return 0;
 	}
 
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
 	{
-		insertData(&circArray, data[i]);
+		insertCircArrayData(&circArray, data[i]);
 
-		int dataLowFiltered = movingWindowFilter(data[i] - getDataValue(&circArray, -N));
+		int dataLowFiltered = movingWindowFilter(data[i] - getCircArrayValue(&circArray, -N));
 		if(!isFilterCorrect(dataLowFiltered, file, "moving window"))
 		{
 			stopInputData(file);

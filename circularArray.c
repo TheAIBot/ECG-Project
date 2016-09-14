@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "includes/circularArray.h"
 
-char initCircularArray(struct CircularArray* circArray, int size, int startIndex)
+char initCircArray(struct CircularArray* circArray, int size, int startIndex)
 {
 	circArray->size = size;
 	circArray->startIndex = startIndex;
@@ -16,7 +16,7 @@ char initCircularArray(struct CircularArray* circArray, int size, int startIndex
 	return 1;
 }
 
-int getDataValue(struct CircularArray* circArray, int offset)
+int getCircArrayValue(struct CircularArray* circArray, int offset)
 {
 	return getArrayDataValue(circArray->data, circArray->startIndex, circArray->size, offset);
 }
@@ -31,13 +31,13 @@ int getArrayDataValue(int data[], int startIndex, int arraySize, int offset)
 	return data[correctIndex];
 }
 
-void insertData(struct CircularArray* circArray, int newData)
+void insertCircArrayData(struct CircularArray* circArray, int newData)
 {
-	moveArrayStartIndex(circArray);
+	moveCircArrayStartIndex(circArray);
 	circArray->data[circArray->startIndex] = newData;
 }
 
-void moveArrayStartIndex(struct CircularArray* circArray)
+void moveCircArrayStartIndex(struct CircularArray* circArray)
 {
 	circArray->startIndex++;
 	if(circArray->startIndex == circArray->size)

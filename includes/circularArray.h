@@ -15,10 +15,9 @@ struct CircularArray
 	int* data;
 };
 
-char initCircularArray(struct CircularArray* circArray, int size, int startIndex);
-int getDataValue(struct CircularArray* circArray, int offset);
+char initCircArray(struct CircularArray* circArray, int size, int startIndex);
+int getCircArrayValue(struct CircularArray* circArray, int offset);
 int getArrayDataValue(int data[], int startIndex, int arraySize, int offset);
-void insertData(struct CircularArray* circArray, int newData);
-void moveArrayStartIndex(struct CircularArray* circArray);
+void insertCircArrayData(struct CircularArray* circArray, int newData);
 
 #endif /* CIRCULARARRAY_H_ */
