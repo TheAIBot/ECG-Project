@@ -43,6 +43,22 @@ int RR_Miss = 249;
 
 
 
+int getNewestTrueRRPeakTime()
+{
+	int timeSum = 0;
+	for(int i = 8; i < indexTrueRPeaks; i++)
+	{
+		timeSum += trueRRPeakRR[i];
+	}
+	//printf("%d\n", timeSum);
+	return timeSum;
+}
+
+int getNewestTrueRRPeakValue()
+{
+	return trueRRPeakVal[indexTrueRPeaks - 1];
+}
+
 /*Variables used for the searchback*/
 
 int tempPeaksForSearchbackRR[8]; //TODO Delete. Only temp.
@@ -109,7 +125,7 @@ int checkSearchBack(int indexPeak){
 }
 
 int searchBack(){
-	printf("Beginning searchback protocols");
+	printf("Beginning searchback protocols\n");
 	int i = tempIndexPeaksForSearchback - 2;
 	int hasFoundProperNewPeak = 0;
 	for(; i >= 0; i--){
