@@ -1,6 +1,10 @@
 #include "includes/derivativeSquareFilter.h"
 
+<<<<<<< HEAD
 #define RAW_DATA_SIZE_DERIVATIVE 31
+=======
+#define RAW_DATA_SIZE_DERIVATIVE 30
+>>>>>>> ec6cd34dafef178b205ce93bee389fe46dac2d61
 
 short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
 short arrayStartIndex4 = 0;

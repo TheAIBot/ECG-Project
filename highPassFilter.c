@@ -1,6 +1,10 @@
 #include "includes/highPassFilter.h"
 
+<<<<<<< HEAD
 #define RAW_DATA_SIZE_HIGH 5
+=======
+#define RAW_DATA_SIZE_HIGH 4
+>>>>>>> ec6cd34dafef178b205ce93bee389fe46dac2d61
 
 short rawHigh[RAW_DATA_SIZE_HIGH];
 short arrayStartIndex3 = 0;
