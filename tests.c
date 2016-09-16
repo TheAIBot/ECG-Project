@@ -204,7 +204,7 @@ char testPeakSeacher(int* data){
 
 char testRPeakSeacher(int* data)
 {
-	FILE* file = startInputData("verification_files/Rpeak.txt");
+	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
 	if(file == NULL)
 	{
 		return 0;
