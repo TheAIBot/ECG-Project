@@ -113,7 +113,12 @@ static int benchmarkPeakSearcher(int* data)
 	int i = 0;
 	for(; i < ECG_10800K_LENGTH; i++)
 	{
+		//searchPeak(data[i] * data[i]);
 		searchPeak(data[i] * data[i]);
+			if (hasNewPeak() &&
+				   isRPeak(getPeakValue(0), getPeakTime(0)))
+			{
+			}
 	}
 	return BENCHMARK_TIME(startTime);
 }
@@ -133,7 +138,7 @@ void runBenchmarks()
 		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 20, data, "derivative square");
 		benchmarkXTimes(&benchmarkMovingWindowFilter, 20, data, "moving window");
 		benchmarkXTimes(&benchmarhWholeFilter, 20, data, "whole");
-		//benchmarkXTimes(&benchmarkPeakSearcher, 20, data, "peak searcher");
+		benchmarkXTimes(&benchmarkPeakSearcher, 20, data, "peak searcher");
 		//benchmarkXTimes(&benchmarkPeakFinder, 20, data, "r peak finder");
 		return;
 	}

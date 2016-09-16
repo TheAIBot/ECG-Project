@@ -41,20 +41,22 @@ int RR_Low = 138;  /*TODO, check if there is a possibility of the values becomin
 int RR_High = 173;
 int RR_Miss = 249;
 
-int getNewestTrueRRPeakTime()
+int* getNewestTrueRRPeakTimes(int timesCount)
 {
+	int* timesSums = malloc(timesCount * sizeof(int));
 	int timeSum = 0;
-	for(int i = 8; i < indexTrueRPeaks; i++)
+	for(int i = 8; i < timesCount + 8; i++)
 	{
 		timeSum += trueRRPeakRR[i];
+		timesSums[i - 8] = timeSum;
 	}
 	//printf("%d\n", timeSum);
-	return timeSum;
+	return timesSums;
 }
 
-int getNewestTrueRRPeakValue()
+int* getNewestTrueRRPeakValues()
 {
-	return trueRRPeakVal[indexTrueRPeaks - 1];
+	return &trueRRPeakVal[8];
 }
 
 /*Variables used for the searchback*/

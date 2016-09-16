@@ -219,31 +219,37 @@ char testRPeakSearcher(int* data)
 		short filteredData = data[i];
 		searchPeak(filteredData);
 		if (hasNewPeak() &&
-			isRPeak(getPeakValue(0), getPeakTime(0)))
+			   isRPeak(getPeakValue(0), getPeakTime(0)))
 		{
-			int peakValue = getNewestTrueRRPeakValue();
-			int peakTime = getNewestTrueRRPeakTime();
-			char isCorrect = 0;
-			for(int y = 0; y < TEST_DATA_R_PEAK_LENGTH; y++)
+		}
+	}
+	int* peakValues = getNewestTrueRRPeakValues();
+	int* peakTimes = getNewestTrueRRPeakTimes(TEST_DATA_R_PEAK_LENGTH);
+	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)
+	{
+		int peakValue = peakValues[i];
+		int peakTime = peakTimes[i];
+		char isCorrect = 0;
+
+		for(int y = 0; y < TEST_DATA_R_PEAK_LENGTH; y++)
+		{
+			if(timeMeasurementTaken[y] == 0 &&
+			   times[y] + ALLOWED_TIME_DEVIANTION >= peakTime &&
+			   times[y] - ALLOWED_TIME_DEVIANTION <= peakTime &&
+			   measurements[y] + ALLOWED_MEASUREMENT_DEVIATION >= peakValue &&
+			   measurements[y] - ALLOWED_MEASUREMENT_DEVIATION <= peakValue)
 			{
-				if(timeMeasurementTaken[y] == 0 &&
-				   times[y] + ALLOWED_TIME_DEVIANTION >= peakTime &&
-				   times[y] - ALLOWED_TIME_DEVIANTION <= peakTime &&
-				   measurements[y] + ALLOWED_MEASUREMENT_DEVIATION >= peakValue &&
-				   measurements[y] - ALLOWED_MEASUREMENT_DEVIATION <= peakValue)
-				{
-					timeMeasurementTaken[y] = 1;
-					isCorrect = 1;
-					break;
-				}
+				timeMeasurementTaken[y] = 1;
+				isCorrect = 1;
+				break;
 			}
-			if(!isCorrect)
-			{
-				printf("Failed to find matching peak for time: %d, measurement: %d\n", peakTime, peakValue);
-				free(timesAndMeasurements);
-				free(timeMeasurementTaken);
-				return 0;
-			}
+		}
+		if(!isCorrect)
+		{
+			printf("Failed to find matching peak for time: %d, measurement: %d\n", peakTime, peakValue);
+			free(timesAndMeasurements);
+			free(timeMeasurementTaken);
+			return 0;
 		}
 	}
 	char foundAll = 1;
