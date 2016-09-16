@@ -202,7 +202,7 @@ char testPeakSeacher(int* data){
 	/*TODO make.*/
 }
 
-char testRPeakSeacher(int* data)
+char testRPeakSearcher(int* data)
 {
 	FILE* file = startInputData("verification_files/Rpeak.txt");
 	if(file == NULL)
@@ -299,7 +299,7 @@ void testAll()
 
 	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
 	if(mwi_after == NULL ||
-	   !testRPeakSeacher(mwi_after))
+	   !testRPeakSearcher(mwi_after))
 	{
 		free(mwi_after);
 		return;

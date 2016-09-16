@@ -41,8 +41,6 @@ int RR_Low = 138;  /*TODO, check if there is a possibility of the values becomin
 int RR_High = 173;
 int RR_Miss = 249;
 
-
-
 int getNewestTrueRRPeakTime()
 {
 	int timeSum = 0;
@@ -77,7 +75,6 @@ void recordNewProperRPeak(int peakValue, int peakTime_0, int rPeakTime_7){
 	trueRRPeakVal[indexTrueRPeaks] = peakValue;
 	trueRRPeakRR[indexTrueRPeaks] = peakTime_0;
 	indexTrueRPeaks++; /*TODO Temp. To make circular*/
-	tempIndexPeaksForSearchback = 0;
 	/*TODO Depending on the occurrence of the below check, it might pay to not calculate it here at all.*/
 }
 
@@ -124,41 +121,67 @@ int checkSearchBack(int indexPeak){
 	}
 }
 
-int searchBack(){
-	printf("Beginning searchback protocols\n");
-	int i = tempIndexPeaksForSearchback - 2;
-	int hasFoundProperNewPeak = 0;
-	for(; i >= 0; i--){
-		if (checkSearchBack(i)){
-			hasFoundProperNewPeak = 1;
-			break;
-		}
-	}
-	/*If it has found a peak that can be taken as an R peak looking back through the array,
-	 * It will check if some of the later peaks then are R peaks, if it is one.*/
-	if(hasFoundProperNewPeak){
-		/*Hack/Hijack of variable for efficiency*/
-		hasFoundProperNewPeak = tempPeaksForSearchbackRR[i];
-		i++;
-		for(; i <= tempIndexPeaksForSearchback - 1; i++){
-			tempPeaksForSearchbackRR[i] -= hasFoundProperNewPeak;
+int searchBackBackwardsGoer(int indexMiss, int indexMostBack){
+	int i = indexMiss - 2;
+		int hasFoundProperNewPeak = 0;
+		for(; i >= indexMostBack; i--){
 			if (checkSearchBack(i)){
-				hasFoundProperNewPeak += tempPeaksForSearchbackRR[i];
+				return i;
 			}
 		}
-		tempIndexPeaksForSearchback = 0;
-		return 1;
-	} else if (checkSearchBack(tempIndexPeaksForSearchback)){
-		/*If it can't find any peaks that can be taken as an R,
-		 * before the peak that has an RR value greater than RR-miss,
-		 * it looks at that as an potential peak.*/
-		tempIndexPeaksForSearchback = 0;
-		return 1;
-	} else{
-		/*No proper search back peak found*/
-		tempIndexPeaksForSearchback = 0;
+	return -1;
+}
+
+int searchBack(){
+	printf("Beginning searchback protocols\n");
+	int indexLatestMiss = tempIndexPeaksForSearchback;
+	int indexMostBackwards = searchBackBackwardsGoer(indexLatestMiss,0);
+	if(indexMostBackwards != -1){
+		int newRRRemoval = tempPeaksForSearchbackRR[indexMostBackwards];
+		for(int i = indexMostBackwards+1; i < tempIndexPeaksForSearchback; i++){
+			int peakTime_0 = tempPeaksForSearchbackRR[i] - newRRRemoval;
+			int peakValue = tempPeaksForSearchbackVal[i];
+			/*TODO Make it so that the last Threshold 1 registerer is not overwritten, see the peak that triggered it all*/
+			if(passThreshold1(peakValue,peakTime_0)){
+				if ((RR_Low < peakTime_0 && peakTime_0 < RR_High)){
+					recordNewProperRPeak(peakValue, peakTime_0, getPeakTimeAnyRPeak(-7));
+					newRRRemoval -= peakTime_0;
+					indexMostBackwards = i;
+				} else if(peakTime_0 > RR_Miss){
+					indexMostBackwards = searchBackBackwardsGoer(indexLatestMiss,0);
+					i = indexMostBackwards;
+					/*TODO move backwards and end it all...*/
+				}
+			}
+		}
+	}	else{
+		/*TODO not this*/
 		return 0;
 	}
+	return 1;
+}
+
+int passThreshold1(int peakValue, int peakTime_0){
+	/*TODO Discuss with the teacher.
+		 * Does RR_Average1 only have to updated if (RR_Low < peakTime_0 && peakTime_0 < RR_High)==True below?.
+		  *  For this is not true if it is false, and the searchback is runned.
+		 * Don't Remove - Jesper
+		 * */
+		/*Written in that way, so it looks more like the flow chart.*/
+	if (!(peakValue > Threshold1)) { /*If it isn't an R-Peak..*/
+			Npkf = peakValue/AVERAGE_NUMBER_MEMBERS + 7*Npkf/8;
+			Threshold1 = Npkf + (Spkf-Npkf)/4;
+			Threshold2 = Threshold1/2;
+			/*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
+			addRRTimeFromFormer();
+			return (0);
+		} else{
+			/*Now it is classified as an R-peak, but not neccesarily a proper one. It is recorded as such.*/
+			threshold1PassVal[indexThreshold1PassPeak] = peakValue;
+			threshold1PassRR[indexThreshold1PassPeak] = peakTime_0;
+			indexThreshold1PassPeak++; /*TODO make circular. Only temporary for testing*/
+			return 1;
+		}
 }
 
 int isRPeak(int peakValue, int peakTime_0){ /*peakTime=RR*/
@@ -181,36 +204,23 @@ int isRPeak(int peakValue, int peakTime_0){ /*peakTime=RR*/
 	RR_Average1_Sum = RR_Average1_Sum + peakTime_0 - peakTime_7;
 	RR_Average1 = RR_Average1_Sum/8;
 
-	/*TODO Discuss with the teacher.
-	 * Does RR_Average1 only have to updated if (RR_Low < peakTime_0 && peakTime_0 < RR_High)==True below?.
-	  *  For this is not true if it is false, and the searchback is runned.
-	 * Don't Remove - Jesper
-	 * */
-	/*Written in that way, so it looks more like the flow chart.*/
-	if (!(peakValue > Threshold1)) { /*If it isn't an R-Peak..*/
-		Npkf = peakValue/AVERAGE_NUMBER_MEMBERS + 7*Npkf/8;
-		Threshold1 = Npkf + (Spkf-Npkf)/4;
-		Threshold2 = Threshold1/2;
-		/*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
-		addRRTimeFromFormer();
-		return (0);
-	}
-	/*Now it is classified as an R-peak, but not neccesarily a proper one. It is recorded as such.
-	  */
-	threshold1PassVal[indexThreshold1PassPeak] = peakValue;
-	threshold1PassRR[indexThreshold1PassPeak] = peakTime_0;
-	indexThreshold1PassPeak++; /*TODO make circular. Only temporary for testing*/
+	return rPeakChecks(peakValue,peakTime_0,rPeakTime_7);
+}
 
-	/*If it is in the RR-interval*/
-	if (RR_Low < peakTime_0 && peakTime_0 < RR_High){
-		recordNewProperRPeak(peakValue, peakTime_0, rPeakTime_7);
-		return (1);
-	} else if(peakTime_0 > RR_Miss){
-		return (searchBack());
-	} else{
-		addRRTimeFromFormer(); /*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
-		return (0);
-	}
+int rPeakChecks(int peakValue, int peakTime_0, int rPeakTime_7){
+	if (passThreshold1(peakValue,peakTime_0)){
+		/*If it is in the RR-interval*/
+		if (RR_Low < peakTime_0 && peakTime_0 < RR_High){
+			recordNewProperRPeak(peakValue, peakTime_0, rPeakTime_7);
+			tempIndexPeaksForSearchback = 0;
+			return (1);
+		} else if(peakTime_0 > RR_Miss){
+			return (searchBack());
+		} else{
+			addRRTimeFromFormer(); /*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
+			return (0);
+		}
+	} else return 0;
 }
 
 int forwardCircularArray(int size, int currentIndex, int offset){
