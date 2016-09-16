@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../avgCircularArray.c \
 ../benchmarks.c \
 ../circularArray.c \
 ../derivativeSquareFilter.c \
@@ -19,6 +20,7 @@ C_SRCS += \
 ../tests.c 
 
 OBJS += \
+./avgCircularArray.o \
 ./benchmarks.o \
 ./circularArray.o \
 ./derivativeSquareFilter.o \
@@ -34,6 +36,7 @@ OBJS += \
 ./tests.o 
 
 C_DEPS += \
+./avgCircularArray.d \
 ./benchmarks.d \
 ./circularArray.d \
 ./derivativeSquareFilter.d \

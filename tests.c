@@ -323,9 +323,6 @@ void testAll()
 	}
 	free(mwi_after);
 
-
-
-
 	printf("All tests finished successfully\n");
 }
 
