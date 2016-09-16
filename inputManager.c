@@ -28,6 +28,18 @@ void getPeakData(FILE* file, int* time, int* measurement)
 	fscanf(file, "%d %d", time, measurement);
 }
 
+int* loadPeakData(FILE* file, int fileSizeInLines)
+{
+	//first array is time and second is measurements
+	int* timeAndMeasurements = malloc(2 * fileSizeInLines * sizeof(int));
+	for(int i = 0; i < fileSizeInLines; i++)
+	{
+		getPeakData(file, &timeAndMeasurements[i], &timeAndMeasurements[i + fileSizeInLines]);
+	}
+	return timeAndMeasurements;
+
+}
+
 void stopInputData(FILE* file)
 {
 	fclose(file);

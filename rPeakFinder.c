@@ -20,7 +20,7 @@ int allPeaksRR[SIZE_R_ARRAYS] = {[0 ... 7]=100};; /*TODO delete it. Only for tes
    */
 int allPeaksVal[SIZE_R_ARRAYS] = {[0 ... 7]=1900};; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
 /*Indexes for the storing*/
-int indexTrueRPeaks = 7;
+int indexTrueRPeaks = 8;
 int indexThreshold1PassPeak = 7;
 int indexAllPeaks = 7; /*TODO delete it. Only for testing purposes*/
 /*Variables for detecting R peaks*/
@@ -41,6 +41,22 @@ int RR_High = 173;
 int RR_Miss = 249;
 
 
+
+int getNewestTrueRRPeakTime()
+{
+	int timeSum = 0;
+	for(int i = 8; i < indexTrueRPeaks; i++)
+	{
+		timeSum += trueRRPeakRR[i];
+	}
+	//printf("%d\n", timeSum);
+	return timeSum;
+}
+
+int getNewestTrueRRPeakValue()
+{
+	return trueRRPeakVal[indexTrueRPeaks - 1];
+}
 
 /*Variables used for the searchback*/
 /*TODO make searchback.*/
@@ -104,7 +120,7 @@ int checkSearchBack(int indexPeak){
 }
 
 int searchBack(){
-	printf("Beginning searchback protocols");
+	printf("Beginning searchback protocols\n");
 	int i = indexAllPeaks - 1;
 	for(; i >= 0; i--){
 		if (checkSearchBack(i))

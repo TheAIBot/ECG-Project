@@ -10,8 +10,12 @@
 #include "includes/movingWindowFilter.h"
 #include "includes/filter.h"
 #include "includes/rPeakFinder.h"
+#include "includes/peakSearcher.h"
 
 #define TEST_DATA_LENGTH 10000 /* 10.000 */
+#define TEST_DATA_R_PEAK_LENGTH 31
+#define ALLOWED_TIME_DEVIANTION 10
+#define ALLOWED_MEASUREMENT_DEVIATION 300
 
 char isFilterCorrect(int filterOutput, FILE* file, char* filterName)
 {
@@ -200,33 +204,50 @@ char testPeakSeacher(int* data){
 
 char testRPeakSeacher(int* data)
 {
-	/*
-	FILE* file = startInputData("verification_files/Rpeak.TXT");
+	FILE* file = startInputData("verification_files/Rpeak.txt");
 	if(file == NULL)
 	{
 		return 0;
 	}
-	int timePeakFoundTeachers = -1;
-	int valPeakFoundTeachers = -1;
-	int timesTeachers[31];
-	int valTeachers[31];
-	*/
-	/*There are 31 datapoints in the file*/
-	/*
-	for(int i = 0; i < 30; i++){
-			getPeakData(file, &timesTeachers[i], &valTeachers[i]);
-	}
-	*/
+	int* timesAndMeasurements = loadPeakData(file, TEST_DATA_R_PEAK_LENGTH);
+	int* times = timesAndMeasurements;
+	int* measurements = &timesAndMeasurements[TEST_DATA_R_PEAK_LENGTH];
+	char* timeMeasurementTaken = calloc(TEST_DATA_R_PEAK_LENGTH, sizeof(char));
 
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
 	{
 		short filteredData = data[i];
 		searchPeak(filteredData);
-		if (hasNewPeak()){
-			printf("peak is at index %d\n",i);
-			isRPeak(getPeakValue(0), getPeakTime(0));
+		if (hasNewPeak() &&
+			isRPeak(getPeakValue(0), getPeakTime(0)))
+		{
+			int peakValue = getNewestTrueRRPeakValue();
+			int peakTime = getNewestTrueRRPeakTime();
+			char isCorrect = 0;
+			for(int y = 0; y < TEST_DATA_R_PEAK_LENGTH; y++)
+			{
+				if(timeMeasurementTaken[y] == 0 &&
+				   times[y] + ALLOWED_TIME_DEVIANTION >= peakTime &&
+				   times[y] - ALLOWED_TIME_DEVIANTION <= peakTime &&
+				   measurements[y] + ALLOWED_MEASUREMENT_DEVIATION >= peakValue &&
+				   measurements[y] - ALLOWED_MEASUREMENT_DEVIATION <= peakValue)
+				{
+					timeMeasurementTaken[y] = 1;
+					isCorrect = 1;
+					break;
+				}
+			}
+			if(!isCorrect)
+			{
+				printf("Failed to find matching peak for time: %d, measurement: %d\n", peakTime, peakValue);
+				free(timesAndMeasurements);
+				free(timeMeasurementTaken);
+				return 0;
+			}
 		}
 	}
+	free(timesAndMeasurements);
+	free(timeMeasurementTaken);
 	return 1;
 }
 
@@ -275,7 +296,7 @@ void testAll()
 	}
 	free(ecgData);
 
-	/*
+
 	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
 	if(mwi_after == NULL ||
 	   !testRPeakSeacher(mwi_after))
@@ -284,7 +305,7 @@ void testAll()
 		return;
 	}
 	free(mwi_after);
-	*/
+
 
 
 
