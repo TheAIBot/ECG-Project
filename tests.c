@@ -202,9 +202,9 @@ char testPeakSeacher(int* data){
 	/*TODO make.*/
 }
 
-char testRPeakSeacher(int* data)
+char testRPeakSearcher(int* data)
 {
-	FILE* file = startInputData("verification_files/Rpeak.txt");
+	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
 	if(file == NULL)
 	{
 		return 0;
@@ -245,6 +245,24 @@ char testRPeakSeacher(int* data)
 				return 0;
 			}
 		}
+	}
+	char foundAll = 1;
+	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)
+	{
+		if(timeMeasurementTaken[i] == 0)
+		{
+			foundAll = 0;
+			printf("Couldn't find a match for time: %d, value: %d\n", times[i], measurements[i]);
+			break;
+		}
+	}
+	if(!foundAll)
+	{
+		printf("Failed to find all peaks\n");
+	}
+	else
+	{
+		printf("Passed r peak searcher test\n");
 	}
 	free(timesAndMeasurements);
 	free(timeMeasurementTaken);
@@ -299,15 +317,14 @@ void testAll()
 
 	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
 	if(mwi_after == NULL ||
-	   !testRPeakSeacher(mwi_after))
+	   !testRPeakSearcher(mwi_after))
 	{
 		free(mwi_after);
 		return;
 	}
 	free(mwi_after);
 
-
-	printf("All tests finished successfully");
+	printf("All tests finished successfully\n");
 }
 
 
