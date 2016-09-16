@@ -1,43 +1,27 @@
 #include "includes/highPassFilter.h"
 
-<<<<<<< HEAD
+
 #define RAW_DATA_SIZE_HIGH 5
-=======
-#define RAW_DATA_SIZE_HIGH 4
->>>>>>> ec6cd34dafef178b205ce93bee389fe46dac2d61
+#define Y_1_INDEX 0
 
 short rawHigh[RAW_DATA_SIZE_HIGH];
-short arrayStartIndex3 = 0;
+static int x_17 = 0;
 
-short getHighPassValue(int offset)
+short highPassFilter(int x, int x_16, int x_32)
 {
-	short correctIndex = arrayStartIndex3 + offset;
-	if(correctIndex < 0)
-	{
-		correctIndex += RAW_DATA_SIZE_HIGH;
-	}
-	return rawHigh[correctIndex];
-}
-
-void moveArrayStartIndex3()
-{
-	arrayStartIndex3++;
-	if(arrayStartIndex3 == RAW_DATA_SIZE_HIGH)
-	{
-		arrayStartIndex3 = 0;
-	}
-}
-
-short highPassFilter(short x, short x_16, short x_17, short x_32)
-{
-	moveArrayStartIndex3();
-
-	short y_1 = getHighPassValue(-1);
-
-	short newY = y_1 - (x / 32) + x_16 - x_17 + (x_32 / 32);
-	rawHigh[arrayStartIndex3] = newY;
+	short newY = GET_HIGH_PASS_VALUE(Y_1_INDEX) - (x / 32) + x_16 - x_17 + (x_32 / 32);
+	x_17 = x_16;
+	memcpy( rawHigh + 1, rawHigh, sizeof(rawHigh));
+	rawHigh[0] = newY;
 	return newY;
 }
+
+void resetHighBuffer()
+{
+	memset(rawHigh, 0, RAW_DATA_SIZE_HIGH * sizeof(short));
+	x_17 = 0;
+}
+
 
 
 
