@@ -246,6 +246,23 @@ char testRPeakSeacher(int* data)
 			}
 		}
 	}
+	char foundAll = 1;
+	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)
+	{
+		if(timeMeasurementTaken[i] == 0)
+		{
+			foundAll = 0;
+			break;
+		}
+	}
+	if(!foundAll)
+	{
+		printf("Failed to find all peaks\n");
+	}
+	else
+	{
+		printf("Passed r peak searcher test\n");
+	}
 	free(timesAndMeasurements);
 	free(timeMeasurementTaken);
 	return 1;
@@ -309,7 +326,7 @@ void testAll()
 
 
 
-	printf("All tests finished successfully");
+	printf("All tests finished successfully\n");
 }
 
 
