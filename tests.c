@@ -275,7 +275,7 @@ void testAll()
 	}
 	free(ecgData);
 
-	/*
+
 	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
 	if(mwi_after == NULL ||
 	   !testRPeakSeacher(mwi_after))
@@ -284,7 +284,6 @@ void testAll()
 		return;
 	}
 	free(mwi_after);
-	*/
 
 
 

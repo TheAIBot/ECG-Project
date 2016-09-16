@@ -11,18 +11,19 @@ int trueRRPeakRR[SIZE_R_ARRAYS] = {[0 ... 7]=150};
 int trueRRPeakVal[SIZE_R_ARRAYS]= {[0 ... 7]=3500};
 int threshold1PassRR[SIZE_R_ARRAYS] = {[0 ... 7]=150};
 int threshold1PassVal[SIZE_R_ARRAYS] = {[0 ... 7]=3500};
-/* Suppose half the peaks found are noicepeaks with an average RR of 50, the other halfs are R-peaks,
+/* Suppose half the peaks found are noicepeaks with an average RR of 50, the other half are R-peaks,
  *,then the average of that is (50 + 150) / 2 = 100
    */
-int allPeaksRR[SIZE_R_ARRAYS] = {[0 ... 7]=100};; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
-/* Suppose half the peaks found are noicepeaks with an average value of 300, the other halfs are R-peaks,
+int allPeaksRR[SIZE_R_ARRAYS] = {[0 ... 7]=100}; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
+/* Suppose half the peaks found are noicepeaks with an average value of 300, the other half are R-peaks,
  *,then the average of that is (300 + 3500) / 2 = 1900
    */
-int allPeaksVal[SIZE_R_ARRAYS] = {[0 ... 7]=1900};; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
+int allPeaksVal[SIZE_R_ARRAYS] = {[0 ... 7]=1900}; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
+
 /*Indexes for the storing*/
-int indexTrueRPeaks = 7;
-int indexThreshold1PassPeak = 7;
-int indexAllPeaks = 7; /*TODO delete it. Only for testing purposes*/
+int indexTrueRPeaks = 8;
+int indexThreshold1PassPeak = 8;
+int indexAllPeaks = 8; /*TODO delete it. Only for testing purposes*/
 /*Variables for detecting R peaks*/
 int Spkf = 3500;
 int Npkf = 300;
@@ -43,7 +44,10 @@ int RR_Miss = 249;
 
 
 /*Variables used for the searchback*/
-/*TODO make searchback.*/
+
+int tempPeaksForSearchbackRR[8]; //TODO Delete. Only temp.
+int tempPeaksForSearchbackVal[8];//TODO Delete. Only temp.
+int tempIndexPeaksForSearchback = 0;
 
 void recordNewProperRPeak(int peakValue, int peakTime_0, int rPeakTime_7){
 	Spkf = peakValue/8 + 7*Spkf/8;
@@ -57,6 +61,7 @@ void recordNewProperRPeak(int peakValue, int peakTime_0, int rPeakTime_7){
 	trueRRPeakVal[indexTrueRPeaks] = peakValue;
 	trueRRPeakRR[indexTrueRPeaks] = peakTime_0;
 	indexTrueRPeaks++; /*TODO Temp. To make circular*/
+	tempIndexPeaksForSearchback = 0;
 	/*TODO Depending on the occurrence of the below check, it might pay to not calculate it here at all.*/
 }
 
@@ -75,13 +80,13 @@ int getPeakTimeAnyPeak(int offsetCurrent){
 }
 
 int checkSearchBack(int indexPeak){
-	if (allPeaksVal[indexPeak] > Threshold2){
+	if (tempPeaksForSearchbackVal[indexPeak] > Threshold2){
 		/*When it gets classified as an R-peak, what must be done?
 		 *  See removing from the average.
 		 *  What if it is an already seen R-peak?
 		 *  TODO
 		   */
-		Spkf = allPeaksVal[indexPeak]/4 + 3*Spkf/4;
+		Spkf = tempPeaksForSearchbackVal[indexPeak]/4 + 3*Spkf/4;
 		Threshold1 = Npkf + (Spkf-Npkf)/4;
 		Threshold2 = Threshold1/2;
 		RR_Low = 23*RR_Average1/25; /*23/25= 0.92*/
@@ -91,10 +96,10 @@ int checkSearchBack(int indexPeak){
 		/*Recording it as an proper R-peak. Will always be later than the current RPeaks*/
 		/*Also updating RR_Average_2, despite the flowchart, so it can be done one by one as they come,
 		 * instead of running through the array	 * */
-		RR_Average2_Sum = RR_Average2_Sum + allPeaksRR[indexPeak] - getPeakTimeAnyRPeak(-7);
+		RR_Average2_Sum = RR_Average2_Sum + tempPeaksForSearchbackRR[indexPeak] - getPeakTimeAnyRPeak(-7);
 		RR_Average2 = RR_Average2_Sum/AVERAGE_NUMBER_MEMBERS;
-		trueRRPeakVal[indexTrueRPeaks] = allPeaksVal[indexPeak];
-		trueRRPeakRR[indexTrueRPeaks] = allPeaksRR[indexPeak];
+		trueRRPeakVal[indexTrueRPeaks] = tempPeaksForSearchbackVal[indexPeak];
+		trueRRPeakRR[indexTrueRPeaks] = tempPeaksForSearchbackRR[indexPeak];
 		indexTrueRPeaks++; /*TODO Temp. To make circular*/
 		/*TODO Ask. Should the later RR values be updated so that this is the latest RR peak?*/
 		return 1;
@@ -105,18 +110,39 @@ int checkSearchBack(int indexPeak){
 
 int searchBack(){
 	printf("Beginning searchback protocols");
-	int i = indexAllPeaks - 1;
+	int i = tempIndexPeaksForSearchback - 2;
+	int hasFoundProperNewPeak = 0;
 	for(; i >= 0; i--){
-		if (checkSearchBack(i))
-			return (1);
+		if (checkSearchBack(i)){
+			hasFoundProperNewPeak = 1;
+			break;
+		}
 	}
-	i = SIZE_R_ARRAYS - 1;
-	for(; i != indexAllPeaks; i--){
-		if (checkSearchBack(i))
-			return (1);
+	/*If it has found a peak that can be taken as an R peak looking back through the array,
+	 * It will check if some of the later peaks then are R peaks, if it is one.*/
+	if(hasFoundProperNewPeak){
+		/*Hack/Hijack of variable for efficiency*/
+		hasFoundProperNewPeak = tempPeaksForSearchbackRR[i];
+		i++;
+		for(; i <= tempIndexPeaksForSearchback - 1; i++){
+			tempPeaksForSearchbackRR[i] -= hasFoundProperNewPeak;
+			if (checkSearchBack(i)){
+				hasFoundProperNewPeak += tempPeaksForSearchbackRR[i];
+			}
+		}
+		tempIndexPeaksForSearchback = 0;
+		return 1;
+	} else if (checkSearchBack(tempIndexPeaksForSearchback)){
+		/*If it can't find any peaks that can be taken as an R,
+		 * before the peak that has an RR value greater than RR-miss,
+		 * it looks at that as an potential peak.*/
+		tempIndexPeaksForSearchback = 0;
+		return 1;
+	} else{
+		/*No proper search back peak found*/
+		tempIndexPeaksForSearchback = 0;
+		return 0;
 	}
-	/*No proper search back peak found*/
-	return (0);
 }
 
 int isRPeak(int peakValue, int peakTime_0){ /*peakTime=RR*/
@@ -126,6 +152,11 @@ int isRPeak(int peakValue, int peakTime_0){ /*peakTime=RR*/
 	indexAllPeaks++; /*TODO Change. Is a temp solution for testing.*/
 	int rPeakTime_7 = getPeakTimeAnyRPeak(-7);
 	int peakTime_7 = getPeakTimeAnyPeak(-7);
+	//TODO remove code below after finishing searchback.
+	tempPeaksForSearchbackVal[tempIndexPeaksForSearchback] = peakValue;
+	tempPeaksForSearchbackRR[tempIndexPeaksForSearchback] = peakTime_0;
+	tempIndexPeaksForSearchback++;
+
 	printf("RR value is %d, RR_LOW=%d and RR_HIGH=%d \n",peakTime_0, RR_Low,RR_High);
 
 	/*At any time, RR_Average_1 is calculated,
