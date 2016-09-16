@@ -252,6 +252,7 @@ char testRPeakSeacher(int* data)
 		if(timeMeasurementTaken[i] == 0)
 		{
 			foundAll = 0;
+			printf("Couldn't find a match for time: %d, value: %d\n", times[i], measurements[i]);
 			break;
 		}
 	}
