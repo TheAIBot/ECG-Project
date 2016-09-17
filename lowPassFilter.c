@@ -41,7 +41,6 @@ int lowPassFilter(int x, int x_6, int x_12)
 
 	y_2 = y_1;
 	y_1 = newY;
-
 	return newY;
 }
 

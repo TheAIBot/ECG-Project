@@ -1,5 +1,6 @@
 #include "includes/movingWindowFilter.h"
 
+#define N 30
 #define RAW_DATA_SIZE_MOVING_WINDOW 13
 
 static int totalValue = 0;

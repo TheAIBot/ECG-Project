@@ -1,5 +1,7 @@
 #include "includes/highPassFilter.h"
 
+
+#define RAW_DATA_SIZE_HIGH 5
 #define Y_1_INDEX 0
 
 short rawHigh[RAW_DATA_SIZE_HIGH];

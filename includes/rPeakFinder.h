@@ -13,7 +13,7 @@ void recordNewProperRRPeak(int peakValue, int peakTime_0, int peakTime_7);
 void searchBack();
 int backwardCircularArray(int size, int currentIndex, int offset);
 int forwardCircularArray(int size, int currentIndex, int offset);
-int getNewestTrueRRPeakTime();
-int getNewestTrueRRPeakValue();
+int* getNewestTrueRRPeakTimes(int timesCount);
+int* getNewestTrueRRPeakValues();
 
 #endif /* INCLUDES_RPEAKFINDER_H_ */
