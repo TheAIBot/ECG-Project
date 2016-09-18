@@ -6,7 +6,6 @@
 
 static short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
 static short arrayStartIndex = 0;
-static short lastValue = 0;
 
 short* getSquareArray()
 {
@@ -38,7 +37,7 @@ short derivativeSquareFilter(int x, int x_1, int x_3, int x_4)
 
 	short newY = (2 * x + x_1 - x_3 - 2 * x_4) / 8;
 	newY = newY * newY;
-	lastValue = rawSquare[arrayStartIndex];
+	short lastValue = rawSquare[arrayStartIndex];
 	rawSquare[arrayStartIndex] = newY;
 	return newY - lastValue;//getSqrValue(-N);
 }
@@ -46,6 +45,5 @@ short derivativeSquareFilter(int x, int x_1, int x_3, int x_4)
 void resetSqrBuffer()
 {
 	memset(rawSquare, 0, RAW_DATA_SIZE_DERIVATIVE * sizeof(short));
-	lastValue = 0;
 }
 
