@@ -133,11 +133,11 @@ void runBenchmarks()
 	int* data = loadDataArray("benchmark_files/ECG10800K.txt", ECG_10800K_LENGTH);
 	if(data != NULL)
 	{
-		benchmarkXTimes(&benchmarkLowPassFilter, 20, data, "low");
-		benchmarkXTimes(&benchmarkHighPassFilter, 20, data, "high");
-		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 20, data, "derivative square");
-		benchmarkXTimes(&benchmarkMovingWindowFilter, 20, data, "moving window");
-		benchmarkXTimes(&benchmarhWholeFilter, 20, data, "whole");
+		benchmarkXTimes(&benchmarkLowPassFilter, 40, data, "low");
+		benchmarkXTimes(&benchmarkHighPassFilter, 40, data, "high");
+		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 40, data, "derivative square");
+		benchmarkXTimes(&benchmarkMovingWindowFilter, 40, data, "moving window");
+		benchmarkXTimes(&benchmarhWholeFilter, 40, data, "whole");
 		//benchmarkXTimes(&benchmarkPeakSearcher, 20, data, "peak searcher");
 		//benchmarkXTimes(&benchmarkPeakFinder, 20, data, "r peak finder");
 		return;
