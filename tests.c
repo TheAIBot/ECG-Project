@@ -134,7 +134,7 @@ char testDerivSqrFilter(int* data)
 	}
 	stopInputData(file);
 	freeCircArray(&circArray);
-	printf("Passed derivative square filter test\n");
+	printf("Passed derivative square moving window filter test\n");
 	return 1;
 }
 

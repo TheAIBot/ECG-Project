@@ -5,9 +5,9 @@
 #define RAW_DATA_SIZE_DERIVATIVE 30
 #define N 30
 
-static short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
+static unsigned short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
 static short arrayStartIndex = 0;
-static int totalValue = 0;
+static unsigned int totalValue = 0;
 
 static void moveArrayStartIndex()
 {
@@ -18,7 +18,7 @@ static void moveArrayStartIndex()
 	}
 }
 
-short derivativeSquareMovingWindowFilter(int x, int x_1, int x_3, int x_4)
+unsigned short derivativeSquareMovingWindowFilter(int x, int x_1, int x_3, int x_4)
 {
 	moveArrayStartIndex();
 
@@ -26,14 +26,13 @@ short derivativeSquareMovingWindowFilter(int x, int x_1, int x_3, int x_4)
 	short newY = (2 * x + x_1 - x_3 - 2 * x_4) / 8;
 
 	//square filter
-	newY = newY * newY;
+	unsigned short squared = newY * newY;
 
-	short lastValue = rawSquare[arrayStartIndex];
-	rawSquare[arrayStartIndex] = newY;
+	unsigned short lastSquaredValue = rawSquare[arrayStartIndex];
+	rawSquare[arrayStartIndex] = squared;
 
 	//moving window filter
-	newY = newY - lastValue;
-	totalValue += newY;
+	totalValue += squared - lastSquaredValue;
 	return totalValue / N;
 }
 
