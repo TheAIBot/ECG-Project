@@ -9,16 +9,6 @@ static short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
 static short arrayStartIndex = 0;
 static int totalValue = 0;
 
-short getSqrValue(int offset)
-{
-	short correctIndex = arrayStartIndex + offset;
-	if(correctIndex < 0)
-	{
-		correctIndex += RAW_DATA_SIZE_DERIVATIVE;
-	}
-	return rawSquare[correctIndex];
-}
-
 static void moveArrayStartIndex()
 {
 	arrayStartIndex++;
@@ -50,5 +40,6 @@ short derivativeSquareMovingWindowFilter(int x, int x_1, int x_3, int x_4)
 void resetSqrBuffer()
 {
 	memset(rawSquare, 0, RAW_DATA_SIZE_DERIVATIVE * sizeof(short));
+	totalValue = 0;
 }
 

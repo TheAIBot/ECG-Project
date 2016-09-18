@@ -108,7 +108,7 @@ char testHighPassFilter(int* data)
 char testDerivSqrFilter(int* data)
 {
 	resetSqrBuffer();
-	FILE* file = startInputData("verification_files/mwi_div_after.txt");
+	FILE* file = startInputData("verification_files/x_mwi_div_after.txt");
 	if(file == NULL)
 	{
 		return 0;
@@ -124,8 +124,8 @@ char testDerivSqrFilter(int* data)
 	{
 		insertCircArrayData(&circArray, data[i]);
 
-		derivativeSquareMovingWindowFilter(data[i], getCircArrayValue(&circArray, -1), getCircArrayValue(&circArray, -3), getCircArrayValue(&circArray, -4));
-		if(!isFilterCorrect(getSqrValue(0), file, "derivative square moving window"))
+		short mwiFiltered = derivativeSquareMovingWindowFilter(data[i], getCircArrayValue(&circArray, -1), getCircArrayValue(&circArray, -3), getCircArrayValue(&circArray, -4));
+		if(!isFilterCorrect(mwiFiltered, file, "derivative square moving window"))
 		{
 			stopInputData(file);
 			free(circArray.data);
