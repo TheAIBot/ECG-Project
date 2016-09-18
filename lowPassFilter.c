@@ -1,11 +1,12 @@
 #include "includes/lowPassFilter.h"
 
-#define RAW_DATA_SIZE_LOW 33
+#define RAW_DATA_SIZE_LOW 32
 
 static int rawLow[RAW_DATA_SIZE_LOW];
 static short arrayStartIndex = 0;
 static int y_1 = 0;
 static int y_2 = 0;
+int y_32 = 0;
 
 int getLowPassValue(int offset)
 {
@@ -37,6 +38,7 @@ int lowPassFilter(int x, int x_6, int x_12)
 	printf("%d\n", x_12);
 	*/
 	int newY = (2 * y_1) - y_2 + ((x - (2 * x_6) + x_12) / 32);
+	y_32 = rawLow[arrayStartIndex];
 	rawLow[arrayStartIndex] = newY;
 
 	y_2 = y_1;
@@ -49,6 +51,7 @@ void resetLowBuffer()
 	memset(rawLow, 0, RAW_DATA_SIZE_LOW * sizeof(int));
 	y_1 = 0;
 	y_2 = 0;
+	y_32 = 0;
 }
 
 

@@ -38,10 +38,10 @@ short filterData(short rawData)
 	insertRawData(rawData);
 
 	/*low pass filter*/
-	int dataLowFiltered = lowPassFilter(rawData, getRawDataValue(-6), getRawDataValue(-12));
+	int dataLowFiltered = lowPassFilter(rawData, getRawDataValue(-6), GET_LAST_RAW_VALUE);
 
 	/*high pass filter*/
-	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), getLowPassValue(-32));
+	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), GET_LAST_LOW_FILTER_VALUE);
 
 	/*derivative, square and moving window filter*/
 	return derivativeSquareMovingWindowFilter(dataHighFiltered, GET_HIGH_PASS_VALUE(X_1_INDEX), GET_HIGH_PASS_VALUE(X_3_INDEX), GET_HIGH_PASS_VALUE(X_4_INDEX));
