@@ -138,7 +138,7 @@ void runBenchmarks()
 		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 20, data, "derivative square");
 		benchmarkXTimes(&benchmarkMovingWindowFilter, 20, data, "moving window");
 		benchmarkXTimes(&benchmarhWholeFilter, 20, data, "whole");
-		benchmarkXTimes(&benchmarkPeakSearcher, 20, data, "peak searcher");
+		//benchmarkXTimes(&benchmarkPeakSearcher, 20, data, "peak searcher");
 		//benchmarkXTimes(&benchmarkPeakFinder, 20, data, "r peak finder");
 		return;
 	}
