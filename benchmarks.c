@@ -4,10 +4,9 @@
 #include "includes/benchmarks.h"
 #include "includes/benchmarkTimer.h"
 #include "includes/circularArray.h"
+#include "includes/derSqrMwiFilter.h"
 #include "includes/lowPassFilter.h"
 #include "includes/highPassFilter.h"
-#include "includes/derivativeSquareFilter.h"
-#include "includes/movingWindowFilter.h"
 #include "includes/filter.h"
 #include "includes/peakSearcher.h"
 #include "includes/rPeakFinder.h"
@@ -77,19 +76,7 @@ static int benchmarkDerivativeSquareFilter(int* data)
 		y_2 = y_1;
 		y_1 = y_1_1;
 		y_1_1 = data[i];
-		result += derivativeSquareFilter(y_1_1, y_1, y_3, y_4);
-	}
-	return BENCHMARK_TIME(startTime);
-}
-
-static int benchmarkMovingWindowFilter(int* data)
-{
-	long startTime = BENCHMARK_START;
-	result = 0;
-	int i = 0;
-	for(; i < ECG_10800K_LENGTH; i++)
-	{
-		result += movingWindowFilter(data[i]);
+		result += derivativeSquareMovingWindowFilter(y_1_1, y_1, y_3, y_4);
 	}
 	return BENCHMARK_TIME(startTime);
 }
@@ -135,8 +122,7 @@ void runBenchmarks()
 	{
 		benchmarkXTimes(&benchmarkLowPassFilter, 40, data, "low");
 		benchmarkXTimes(&benchmarkHighPassFilter, 40, data, "high");
-		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 40, data, "derivative square");
-		benchmarkXTimes(&benchmarkMovingWindowFilter, 40, data, "moving window");
+		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 40, data, "derivative square moving window");
 		benchmarkXTimes(&benchmarhWholeFilter, 40, data, "whole");
 		//benchmarkXTimes(&benchmarkPeakSearcher, 20, data, "peak searcher");
 		//benchmarkXTimes(&benchmarkPeakFinder, 20, data, "r peak finder");

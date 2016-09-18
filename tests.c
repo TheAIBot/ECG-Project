@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include "includes/tests.h"
 #include "includes/circularArray.h"
+#include "includes/derSqrMwiFilter.h"
 #include "includes/inputManager.h"
 #include "includes/rawData.h"
 #include "includes/lowPassFilter.h"
 #include "includes/highPassFilter.h"
-#include "includes/derivativeSquareFilter.h"
-#include "includes/movingWindowFilter.h"
 #include "includes/filter.h"
 #include "includes/rPeakFinder.h"
 #include "includes/peakSearcher.h"
@@ -37,7 +36,6 @@ void flushFilterBuffers()
 	resetLowBuffer();
 	resetHighBuffer();
 	resetSqrBuffer();
-	resetMovingWindowBuffer();
 	resetFilteredBuffer();
 }
 
@@ -110,7 +108,7 @@ char testHighPassFilter(int* data)
 char testDerivSqrFilter(int* data)
 {
 	resetSqrBuffer();
-	FILE* file = startInputData("verification_files/x_sqr.txt");
+	FILE* file = startInputData("verification_files/mwi_div_after.txt");
 	if(file == NULL)
 	{
 		return 0;
@@ -126,8 +124,8 @@ char testDerivSqrFilter(int* data)
 	{
 		insertCircArrayData(&circArray, data[i]);
 
-		derivativeSquareFilter(data[i], getCircArrayValue(&circArray, -1), getCircArrayValue(&circArray, -3), getCircArrayValue(&circArray, -4));
-		if(!isFilterCorrect(getSqrValue(0), file, "derivative square"))
+		derivativeSquareMovingWindowFilter(data[i], getCircArrayValue(&circArray, -1), getCircArrayValue(&circArray, -3), getCircArrayValue(&circArray, -4));
+		if(!isFilterCorrect(getSqrValue(0), file, "derivative square moving window"))
 		{
 			stopInputData(file);
 			free(circArray.data);
@@ -137,38 +135,6 @@ char testDerivSqrFilter(int* data)
 	stopInputData(file);
 	freeCircArray(&circArray);
 	printf("Passed derivative square filter test\n");
-	return 1;
-}
-
-char testMovingwindowFilter(int* data)
-{
-	resetMovingWindowBuffer();
-	FILE* file = startInputData("verification_files/x_mwi_div_after.txt");
-	if(file == NULL)
-	{
-		return 0;
-	}
-	struct CircularArray circArray;
-	if(!initCircArray(&circArray, 31, 0))
-	{
-		return 0;
-	}
-
-	for(int i = 0; i < TEST_DATA_LENGTH; i++)
-	{
-		insertCircArrayData(&circArray, data[i]);
-
-		int dataLowFiltered = movingWindowFilter(data[i] - getCircArrayValue(&circArray, -N));
-		if(!isFilterCorrect(dataLowFiltered, file, "moving window"))
-		{
-			stopInputData(file);
-			free(circArray.data);
-			return 0;
-		}
-	}
-	stopInputData(file);
-	freeCircArray(&circArray);
-	printf("Passed moving window filter test\n");
 	return 1;
 }
 
@@ -295,22 +261,13 @@ void testAll()
 	free(lowData);
 
 	int* highData = loadDataArray("verification_files/x_high.txt", TEST_DATA_LENGTH);
-	if(highData == NULL ||
-	   !testDerivSqrFilter(highData))
-	{
-		free(highData);
-		return;
-	}
+		if(highData == NULL ||
+		   !testDerivSqrFilter(highData))
+		{
+			free(highData);
+			return;
+		}
 	free(highData);
-
-	int* sqrData = loadDataArray("verification_files/x_sqr.txt", TEST_DATA_LENGTH);
-	if(sqrData == NULL ||
-	   !testMovingwindowFilter(sqrData))
-	{
-		free(sqrData);
-		return;
-	}
-	free(sqrData);
 
 	if(ecgData == NULL ||
 	   !testWholeFilter(ecgData))

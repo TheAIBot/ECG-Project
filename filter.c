@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "includes/filter.h"
+
+#include "includes/derSqrMwiFilter.h"
 #include "includes/rawData.h"
 #include "includes/lowPassFilter.h"
 #include "includes/highPassFilter.h"
-#include "includes/derivativeSquareFilter.h"
-#include "includes/movingWindowFilter.h"
 #include "includes/inputManager.h"
 
 #define FILTERED_DATA_SIZE 5
@@ -43,14 +43,8 @@ short filterData(short rawData)
 	/*high pass filter*/
 	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), getLowPassValue(-32));
 
-	/*derivative and square filter*/
-	short dataDerSqrFiltered = derivativeSquareFilter(dataHighFiltered, GET_HIGH_PASS_VALUE(X_1_INDEX), GET_HIGH_PASS_VALUE(X_3_INDEX), GET_HIGH_PASS_VALUE(X_4_INDEX));
-
-	/*moving window filter*/
-	short dataMovingWindowFilter = movingWindowFilter(dataDerSqrFiltered);
-
-	filteredData[arrayStartIndex] = dataMovingWindowFilter;
-	return dataMovingWindowFilter;
+	/*derivative, square and moving window filter*/
+	return derivativeSquareMovingWindowFilter(dataHighFiltered, GET_HIGH_PASS_VALUE(X_1_INDEX), GET_HIGH_PASS_VALUE(X_3_INDEX), GET_HIGH_PASS_VALUE(X_4_INDEX));
 }
 
 void resetFilteredBuffer()
