@@ -36,7 +36,6 @@ void flushFilterBuffers()
 	resetLowFilter();
 	resetHighFilter();
 	resetDerSqrMwiFilter();
-	resetFilteredBuffer();
 }
 
 char testLowPassFilter(int* data)
