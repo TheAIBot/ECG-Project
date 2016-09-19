@@ -4,7 +4,8 @@
 
 int main(int argc, char *argv[])
 {
-	testSearchBackDoubleSearchTest();
+	if (!testSearchBackDoubleSearchTest())
+		printf("Failed triple searchback test");
 	testAll();
 	//exit(1);
 

@@ -202,20 +202,39 @@ char testPeakSeacher(int* data){
 	/*TODO make.*/
 }
 
-char testSearchBackDoubleSearchTest(){
-	int* testData = loadDataArray("verification_files/testSearchbackDouble.txt", 170);
+char testSearchBackTripleSearchTest(){
+	int dataSize = 702;
+	int* testData = loadDataArray("verification_files/testSearchbackDouble.txt", dataSize);
 	if (testData == NULL){
 		free(testData);
 		return 0;
 	}
-	for(int i = 0; i < 170; i++)
+	for(int i = 0; i < dataSize; i++)
 		{
 			short filteredData = testData[i];
 			searchPeak(filteredData);
 			if (hasNewPeak() &&
 				   isRPeak(getPeakValue(0), getPeakTime(0)))
 			{
-				printf("Registrated first true RR peak");
+				int* trueRRPeaksRR = getTrueRPeaksArrayRR();
+				int* trueRRPeaksVal = getTrueRPeaksArrayVal();
+				int indexTrueRPeaks = getIndexTrueRPeaks();
+				if (indexTrueRPeaks != 8+3)
+					return 0;
+				//The expected first 3 new peaks recorded, have value 2000,2000 and 5000:
+				if (trueRRPeaksVal[indexTrueRPeaks - 3] != 2000 || trueRRPeaksVal[indexTrueRPeaks - 2] != 2000 ||
+						 trueRRPeaksVal[indexTrueRPeaks - 1] != 5000){
+					printf("%d,%d,%d \n",trueRRPeaksVal[indexTrueRPeaks - 3], trueRRPeaksVal[indexTrueRPeaks - 2], trueRRPeaksVal[indexTrueRPeaks - 1]);
+					return 0;
+				}
+				//The expecte RR values are 174, (248 - 174) = 74 og (700 - 248)=452:
+				if (trueRRPeaksRR[indexTrueRPeaks - 3] != 174 || trueRRPeaksRR[indexTrueRPeaks - 2] != 74 ||
+						 trueRRPeaksRR[indexTrueRPeaks -1] != 452)
+					return 0;
+
+				//else:
+				printf("Triple searchback test passed");
+				return 1;
 			}
 		}
 	free(testData);
@@ -349,6 +368,12 @@ void testAll()
 		return;
 	}
 	free(mwi_after);
+
+
+	if (!testSearchBackTripleSearchTest()){
+		printf("Failed triple searchback test");
+		return;
+	}
 
 	printf("All tests finished successfully\n");
 }
