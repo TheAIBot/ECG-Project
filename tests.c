@@ -33,15 +33,15 @@ char isFilterCorrect(int filterOutput, FILE* file, char* filterName)
 void flushFilterBuffers()
 {
 	resetRawBuffer();
-	resetLowBuffer();
-	resetHighBuffer();
-	resetSqrBuffer();
+	resetLowFilter();
+	resetHighFilter();
+	resetDerSqrMwiFilter();
 	resetFilteredBuffer();
 }
 
 char testLowPassFilter(int* data)
 {
-	resetLowBuffer();
+	resetLowFilter();
 	FILE* file = startInputData("verification_files/x_low.txt");
 	if(file == NULL)
 	{
@@ -74,7 +74,7 @@ char testLowPassFilter(int* data)
 
 char testHighPassFilter(int* data)
 {
-	resetHighBuffer();
+	resetHighFilter();
 	FILE* file = startInputData("verification_files/x_high.txt");
 	if(file == NULL)
 	{
@@ -107,7 +107,7 @@ char testHighPassFilter(int* data)
 
 char testDerivSqrFilter(int* data)
 {
-	resetSqrBuffer();
+	resetDerSqrMwiFilter();
 	FILE* file = startInputData("verification_files/x_mwi_div_after.txt");
 	if(file == NULL)
 	{

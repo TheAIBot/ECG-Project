@@ -16,7 +16,7 @@ short highPassFilter(int x, int x_16, int x_32)
 	return newY;
 }
 
-void resetHighBuffer()
+void resetHighFilter()
 {
 	memset(rawHigh, 0, RAW_DATA_SIZE_HIGH * sizeof(short));
 	x_17 = 0;

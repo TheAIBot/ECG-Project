@@ -14,6 +14,6 @@ extern int low_y_32;
 
 int getLowPassValue(int offset);
 int lowPassFilter(int x, int x_6, int x_12);
-void resetLowBuffer(void);
+void resetLowFilter(void);
 
 #endif /* LOWPASSFILTER_H_ */

@@ -36,7 +36,7 @@ unsigned short derivativeSquareMovingWindowFilter(int x, int x_1, int x_3, int x
 	return totalValue / N;
 }
 
-void resetSqrBuffer()
+void resetDerSqrMwiFilter()
 {
 	memset(rawSquare, 0, RAW_DATA_SIZE_DERIVATIVE * sizeof(unsigned short));
 	totalValue = 0;

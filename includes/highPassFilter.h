@@ -13,6 +13,6 @@
 extern short rawHigh[RAW_DATA_SIZE_HIGH];
 
 short highPassFilter(int x, int x_16, int x_32);
-void resetHighBuffer(void);
+void resetHighFilter(void);
 
 #endif /* HIGHPASSFILTER_H_ */

@@ -46,7 +46,7 @@ int lowPassFilter(int x, int x_6, int x_12)
 	return newY;
 }
 
-void resetLowBuffer()
+void resetLowFilter()
 {
 	memset(rawLow, 0, RAW_DATA_SIZE_LOW * sizeof(int));
 	y_1 = 0;
