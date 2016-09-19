@@ -4,7 +4,8 @@
 
 int main(int argc, char *argv[])
 {
-	//testAll();
+	testSearchBackDoubleSearchTest();
+	testAll();
 	//exit(1);
 
 	runBenchmarks();

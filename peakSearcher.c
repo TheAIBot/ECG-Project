@@ -9,7 +9,7 @@
 #define LATER_ALL_VAL(offset) allVal[nextPlaceCirkArray(PEAK_AREA, currentAllValIndex, offset)]
 
 /*TODO Think about removing the value below, and calcultating it on the go. Discuss with Andreas - don't remove - Jesper*/
-int currentTimeSinceLastPeak = -(PEAK_AREA - 1)/2; /*It starts at -(PEAK_AREA - 1)/2, because of the delay of (PEAK_AREA - 1)/2*/
+int currentTimeSinceLastPeak = -(PEAK_AREA - 1)/2 + 1; /*It starts at -(PEAK_AREA - 1)/2 + , because of the delay of (PEAK_AREA - 1)/2*/
 int currentPeakIndex = 0;
 int currentAllValIndex = 0;
 /*All arrays are used as if they where circular.*/
@@ -39,7 +39,7 @@ void searchPeak(int newDataPoint){ /*A delay by two data points. Can be changed 
 	 */
 	 /*Places the new data point two forwards from the current one.*/
 	allVal[nextPlaceCirkArray(PEAK_AREA, currentAllValIndex, 2)] = newDataPoint;
-	//printf("%d \n", newDataPoint);
+	printf("allVal searchPeak = %d,%d,%d,%d,%d. Current index: %d \n", allVal[0],allVal[1],allVal[2],allVal[3],allVal[4],currentAllValIndex);
 	if (isCurrentAPeak()){
 		/*Records the value of the detected peak, and the time since the last peak.*/
 		peaksTime[currentPeakIndex] = currentTimeSinceLastPeak;
@@ -59,15 +59,17 @@ int isCurrentAPeak(){
 	/*Notice that currentTimeSinceLastPeak is modefied by the rPeakFinder,
 	 *so that it is always the time since the last RR peak*/
 	/*TODO write description*/
-	if ( CURRENT_ALL_VAL < 100 || currentTimeSinceLastPeak <= 20){
-		return 0;
-	}
+
+
 
 	/*To avoid registrating a peak in case of a fall, then a plateu, then a fall in values.*/
-	if (FORMER_ALL_VAL(-1) != CURRENT_ALL_VAL){
-		formerDifferentValue = FORMER_ALL_VAL(-1);
-	} else{
-		printf("Not different, formerDifferent value is %d and former (by one) is %d \n", formerDifferentValue, FORMER_ALL_VAL(-1));
+		if (FORMER_ALL_VAL(-1) != CURRENT_ALL_VAL){
+			formerDifferentValue = FORMER_ALL_VAL(-1);
+		} else{
+			//printf("Not different, formerDifferent value is %d and former (by one) is %d \n", formerDifferentValue, FORMER_ALL_VAL(-1));
+			return 0;
+		}
+	if ( CURRENT_ALL_VAL < 100 || currentTimeSinceLastPeak <= 20){
 		return 0;
 	}
 	if (FORMER_ALL_VAL(-2) <= CURRENT_ALL_VAL){

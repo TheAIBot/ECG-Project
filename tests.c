@@ -202,6 +202,26 @@ char testPeakSeacher(int* data){
 	/*TODO make.*/
 }
 
+char testSearchBackDoubleSearchTest(){
+	int* testData = loadDataArray("verification_files/testSearchbackDouble.txt", 170);
+	if (testData == NULL){
+		free(testData);
+		return 0;
+	}
+	for(int i = 0; i < 170; i++)
+		{
+			short filteredData = testData[i];
+			searchPeak(filteredData);
+			if (hasNewPeak() &&
+				   isRPeak(getPeakValue(0), getPeakTime(0)))
+			{
+				printf("Registrated first true RR peak");
+			}
+		}
+	free(testData);
+	return 1;
+}
+
 char testRPeakSearcher(int* data)
 {
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
