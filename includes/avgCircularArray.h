@@ -17,11 +17,13 @@ struct AvgCircularArray
 	int* data;
 };
 
-char initAvgCircArray(struct AvgCircularArray* avgCirc, int size, int startIndex, int avgLength);
-int getAvgCircValue(struct AvgCircularArray* avgCirc, int offset);
-void insertAvgCircData(struct AvgCircularArray* avgCirc, int newData);
-int getAvgCircAverage(struct AvgCircularArray* avgCirc);
-void moveAvgCircStartIndex(struct AvgCircularArray* circArray);
+int getAvgCircValue(const struct AvgCircularArray* avgCirc, const int offset);
+static inline void moveAvgCircStartIndex(struct AvgCircularArray* avgCirc);
+void insertAvgCircData(struct AvgCircularArray* avgCirc, const int newData);
+int getAvgCircAverage(const struct AvgCircularArray* avgCirc);
+void resetAvgCirc(struct AvgCircularArray* avgCirc);
 void freeAvgCirc(struct AvgCircularArray* avgCirc);
+
+
 
 #endif /* INCLUDES_AVGCIRCULARARRAY_H_ */
