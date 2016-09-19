@@ -164,10 +164,6 @@ char testWholeFilter(int* data)
 	return 1;
 }
 
-char testPeakSeacher(int* data){
-	/*TODO make.*/
-}
-
 char testRPeakSearcher(int* data)
 {
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");

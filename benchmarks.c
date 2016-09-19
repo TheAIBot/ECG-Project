@@ -103,7 +103,7 @@ static int benchmarkPeakSearcher(int* data)
 		//searchPeak(data[i] * data[i]);
 		searchPeak(data[i] * data[i]);
 			if (hasNewPeak() &&
-				   isRPeak(getPeakValue(0), getPeakTime(0)))
+				isRPeak(getPeakValue(0), getPeakTime(0)))
 			{
 			}
 	}

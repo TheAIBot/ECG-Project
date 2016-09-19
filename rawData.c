@@ -4,7 +4,7 @@
 
 static short rawData[RAW_DATA_SIZE];
 static short arrayStartIndex = 0;
-short y_12 = 0;
+short raw_y_12 = 0;
 
 short getRawDataValue(int offset)
 {
@@ -28,12 +28,12 @@ static void moveArrayStartIndex()
 void insertRawData(short data)
 {
 	moveArrayStartIndex();
-	y_12 = rawData[arrayStartIndex];
+	raw_y_12 = rawData[arrayStartIndex];
 	rawData[arrayStartIndex] = data;
 }
 
 void resetRawBuffer()
 {
 	memset(rawData, 0, RAW_DATA_SIZE * sizeof(short));
-	y_12 = 0;
+	raw_y_12 = 0;
 }
