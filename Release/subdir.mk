@@ -7,49 +7,49 @@ C_SRCS += \
 ../avgCircularArray.c \
 ../benchmarks.c \
 ../circularArray.c \
-../derivativeSquareFilter.c \
+../derSqrMwiFilter.c \
 ../filter.c \
 ../highPassFilter.c \
 ../inputManager.c \
 ../lowPassFilter.c \
 ../main.c \
-../movingWindowFilter.c \
 ../peakSearcher.c \
 ../rPeakFinder.c \
 ../rawData.c \
-../tests.c 
+../tests.c \
+../ui.c 
 
 OBJS += \
 ./avgCircularArray.o \
 ./benchmarks.o \
 ./circularArray.o \
-./derivativeSquareFilter.o \
+./derSqrMwiFilter.o \
 ./filter.o \
 ./highPassFilter.o \
 ./inputManager.o \
 ./lowPassFilter.o \
 ./main.o \
-./movingWindowFilter.o \
 ./peakSearcher.o \
 ./rPeakFinder.o \
 ./rawData.o \
-./tests.o 
+./tests.o \
+./ui.o 
 
 C_DEPS += \
 ./avgCircularArray.d \
 ./benchmarks.d \
 ./circularArray.d \
-./derivativeSquareFilter.d \
+./derSqrMwiFilter.d \
 ./filter.d \
 ./highPassFilter.d \
 ./inputManager.d \
 ./lowPassFilter.d \
 ./main.d \
-./movingWindowFilter.d \
 ./peakSearcher.d \
 ./rPeakFinder.d \
 ./rawData.d \
-./tests.d 
+./tests.d \
+./ui.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

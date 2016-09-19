@@ -8,9 +8,7 @@
 #ifndef DERIVATIVESQUAREFILTER_H_
 #define DERIVATIVESQUAREFILTER_H_
 
-short* getSquareArray();
-short getSqrValue(int offset);
-short derivativeSquareFilter(int x, int x_1, int x_3, int x_4);
-void resetSqrBuffer(void);
+unsigned short derivativeSquareMovingWindowFilter(const short x, const short x_1, const short x_3, const short x_4);
+void resetDerSqrMwiFilter(void);
 
 #endif /* DERIVATIVESQUAREFILTER_H_ */

@@ -8,8 +8,6 @@
 #ifndef FILTER_H_
 #define FILTER_H_
 
-short getFilteredValue(int offset);
-short filterData(short rawData);
-void resetFilteredBuffer(void);
+unsigned short filterData(short rawData);
 
 #endif /* FILTER_H_ */

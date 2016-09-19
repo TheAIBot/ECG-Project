@@ -8,10 +8,12 @@
 #ifndef RAWDATA_H_
 #define RAWDATA_H_
 
-#define RAW_DATA_SIZE 13
+#define GET_RAW_VALUE_X_12 raw_y_12
 
-short getRawDataValue(int offset);
-void insertRawData(short data);
+extern short raw_y_12;
+
+short getRawDataValue(const int offset);
+void insertRawData(const short data);
 void resetRawBuffer(void);
 
 #endif /* RAWDATA_H_ */

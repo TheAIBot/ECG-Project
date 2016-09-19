@@ -1,22 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "includes/avgCircularArray.h"
 
-char initAvgCircArray(struct AvgCircularArray* avgCirc, int size, int startIndex, int avgLength)
-{
-	avgCirc->size = size;
-	avgCirc->startIndex = startIndex;
-	avgCirc->averageLength = avgLength;
-	avgCirc->data = calloc(size, sizeof(int));
-
-	if(avgCirc->data == NULL)
-	{
-		fprintf(stderr, "Failed to allocate memory for circular array");
-		return 0;
-	}
-	return 1;
-}
-
-int getAvgCircValue(struct AvgCircularArray* avgCirc, int offset)
+int getAvgCircValue(const struct AvgCircularArray* avgCirc, const int offset)
 {
 	int correctIndex = avgCirc->startIndex + offset;
 	if(correctIndex < 0)
@@ -26,26 +13,32 @@ int getAvgCircValue(struct AvgCircularArray* avgCirc, int offset)
 	return avgCirc->data[correctIndex];
 }
 
-void insertAvgCircData(struct AvgCircularArray* avgCirc, int newData)
-{
-	moveAvgCircStartIndex(avgCirc);
-	avgCirc->averageSum += newData - avgCirc->data[avgCirc->startIndex];
-	avgCirc->data[avgCirc->startIndex] = newData;
-
-}
-
-int getAvgCircAverage(struct AvgCircularArray* avgCirc)
-{
-	return avgCirc->averageSum / avgCirc->averageLength;
-}
-
-void moveAvgCircStartIndex(struct AvgCircularArray* avgCirc)
+static inline void moveAvgCircStartIndex(struct AvgCircularArray* avgCirc)
 {
 	avgCirc->startIndex++;
 	if(avgCirc->startIndex == avgCirc->size)
 	{
 		avgCirc->startIndex = 0;
 	}
+}
+
+void insertAvgCircData(struct AvgCircularArray* avgCirc, const int newData)
+{
+	moveAvgCircStartIndex(avgCirc);
+	avgCirc->averageSum += newData - getAvgCircValue(avgCirc, -avgCirc->averageLength);//avgCirc->data[avgCirc->averageLength];
+	avgCirc->data[avgCirc->startIndex] = newData;
+
+}
+
+int getAvgCircAverage(const struct AvgCircularArray* avgCirc)
+{
+	return avgCirc->averageSum / avgCirc->averageLength;
+}
+
+void resetAvgCirc(struct AvgCircularArray* avgCirc)
+{
+	memset(avgCirc->data, 0, avgCirc->size * sizeof(int));
+	avgCirc->averageSum = 0;
 }
 
 void freeAvgCirc(struct AvgCircularArray* avgCirc)
