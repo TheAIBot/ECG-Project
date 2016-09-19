@@ -8,14 +8,9 @@ static int y_1 = 0;
 static int y_2 = 0;
 int low_y_32 = 0;
 
-int getLowPassValue(int offset)
+int getLowPassValue(const int offset)
 {
-	short correctIndex = arrayStartIndex + offset;
-	if(correctIndex < 0)
-	{
-		correctIndex += RAW_DATA_SIZE_LOW;
-	}
-	return rawLow[correctIndex];
+	return rawLow[(arrayStartIndex + offset) & 0x1F];
 }
 
 static void moveArrayStartIndex()
@@ -27,7 +22,7 @@ static void moveArrayStartIndex()
 	arrayStartIndex &= 0x1F;
 }
 
-int lowPassFilter(int x, int x_6, int x_12)
+int lowPassFilter(const int x, const int x_6, const int x_12)
 {
 	moveArrayStartIndex();
 	/*

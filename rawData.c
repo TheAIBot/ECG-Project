@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "includes/rawData.h"
 
 #define RAW_DATA_SIZE 12
@@ -25,7 +26,7 @@ static void moveArrayStartIndex()
 	}
 }
 
-void insertRawData(short data)
+void insertRawData(const short data)
 {
 	moveArrayStartIndex();
 	raw_y_12 = rawData[arrayStartIndex];
