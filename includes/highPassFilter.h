@@ -12,7 +12,7 @@
 
 extern short rawHigh[RAW_DATA_SIZE_HIGH];
 
-short highPassFilter(int x, int x_16, int x_32);
+short highPassFilter(const int x, const int x_16, const int x_32);
 void resetHighFilter(void);
 
 #endif /* HIGHPASSFILTER_H_ */

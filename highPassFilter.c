@@ -1,3 +1,4 @@
+#include <string.h>
 #include "includes/highPassFilter.h"
 
 
@@ -7,7 +8,7 @@
 short rawHigh[RAW_DATA_SIZE_HIGH];
 static int x_17 = 0;
 
-short highPassFilter(int x, int x_16, int x_32)
+short highPassFilter(const int x, const int x_16, const int x_32)
 {
 	short newY = GET_HIGH_PASS_VALUE(Y_1_INDEX) - (x / 32) + x_16 - x_17 + (x_32 / 32);
 	x_17 = x_16;

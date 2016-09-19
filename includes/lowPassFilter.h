@@ -12,8 +12,8 @@
 
 extern int low_y_32;
 
-int getLowPassValue(int offset);
-int lowPassFilter(int x, int x_6, int x_12);
+int getLowPassValue(const int offset);
+int lowPassFilter(const int x, const int x_6, const int x_12);
 void resetLowFilter(void);
 
 #endif /* LOWPASSFILTER_H_ */

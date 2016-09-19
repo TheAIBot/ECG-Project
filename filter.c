@@ -8,7 +8,7 @@
 #include "includes/highPassFilter.h"
 #include "includes/inputManager.h"
 
-unsigned short filterData(short rawData)
+unsigned short filterData(const short rawData)
 {
 	insertRawData(rawData);
 

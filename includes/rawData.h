@@ -12,8 +12,8 @@
 
 extern short raw_y_12;
 
-short getRawDataValue(int offset);
-void insertRawData(short data);
+short getRawDataValue(const int offset);
+void insertRawData(const short data);
 void resetRawBuffer(void);
 
 #endif /* RAWDATA_H_ */

@@ -1,3 +1,4 @@
+#include <string.h>
 #include "includes/lowPassFilter.h"
 
 #define RAW_DATA_SIZE_LOW 32

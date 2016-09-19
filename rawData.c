@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include <string.h>
 #include "includes/rawData.h"
 
 #define RAW_DATA_SIZE 12
