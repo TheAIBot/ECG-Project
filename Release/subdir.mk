@@ -16,7 +16,8 @@ C_SRCS += \
 ../peakSearcher.c \
 ../rPeakFinder.c \
 ../rawData.c \
-../tests.c 
+../tests.c \
+../ui.c 
 
 OBJS += \
 ./avgCircularArray.o \
@@ -31,7 +32,8 @@ OBJS += \
 ./peakSearcher.o \
 ./rPeakFinder.o \
 ./rawData.o \
-./tests.o 
+./tests.o \
+./ui.o 
 
 C_DEPS += \
 ./avgCircularArray.d \
@@ -46,7 +48,8 @@ C_DEPS += \
 ./peakSearcher.d \
 ./rPeakFinder.d \
 ./rawData.d \
-./tests.d 
+./tests.d \
+./ui.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
