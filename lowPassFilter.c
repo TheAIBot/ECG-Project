@@ -21,10 +21,10 @@ int getLowPassValue(int offset)
 static void moveArrayStartIndex()
 {
 	arrayStartIndex++;
-	if(arrayStartIndex == RAW_DATA_SIZE_LOW)
-	{
-		arrayStartIndex = 0;
-	}
+	//when arrayStartindex == RAW_DATA_SIZE_LOW the circular array start index has to begin
+	//at 0 again and because the length of the array is a power of two it's possible to do just that
+	//with a bitwise and which sets all the bits above the fifth bit to zero zero.
+	arrayStartIndex &= 0x1F;
 }
 
 int lowPassFilter(int x, int x_6, int x_12)

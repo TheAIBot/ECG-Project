@@ -2,14 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "includes/filter.h"
-
 #include "includes/derSqrMwiFilter.h"
 #include "includes/rawData.h"
 #include "includes/lowPassFilter.h"
 #include "includes/highPassFilter.h"
 #include "includes/inputManager.h"
-
-#define FILTERED_DATA_SIZE 5
 
 unsigned short filterData(short rawData)
 {
