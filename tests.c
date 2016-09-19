@@ -3,13 +3,13 @@
 #include "includes/tests.h"
 #include "includes/circularArray.h"
 #include "includes/derSqrMwiFilter.h"
-#include "includes/inputManager.h"
 #include "includes/rawData.h"
 #include "includes/lowPassFilter.h"
 #include "includes/highPassFilter.h"
 #include "includes/filter.h"
 #include "includes/rPeakFinder.h"
 #include "includes/peakSearcher.h"
+#include "includes/sensor.h"
 
 #define TEST_DATA_LENGTH 10000 /* 10.000 */
 #define TEST_DATA_R_PEAK_LENGTH 31

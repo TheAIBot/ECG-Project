@@ -10,12 +10,12 @@ C_SRCS += \
 ../derSqrMwiFilter.c \
 ../filter.c \
 ../highPassFilter.c \
-../inputManager.c \
 ../lowPassFilter.c \
 ../main.c \
 ../peakSearcher.c \
 ../rPeakFinder.c \
 ../rawData.c \
+../sensor.c \
 ../tests.c \
 ../ui.c 
 
@@ -26,12 +26,12 @@ OBJS += \
 ./derSqrMwiFilter.o \
 ./filter.o \
 ./highPassFilter.o \
-./inputManager.o \
 ./lowPassFilter.o \
 ./main.o \
 ./peakSearcher.o \
 ./rPeakFinder.o \
 ./rawData.o \
+./sensor.o \
 ./tests.o \
 ./ui.o 
 
@@ -42,12 +42,12 @@ C_DEPS += \
 ./derSqrMwiFilter.d \
 ./filter.d \
 ./highPassFilter.d \
-./inputManager.d \
 ./lowPassFilter.d \
 ./main.d \
 ./peakSearcher.d \
 ./rPeakFinder.d \
 ./rawData.d \
+./sensor.d \
 ./tests.d \
 ./ui.d 
 

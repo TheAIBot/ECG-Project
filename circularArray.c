@@ -10,15 +10,10 @@ char initCircArray(struct CircularArray* circArray, int size, int startIndex)
 
 	if(circArray->data == NULL)
 	{
-		fprintf(stderr, "Failed to allocate memory for circular array");
+		fprintf(stderr, "Failed to allocate memory for circular array\n");
 		return 0;
 	}
 	return 1;
-}
-
-int getCircArrayValue(struct CircularArray* circArray, int offset)
-{
-	return getArrayDataValue(circArray->data, circArray->startIndex, circArray->size, offset);
 }
 
 int getArrayDataValue(int data[], int startIndex, int arraySize, int offset)
@@ -33,6 +28,11 @@ int getArrayDataValue(int data[], int startIndex, int arraySize, int offset)
 		correctIndex -= arraySize;
 	}
 	return data[correctIndex];
+}
+
+int getCircArrayValue(struct CircularArray* circArray, int offset)
+{
+	return getArrayDataValue(circArray->data, circArray->startIndex, circArray->size, offset);
 }
 
 void insertCircArrayData(struct CircularArray* circArray, int newData)

@@ -6,7 +6,7 @@
 #include "includes/rawData.h"
 #include "includes/lowPassFilter.h"
 #include "includes/highPassFilter.h"
-#include "includes/inputManager.h"
+#include "includes/sensor.h"
 
 unsigned short filterData(const short rawData)
 {

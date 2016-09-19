@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "includes/inputManager.h"
 #include "includes/benchmarks.h"
 #include "includes/benchmarkTimer.h"
 #include "includes/circularArray.h"
@@ -10,6 +9,7 @@
 #include "includes/filter.h"
 #include "includes/peakSearcher.h"
 #include "includes/rPeakFinder.h"
+#include "includes/sensor.h"
 
 #define ECG_10800K_LENGTH 10800000 /* 10.800.000 */
 static long result = 0;

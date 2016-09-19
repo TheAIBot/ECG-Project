@@ -1,5 +1,6 @@
 #include <stdlib.h>
-#include "includes/inputManager.h"
+#include "includes/sensor.h"
+#include "includes/benchmarkTimer.h"
 
 
 FILE* startInputData(char* fileName)
@@ -72,4 +73,13 @@ int* loadDataArray(char* filename, int arrayLength)
 	stopInputData(inputFile);
 
 	return inputArray;
+}
+
+int waitForNextValue(FILE* file, int timeToWait)
+{
+	int startTime = BENCHMARK_START;
+	while(BENCHMARK_TIME(startTime) < timeToWait)
+	{}
+
+	return getNextData(file);
 }
