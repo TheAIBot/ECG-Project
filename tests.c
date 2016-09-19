@@ -163,11 +163,6 @@ char testWholeFilter(int* data)
 	return 1;
 }
 
-<<<<<<< HEAD
-char testPeakSeacher(int* data){
-	/*TODO make.*/
-}
-
 char testSearchBackTripleSearchTest(){
 	int dataSize = 702;
 	int* testData = loadDataArray("verification_files/testSearchbackDouble.txt", dataSize);
@@ -207,8 +202,6 @@ char testSearchBackTripleSearchTest(){
 	return 1;
 }
 
-=======
->>>>>>> e2ef72e111c37c7d3b74c36150cf2c7355821d58
 char testRPeakSearcher(int* data)
 {
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
