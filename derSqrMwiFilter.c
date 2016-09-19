@@ -23,7 +23,7 @@ unsigned short derivativeSquareMovingWindowFilter(int x, int x_1, int x_3, int x
 	moveArrayStartIndex();
 
 	//derivate filter
-	short newY = (2 * x + x_1 - x_3 - 2 * x_4) / 8;
+	unsigned short newY = (2 * x + x_1 - x_3 - 2 * x_4) / 8;
 
 	//square filter
 	unsigned short squared = newY * newY;
