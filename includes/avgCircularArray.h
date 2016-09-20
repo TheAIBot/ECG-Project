@@ -8,22 +8,26 @@
 #ifndef INCLUDES_AVGCIRCULARARRAY_H_
 #define INCLUDES_AVGCIRCULARARRAY_H_
 
-struct AvgCircularArray
+#include "peak.h"
+
+typedef struct TAvgCircularArray AvgCircularArray;
+
+struct TAvgCircularArray
 {
 	int size;
 	int startIndex;
 	int averageSum;
 	int averageLength;
-	int* data;
+	Peak *data;
 };
 
-int getAvgCircValue(const struct AvgCircularArray* avgCirc, const int offset);
-static inline void moveAvgCircStartIndex(struct AvgCircularArray* avgCirc);
-void insertAvgCircData(struct AvgCircularArray* avgCirc, const int newData);
-int getAvgCircAverage(const struct AvgCircularArray* avgCirc);
-void resetAvgCirc(struct AvgCircularArray* avgCirc);
-void freeAvgCirc(struct AvgCircularArray* avgCirc);
 
+int getValue(const AvgCircularArray* avgCirc, const int offset);
+static inline void moveAvgCircIndexForward(AvgCircularArray* avgCirc);
+void insertAvgCircData(AvgCircularArray* avgCirc, const Peak newData);
+int getAvgCircAverage(const AvgCircularArray* avgCirc);
+void resetAvgCirc(AvgCircularArray* avgCirc);
+void freeAvgCirc(AvgCircularArray* avgCirc);
 
 
 #endif /* INCLUDES_AVGCIRCULARARRAY_H_ */

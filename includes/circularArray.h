@@ -8,17 +8,19 @@
 #ifndef CIRCULARARRAY_H_
 #define CIRCULARARRAY_H_
 
-struct CircularArray
+struct TCircularArray
 {
 	int size;
 	int startIndex;
 	int* data;
 };
 
-char initCircArray(struct CircularArray* circArray, int size, int startIndex);
-int getCircArrayValue(struct CircularArray* circArray, int offset);
+typedef struct TCircularArray CircularArray;
+
+char initCircArray(CircularArray* circArray, int size, int startIndex);
+int getCircArrayValue(CircularArray* circArray, int offset);
 int getArrayDataValue(int data[], int startIndex, int arraySize, int offset);
-void insertCircArrayData(struct CircularArray* circArray, int newData);
-void freeCircArray(struct CircularArray* circArray);
+void insertCircArrayData(CircularArray* circArray, int newData);
+void freeCircArray(CircularArray* circArray);
 
 #endif /* CIRCULARARRAY_H_ */

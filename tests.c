@@ -47,7 +47,7 @@ char testLowPassFilter(int* data)
 		return 0;
 	}
 
-	struct CircularArray circArray;
+	CircularArray circArray;
 	if(!initCircArray(&circArray, 13, 0))
 	{
 		return 0;
@@ -80,7 +80,7 @@ char testHighPassFilter(int* data)
 		return 0;
 	}
 
-	struct CircularArray circArray;
+	CircularArray circArray;
 	if(!initCircArray(&circArray, 33, 0))
 	{
 		return 0;
@@ -113,7 +113,7 @@ char testDerivSqrFilter(int* data)
 		return 0;
 	}
 
-	struct CircularArray circArray;
+	CircularArray circArray;
 	if(!initCircArray(&circArray, 5, 0))
 	{
 		return 0;
