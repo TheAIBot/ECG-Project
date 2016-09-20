@@ -10,7 +10,9 @@
 #include "includes/filter.h"
 #include "includes/rPeakFinder.h"
 #include "includes/peakSearcher.h"
+#include "includes/peakCircularArray.h"
 
+typedef struct TPeakCircularArray PeakCircularArray;
 #define TEST_DATA_LENGTH 10000 /* 10.000 */
 #define TEST_DATA_R_PEAK_LENGTH 31
 #define ALLOWED_TIME_DEVIANTION 10
@@ -162,7 +164,9 @@ char testWholeFilter(int* data)
 	printf("Passed whole filter test\n");
 	return 1;
 }
-
+/*TODO write describtion
+ * Assumes the initialization works.
+ * */
 char testSearchBackTripleSearchTest(){
 	int dataSize = 702;
 	int* testData = loadDataArray("verification_files/testSearchbackDouble.txt", dataSize);
@@ -177,22 +181,18 @@ char testSearchBackTripleSearchTest(){
 			if (hasNewPeak() &&
 				   isRPeak(getPeakValue(0), getPeakTime(0)))
 			{
-				int* trueRRPeaksRR = getTrueRPeaksArrayRR();
-				int* trueRRPeaksVal = getTrueRPeaksArrayVal();
-				int indexTrueRPeaks = getIndexTrueRPeaks();
-				if (indexTrueRPeaks != 8+3)
-					return 0;
+				PeakCircularArray* trueRPeaks = getTrueRPeaks();
 				//The expected first 3 new peaks recorded, have value 2000,2000 and 5000:
-				if (trueRRPeaksVal[indexTrueRPeaks - 3] != 2000 || trueRRPeaksVal[indexTrueRPeaks - 2] != 2000 ||
-						 trueRRPeaksVal[indexTrueRPeaks - 1] != 5000){
-					printf("%d,%d,%d \n",trueRRPeaksVal[indexTrueRPeaks - 3], trueRRPeaksVal[indexTrueRPeaks - 2], trueRRPeaksVal[indexTrueRPeaks - 1]);
+				if (getPeakCircArrayValue(trueRPeaks,-3)->intensity != 2000 || getPeakCircArrayValue(trueRPeaks,-2)->intensity != 2000 ||
+						getPeakCircArrayValue(trueRPeaks,-1)->intensity != 5000){
+					printf("%d,%d,%d \n",getPeakCircArrayValue(trueRPeaks,-3)->intensity, getPeakCircArrayValue(trueRPeaks,-2)->intensity,
+							getPeakCircArrayValue(trueRPeaks,-1)->intensity);
 					return 0;
 				}
 				//The expecte RR values are 174, (248 - 174) = 74 og (700 - 248)=452:
-				if (trueRRPeaksRR[indexTrueRPeaks - 3] != 174 || trueRRPeaksRR[indexTrueRPeaks - 2] != 74 ||
-						 trueRRPeaksRR[indexTrueRPeaks -1] != 452)
+				if (getPeakCircArrayValue(trueRPeaks,-3)->RR != 174 || getPeakCircArrayValue(trueRPeaks,-2)->RR != 74 ||
+						getPeakCircArrayValue(trueRPeaks,-1)->RR != 452)
 					return 0;
-
 				//else:
 				printf("Triple searchback test passed");
 				return 1;

@@ -18,16 +18,17 @@ struct TAvgCircularArray
 	int startIndex;
 	int averageSum;
 	int averageLength;
-	Peak *data;
+	Peak** data;
 };
 
-
-int getValue(const AvgCircularArray* avgCirc, const int offset);
-static inline void moveAvgCircIndexForward(AvgCircularArray* avgCirc);
-void insertAvgCircData(AvgCircularArray* avgCirc, const Peak newData);
-int getAvgCircAverage(const AvgCircularArray* avgCirc);
-void resetAvgCirc(AvgCircularArray* avgCirc);
-void freeAvgCirc(AvgCircularArray* avgCirc);
+char initAvgCircArray(struct TAvgCircularArray* avgCirc, int size, int startIndex, int averageLength, Peak defaultPeak);
+void setAvgCircValue(struct TAvgCircularArray* avgCirc, const int offset, const Peak* peak);
+Peak* getAvgCircValue(const struct TAvgCircularArray* avgCirc, const int offset);
+//static void moveAvgCircIndexForward(AvgCircularArray* avgCirc);
+void insertAvgCircData(AvgCircularArray* avgCirc, const Peak* newPeak);
+int getAvgCircAverageRR(const struct TAvgCircularArray* avgCirc);
+void resetAvgCirc(struct TAvgCircularArray* avgCirc);
+void freeAvgCirc(struct TAvgCircularArray* avgCirc);
 
 
 #endif /* INCLUDES_AVGCIRCULARARRAY_H_ */

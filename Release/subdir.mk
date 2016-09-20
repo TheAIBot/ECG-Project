@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../ECGScanner.c \
 ../avgCircularArray.c \
 ../benchmarks.c \
 ../circularArray.c \
@@ -13,6 +14,8 @@ C_SRCS += \
 ../inputManager.c \
 ../lowPassFilter.c \
 ../main.c \
+../peak.c \
+../peakCircularArray.c \
 ../peakSearcher.c \
 ../rPeakFinder.c \
 ../rawData.c \
@@ -20,6 +23,7 @@ C_SRCS += \
 ../ui.c 
 
 OBJS += \
+./ECGScanner.o \
 ./avgCircularArray.o \
 ./benchmarks.o \
 ./circularArray.o \
@@ -29,6 +33,8 @@ OBJS += \
 ./inputManager.o \
 ./lowPassFilter.o \
 ./main.o \
+./peak.o \
+./peakCircularArray.o \
 ./peakSearcher.o \
 ./rPeakFinder.o \
 ./rawData.o \
@@ -36,6 +42,7 @@ OBJS += \
 ./ui.o 
 
 C_DEPS += \
+./ECGScanner.d \
 ./avgCircularArray.d \
 ./benchmarks.d \
 ./circularArray.d \
@@ -45,6 +52,8 @@ C_DEPS += \
 ./inputManager.d \
 ./lowPassFilter.d \
 ./main.d \
+./peak.d \
+./peakCircularArray.d \
 ./peakSearcher.d \
 ./rPeakFinder.d \
 ./rawData.d \

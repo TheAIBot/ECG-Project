@@ -6,39 +6,42 @@ typedef struct TPeak Peak;
 typedef struct TPeakCircularArray PeakCircularArray;
 
 
-char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex)
+char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex, Peak defaultPeak)
 {
 	circArray->size = size;
 	circArray->startIndex = startIndex;
-	circArray->data = calloc(size, sizeof(Peak));
-	if(circArray->data == NULL)
-	{
+	circArray->data = malloc(size * sizeof(Peak*));
+	if(circArray->data == NULL){
 		fprintf(stderr, "Failed to allocate memory for peak circular array");
 		return 0;
+	}
+	for(int i = 0; i < size; i++){
+			circArray->data[i]->RR = defaultPeak.RR;
+			circArray->data[i]->intensity = defaultPeak.intensity;
 	}
 	return 1;
 }
 
-Peak getPeakCircArrayValue(PeakCircularArray* circArray, int offset){
+Peak* getPeakCircArrayValue(PeakCircularArray* circArray, int offset){
 	int correctIndex = circArray->startIndex + offset;
 	if(correctIndex < 0)
 		correctIndex += circArray->size;
 	else if (correctIndex >= circArray->size)
 		correctIndex -= circArray->size;
-	return (circArray->data[correctIndex]);
+	return circArray->data[correctIndex];
 }
 //TODO delete
-Peak getPeakArrayDataValue(Peak data[], int startIndex, int arraySize, int offset)
+Peak* getPeakArrayDataValue(Peak* data[], int startIndex, int arraySize, int offset)
 {
 	int correctIndex = startIndex + offset;
 	if(correctIndex < 0)
 		correctIndex += arraySize;
 	else if (correctIndex >= arraySize)
 		correctIndex -= arraySize;
-	return (data[correctIndex]);
+	return data[correctIndex];
 }
 
-void insertPeakCircArrayData(PeakCircularArray* circArray, Peak newData){
+void insertPeakCircArrayData(PeakCircularArray* circArray, Peak* newData){
 	moveCircArrayStartIndex(circArray);
 	circArray->data[circArray->startIndex] = newData;
 }
