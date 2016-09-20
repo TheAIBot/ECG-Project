@@ -16,8 +16,9 @@ char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex, P
 		return 0;
 	}
 	for(int i = 0; i < size; i++){
-			circArray->data[i]->RR = defaultPeak.RR;
-			circArray->data[i]->intensity = defaultPeak.intensity;
+		Peak* copyDefaultPeak = malloc(sizeof(Peak));
+		*copyDefaultPeak = defaultPeak;
+		(circArray->data[i]) = copyDefaultPeak;
 	}
 	return 1;
 }

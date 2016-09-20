@@ -7,13 +7,13 @@
 
 #ifndef INCLUDES_RPEAKFINDER_H_
 #define INCLUDES_RPEAKFINDER_H_
-
+#include "peak.h"
 #include "peakCircularArray.h"
 
 typedef struct TPeak Peak;
 typedef struct TPeakCircularArray PeakCircularArray;
 
-int isRPeak(int peakValue, int peakTime_0);
+int isRPeak(Peak* newPeak);
 void recordNewProperRRPeak(int peakValue, int peakTime_0, int peakTime_7);
 void searchBack();
 int backwardCircularArray(int size, int currentIndex, int offset);

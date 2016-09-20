@@ -19,15 +19,10 @@ char initAvgCircArray(AvgCircularArray* avgCirc, int size, int startIndex, int a
 	}
 
 	for(int i = 0; i < avgCirc->size; i++){
-		//TODO does it make a hard copy?
 		Peak* copyDefaultPeak = malloc(sizeof(Peak));
-		copyDefaultPeak->RR = defaultPeak.RR;
-		copyDefaultPeak->intensity = defaultPeak.intensity;
+		*copyDefaultPeak = defaultPeak;
 		(avgCirc->data[i]) = copyDefaultPeak;
-		printf("Address defaultPeak = %d, address copyDefaultPeak = %d\n", &defaultPeak, copyDefaultPeak);
 	}
-	avgCirc->data[2]->RR = 1200;
-	printf("%d, %d\n", avgCirc->data[0]->RR, avgCirc->data[2]->RR);
 	return 1;
 }
 
@@ -64,7 +59,7 @@ static inline void moveAvgCircIndexForward(AvgCircularArray* avgCirc)
 	}
 }
 
-void insertAvgCircData(AvgCircularArray* avgCirc, const Peak* newPeak){
+void insertAvgCircData(AvgCircularArray* avgCirc, Peak* newPeak){
 	moveAvgCircIndexForward(avgCirc);
 	avgCirc->averageSum += newPeak->RR - getAvgCircValue(avgCirc, -avgCirc->averageLength)->RR;
 	avgCirc->data[avgCirc->startIndex] = newPeak;

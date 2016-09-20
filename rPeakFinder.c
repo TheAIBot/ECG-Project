@@ -8,8 +8,6 @@
 #include "includes/avgCircularArray.h"
 #define SIZE_R_ARRAYS 128
 #define AVERAGE_NUMBER_MEMBERS 8
-AvgCircularArray threshold1PassPeaks;
-
 #define RR_AVERAGE1 getAvgCircAverageRR(&allPeaks)
 #define RR_AVERAGE2 getAvgCircAverageRR(&threshold1PassPeaks)
 //TODO delete
@@ -30,6 +28,7 @@ typedef struct TPeak Peak;
 PeakCircularArray trueRPeaks; //Last eight true r peak
 AvgCircularArray threshold1PassPeaks; //Last eight peaks which intensity surpassed Threshold1 (making them R peaks)
 AvgCircularArray allPeaks;//Last eight peaks found, no matter what.
+/*TODO Andreas, what about freeing the memory of the peaks?*/
 Peak * tempPeaksForSearchback[16]; //Last peaks since last register of a true R peak. Used in searchback.
 int tempIndexPeaksForSearchback = 0; //Index of tempPeaksForSearchback, pointing to the next free space.
 
@@ -64,16 +63,15 @@ void initializeRPeakFinder()
 	 * and the average intensity is (3500 + 300)/2 = 1800
 	 * */
 	const Peak defaultAllPeak = {.RR = 100, .intensity = 1800};
-	initAvgCircArray(&defaultThreshold1Peak, AVERAGE_NUMBER_MEMBERS, 0, AVERAGE_NUMBER_MEMBERS, defaultTrueRPeak);
-	initAvgCircArray(&defaultAllPeak, AVERAGE_NUMBER_MEMBERS, 0, AVERAGE_NUMBER_MEMBERS, defaultTrueRPeak);
 	initPeakCircArray(&trueRPeaks, AVERAGE_NUMBER_MEMBERS, 0, defaultTrueRPeak);
+	initAvgCircArray(&allPeaks, AVERAGE_NUMBER_MEMBERS, 0, AVERAGE_NUMBER_MEMBERS, defaultAllPeak);
+	initAvgCircArray(&threshold1PassPeaks, AVERAGE_NUMBER_MEMBERS, 0, AVERAGE_NUMBER_MEMBERS, defaultThreshold1Peak);
 
 }
 
 //TODO check this method
 void recordNewProperRPeak(Peak* newPeak){
 	//Calulates the new values for determining if a peak is an RR peak:
-	insertAvgCircData(&threshold1PassPeaks, newPeak);
 	Spkf = newPeak->intensity/8 + 7*Spkf/8;
 	Threshold1 = Npkf + (Spkf-Npkf)/4;
 	Threshold2 = Threshold1/2;
@@ -111,7 +109,7 @@ int registerSearchBackPeak(Peak* peak){
 int searchBackBackwardsGoer(int indexMiss){
 	//The lower the value, the more likely is it to be a true peak.
 	int minInverseLikelyhoodIsTruePeak = INT_MAX;
-	Peak* indexMaxLikelyhoodIsTruePeak;
+	int indexMaxLikelyhoodIsTruePeak;
 	int currentInverseLikelyhood = 0;
 
 	/*TODO Don't know the average currently used. Using number two currently*/
@@ -125,12 +123,12 @@ int searchBackBackwardsGoer(int indexMiss){
 				currentInverseLikelyhood = (tempPeaksForSearchback[i]->RR - RR_AVERAGE2)/2;
 			if(currentInverseLikelyhood <= minInverseLikelyhoodIsTruePeak){
 				minInverseLikelyhoodIsTruePeak = currentInverseLikelyhood;
-				indexMaxLikelyhoodIsTruePeak = tempPeaksForSearchback[i];
+				indexMaxLikelyhoodIsTruePeak = i;
 			}
 		}
 	}
 	//It records the peak:
-	registerSearchBackPeak(indexMaxLikelyhoodIsTruePeak);
+	registerSearchBackPeak(tempPeaksForSearchback[indexMaxLikelyhoodIsTruePeak]);
 
 	//Returns the index to the most likely-to-be-a-proper-R-peak peak.
 	//There will always be one, as the peak triggering the searchback is a candidate.
@@ -140,8 +138,8 @@ int searchBackBackwardsGoer(int indexMiss){
 
 int searchBack(){
 	//TODO Set the RR value in the peakFinder algorithm, depending on what is registrated.
-
-	int indexMostBackwards = searchBackBackwardsGoer(tempIndexPeaksForSearchback);
+	//TODO check if -1 below is correct
+	int indexMostBackwards = searchBackBackwardsGoer(tempIndexPeaksForSearchback - 1);
 	//For decreasing the value of the RR, since the now last registrated peak;
 	int newRRRemoval = tempPeaksForSearchback[indexMostBackwards]->RR;
 	//TODO fix indexMostBackwards after tests.
@@ -222,6 +220,9 @@ int passThreshold1(Peak* peak){
  * */
 int isRPeak(Peak* newPeak){
 	insertAvgCircData(&allPeaks,newPeak);
+	//allPeaks Move one forward to fast, but still fine. TODO
+
+
 	tempPeaksForSearchback[tempIndexPeaksForSearchback] = newPeak;
 	tempIndexPeaksForSearchback++;
 	return rPeakChecks(newPeak);

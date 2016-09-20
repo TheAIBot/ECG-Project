@@ -9,6 +9,7 @@
 #include "includes/highPassFilter.h"
 #include "includes/filter.h"
 #include "includes/rPeakFinder.h"
+#include "includes/peak.h"
 #include "includes/peakSearcher.h"
 #include "includes/peakCircularArray.h"
 
@@ -178,6 +179,7 @@ char testSearchBackTripleSearchTest(){
 		{
 			short filteredData = testData[i];
 			searchPeak(filteredData);
+			/*TODO uncomment
 			if (hasNewPeak() &&
 				   isRPeak(getPeakValue(0), getPeakTime(0)))
 			{
@@ -197,6 +199,7 @@ char testSearchBackTripleSearchTest(){
 				printf("Triple searchback test passed");
 				return 1;
 			}
+			*/
 		}
 	free(testData);
 	return 1;
@@ -218,9 +221,14 @@ char testRPeakSearcher(int* data)
 	{
 		short filteredData = data[i];
 		searchPeak(filteredData);
-		if (hasNewPeak() &&
-			   isRPeak(getPeakValue(0), getPeakTime(0)))
-		{
+		Peak * newPeak = malloc(sizeof(Peak));
+		newPeak->intensity = getPeakValue(0);
+		newPeak->RR = getPeakTime(0);
+		if (hasNewPeak()){
+			if (isRPeak(newPeak)){
+				printf("%d\n",i);
+			}
+			//else free(newPeak);
 		}
 	}
 	int* peakValues = getNewestTrueRRPeakValues();
