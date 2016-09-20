@@ -20,9 +20,11 @@ char initAvgCircArray(AvgCircularArray* avgCirc, int size, int startIndex, int a
 
 	for(int i = 0; i < avgCirc->size; i++){
 		//TODO does it make a hard copy?
-		Peak copyDefaultPeak = {.intensity = defaultPeak.intensity, .RR = defaultPeak.RR};
-		(avgCirc->data[i]) = &copyDefaultPeak;
-		printf("Address defaultPeak = %d, address copyDefaultPeak = %d\n", &defaultPeak, &copyDefaultPeak);
+		Peak* copyDefaultPeak = malloc(sizeof(Peak));
+		copyDefaultPeak->RR = defaultPeak.RR;
+		copyDefaultPeak->intensity = defaultPeak.intensity;
+		(avgCirc->data[i]) = copyDefaultPeak;
+		printf("Address defaultPeak = %d, address copyDefaultPeak = %d\n", &defaultPeak, copyDefaultPeak);
 	}
 	avgCirc->data[2]->RR = 1200;
 	printf("%d, %d\n", avgCirc->data[0]->RR, avgCirc->data[2]->RR);
