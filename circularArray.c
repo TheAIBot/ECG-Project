@@ -28,6 +28,10 @@ int getArrayDataValue(int data[], int startIndex, int arraySize, int offset)
 	{
 		correctIndex += arraySize;
 	}
+	else if(correctIndex >= arraySize)
+	{
+		correctIndex -= arraySize;
+	}
 	return data[correctIndex];
 }
 
