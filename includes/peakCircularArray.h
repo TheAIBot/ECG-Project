@@ -16,13 +16,13 @@ struct TPeakCircularArray
 {
 	int size;
 	int startIndex;
-	Peak* data;
+	Peak** data;
 };
 
 char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex);
-Peak getPeakCircArrayValue(PeakCircularArray* circArray, int offset);
-Peak getPeakCircArrayDataValue(Peak data[], int startIndex, int arraySize, int offset);
-void insertPeakCircArrayData(PeakCircularArray* circArray, Peak newData);
+Peak* getPeakCircArrayValue(PeakCircularArray* circArray, int offset);
+Peak* getPeakCircArrayDataValue(Peak data[], int startIndex, int arraySize, int offset);
+void insertPeakCircArrayData(PeakCircularArray* circArray, Peak* newData);
 void freePeakCircArray(PeakCircularArray* circArray);
 
 #endif /* INCLUDES_PEAKCIRCULARARRAY_H_ */
