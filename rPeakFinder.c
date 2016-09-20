@@ -8,7 +8,7 @@
 #include "includes/avgCircularArray.h"
 #define SIZE_R_ARRAYS 128
 #define AVERAGE_NUMBER_MEMBERS 8
-#define RR_AVERAGE2 getAvgCircAverageRR(threshold1PassPeaks)
+#define RR_AVERAGE2 getAvgCircAverageRR(&threshold1PassPeaks)
 
 //TODO delete
 typedef struct TPeak Peak;
@@ -24,28 +24,16 @@ typedef struct TPeak Peak;
  * Removing Peaks from memory when done with them.
  * */
 
-PeakCircularArray trueRRPeaks;
+PeakCircularArray trueRRPeaks = {.size = AVERAGE_NUMBER_MEMBERS, .index = 0};
 AvgCircularArray threshold1PassPeaks;
-struct TAvgCircularArray allPeaksInclusiveOfDoom;//Last eight peaks found, no matter what.
-PeakCircularArray allPeaksOverThreshold2; //For searchback.
-
-//struct CircularArray threshold1PassPeaks = {.size = SIZE_R_ARRAYS, .startIndex = 0,		(int[SIZE_R_ARRAYS]) {[0 ... AVERAGE_NUMBER_MEMBERS-1]=150}};
-//struct CircularArray threshold1PassVal = {.size = SIZE_R_ARRAYS, .startIndex = 0,		(int[SIZE_R_ARRAYS]) {[0 ... AVERAGE_NUMBER_MEMBERS-1]=3500}};
-/* Suppose half the peaks found are noicepeaks with an average RR of 50, the other half are R-peaks,
- *,then the average of that is (50 + 150) / 2 = 100
-   */
-
-//struct AvgCircularArray allPeaks = {.size = AVERAGE_NUMBER_MEMBERS, .startIndex = 0,		(int[AVERAGE_NUMBER_MEMBERS]) {[0 ... 7]=100}}; /*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
-/* Suppose half the peaks found are noicepeaks with an average value of 300, the other half are R-peaks,
- *,then the average of that is (300 + 3500) / 2 = 1900
-   */
-//struct CircularArray allPeaksVal = {.size = AVERAGE_NUMBER_MEMBERS, .startIndex = 0, 		(int[AVERAGE_NUMBER_MEMBERS]) {[0 ... 7]=1900}};/*TODO delete it. Only for testing purposes, else the same data is stored twice.*/
-/*Indexes for the storing*/
-
-int allPeaksVal[AVERAGE_NUMBER_MEMBERS];
-int allPeaksRR[AVERAGE_NUMBER_MEMBERS];
+struct TfAvgCircularArray allPeaksInclusiveOfDoom;//Last eight peaks found, no matter what.
+/*Variables used for the searchback*/
+Peak tempPeaksForSearchback[16];
+int tempIndexPeaksForSearchback = 0;
 
 //TODO look at below after structify:
+int allPeaksVal[AVERAGE_NUMBER_MEMBERS];
+int allPeaksRR[AVERAGE_NUMBER_MEMBERS];
 int indexAllPeaks = AVERAGE_NUMBER_MEMBERS; /*TODO delete it. Only for testing purposes*/
 
 /*Variables for detecting R peaks*/
@@ -59,23 +47,21 @@ int Threshold2 = 550; /*Answers to Threshold1/2*/
 /*Given the values in the arrays above, one gets:*/
 int RR_Average1_Sum = AVERAGE_NUMBER_MEMBERS*100;
 int RR_Average1 = 100;
-/*Given as though calculated from RR_Average1*/
+/*Given as though calculated from RR_Average2*/
 //TODO What about macros? But problems.
+//TODO should it be from RR_Average1 or 2 at the beggining. What are they?
 int RR_Low = 138;  /*TODO, check if there is a possibility of the values becoming "locked"*/
 int RR_High = 173;
 int RR_Miss = 249;
 
-/*Variables used for the searchback*/
-
-Peak tempPeaksForSearchback[16];
-int tempIndexPeaksForSearchback = 0;
-
 void initializeRPeakFinder(){
-	//Most of the values have been set already, the only thing missing is setting the value of the arrays:
+	//Many of the values have been set already, the only thing missing is setting the value of the arrays:
 	//TODO Discuss with Andreas.
 	Peak trueRRPeaksArray[AVERAGE_NUMBER_MEMBERS];
+	trueRRPeaks.data = trueRRPeaksArray;
 	for(int i = 0; i<AVERAGE_NUMBER_MEMBERS; i++){
-		trueRRPeaksArray[i] = ((struct TPeak){.RR=150, .intensity=3500});
+		insertPeakCircArrayData(&trueRRPeaks, (Peak){.RR=150, .intensity=3500});
+
 	}
 	//initPeakCircArray(&trueRRPeaksOfDoom, AVERAGE_NUMBER_MEMBERS, 0);
 	trueRRPeaks.size = AVERAGE_NUMBER_MEMBERS;
@@ -161,7 +147,6 @@ int registerSearchBackPeak(Peak peak){
 
 int searchBackBackwardsGoer(int indexMiss){
 	//The lower the value, the more likely is it to be a true peak.
-
 	int minInverseLikelyhoodIsTruePeak = INT_MAX;
 	Peak* indexMaxLikelyhoodIsTruePeak;
 	int currentInverseLikelyhood = 0;
