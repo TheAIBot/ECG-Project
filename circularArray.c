@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "includes/circularArray.h"
 
-char initCircArray(struct CircularArray* circArray, int size, int startIndex)
+char initCircArray(CircularArray* circArray, int size, int startIndex)
 {
 	circArray->size = size;
 	circArray->startIndex = startIndex;
@@ -16,7 +16,13 @@ char initCircArray(struct CircularArray* circArray, int size, int startIndex)
 	return 1;
 }
 
-int getArrayDataValue(int data[], int startIndex, int arraySize, int offset)
+int getCircArrayValue(CircularArray* circArray, int offset)
+{
+	return getArrayDataValue(circArray->data, circArray->startIndex, circArray->size, offset);
+}
+
+
+static int getOffsettedIndex(int startIndex, int arraySize, int offset)
 {
 	int correctIndex = startIndex + offset;
 	if(correctIndex < 0)
@@ -27,21 +33,28 @@ int getArrayDataValue(int data[], int startIndex, int arraySize, int offset)
 	{
 		correctIndex -= arraySize;
 	}
-	return data[correctIndex];
+	return correctIndex;
 }
 
-int getCircArrayValue(struct CircularArray* circArray, int offset)
+int getArrayDataValue(int data[], int startIndex, int arraySize, int offset)
 {
-	return getArrayDataValue(circArray->data, circArray->startIndex, circArray->size, offset);
+
+	return data[getOffsettedIndex(startIndex, arraySize, offset)];
 }
 
-void insertCircArrayData(struct CircularArray* circArray, int newData)
+void insertCircArrayData(CircularArray* circArray, int newData)
 {
 	moveCircArrayStartIndex(circArray);
 	circArray->data[circArray->startIndex] = newData;
 }
 
-void moveCircArrayStartIndex(struct CircularArray* circArray)
+void insertCircArrayDataAt(CircularArray* circArray, int newData, int offset)
+{
+	moveCircArrayStartIndex(circArray);
+	circArray->data[getOffsettedIndex(circArray->startIndex, circArray->size, offset)] = newData;
+}
+
+void moveCircArrayStartIndex(CircularArray* circArray)
 {
 	circArray->startIndex++;
 	if(circArray->startIndex == circArray->size)
@@ -50,7 +63,7 @@ void moveCircArrayStartIndex(struct CircularArray* circArray)
 	}
 }
 
-void freeCircArray(struct CircularArray* circArray)
+void freeCircArray(CircularArray* circArray)
 {
 	free(circArray->data);
 }
