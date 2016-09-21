@@ -13,9 +13,6 @@
 //TODO delete
 typedef struct TPeak Peak;
 
-/*Storing*/
-/*TODO Explain why the different values*/
-
 /*TODO
  * The peaks that pass threshold 1 should not be re-recorded. All should be updated.
  * The array that calcultates RR_AVERAGE1 should be updated when a searchback has been run.
@@ -35,13 +32,11 @@ int tempIndexPeaksForSearchback = 0; //Index of tempPeaksForSearchback, pointing
 /*Variables for detecting R peaks*/
 int Spkf = 3500;
 int Npkf = 300;
-//TODO Might want to make to macros. Depends on performance.
 int Threshold1 =  1100; /*Answers to: Npkf + (Spkf-Npkf)/4*/
 int Threshold2 = 550; /*Answers to Threshold1/2*/
 
 /*Variables for finding the RR-interval
  * Given as though calculated from RR_Average2
- *TODO What about macros? But problems.
  *TODO should it be from RR_Average1 or 2 at the beggining. What are they?
   */
 int RR_Low = 138;  /*TODO, check if there is a possibility of the values becoming "locked"*/
@@ -66,10 +61,9 @@ void initializeRPeakFinder()
 	initPeakCircArray(&trueRPeaks, AVERAGE_NUMBER_MEMBERS, 0, defaultTrueRPeak);
 	initAvgCircArray(&allPeaks, AVERAGE_NUMBER_MEMBERS, 0, AVERAGE_NUMBER_MEMBERS, defaultAllPeak);
 	initAvgCircArray(&threshold1PassPeaks, AVERAGE_NUMBER_MEMBERS, 0, AVERAGE_NUMBER_MEMBERS, defaultThreshold1Peak);
-
 }
 
-//TODO check this method
+
 void recordNewProperRPeak(Peak* newPeak){
 	//Calulates the new values for determining if a peak is an RR peak:
 	Spkf = newPeak->intensity/8 + 7*Spkf/8;
@@ -79,19 +73,13 @@ void recordNewProperRPeak(Peak* newPeak){
 	RR_High = 29*RR_AVERAGE2/25; /*29/25= 1.16*/
 	RR_Miss = 83*RR_AVERAGE2/50; /*83/50 = 1.66*/
 	/*TODO Discuss Andreas, what if the RR interval becomes large enough that multiplying by 83 makes an overflow error,
-	 * For example in the case of a searchback?
+	 * For example in the case of a searchback? This is a definite possibility,
 	 * */
 	//The peak is registrated as a true RR peak.
 	insertPeakCircArrayData(&trueRPeaks, newPeak);
 }
 
 int registerSearchBackPeak(Peak* peak){
-
-	/*When it gets classified as an R-peak, what must be done?
-	 *  See removing from the average.
-	 *  What if it is an already seen R-peak?
-	 *  TODO
-	   */
 	//Calulates the new values for determining if a peak is an RR peak:
 	Spkf = peak->intensity/4 + 3*Spkf/4;
 	Threshold1 = Npkf + (Spkf-Npkf)/4;
@@ -100,9 +88,8 @@ int registerSearchBackPeak(Peak* peak){
 	RR_High = 29*RR_AVERAGE1/25; /*29/25= 1.16*/
 	RR_Miss = 83*RR_AVERAGE1/50; /*83/50 = 1.66*/
 
-	/*Recording it as an proper R-peak. Will always be later than the current RPeaks*/
+	/*Recording it as an proper R-peak. Will always be later than or the same as the current RPeak*/
 	insertPeakCircArrayData(&trueRPeaks, peak);
-	/*TODO Ask. Should the later RR values be updated so that this is the latest RR peak?*/
 	return 1;
 }
 
@@ -114,7 +101,7 @@ int searchBackBackwardsGoer(int indexMiss){
 
 	/*TODO Don't know the average currently used. Using number two currently*/
 	/*TODO Discuss with Andreas, up to the missed peak
-	 * TODO check for pointer error after done*/
+	 */
 	for(int i = 0; i <= indexMiss; i++){
 		if(tempPeaksForSearchback[i]->intensity > Threshold2){
 			if(tempPeaksForSearchback[i]->RR <= RR_Low)
@@ -142,7 +129,6 @@ int searchBack(){
 	int indexMostBackwards = searchBackBackwardsGoer(tempIndexPeaksForSearchback - 1);
 	//For decreasing the value of the RR, since the now last registrated peak;
 	int newRRRemoval = tempPeaksForSearchback[indexMostBackwards]->RR;
-	//TODO fix indexMostBackwards after tests.
 	int i = indexMostBackwards+1;
 	/*i needs to be less than tempIndexPeaksForSearchback, as it is 1 greater the RR_MISS peak*/
 	for(; i < tempIndexPeaksForSearchback; i++){
@@ -176,7 +162,6 @@ int searchBack(){
 				 *have been moved to position i - indexMostBackwards, if the position exists.
 				   */
 				i = indexMostBackwards;
-				//TODO wrong update. Maybe fixed?
 				newRRRemoval += currentPeak->RR;
 			}
 		}
