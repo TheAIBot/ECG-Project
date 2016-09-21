@@ -5,17 +5,16 @@
 #include "includes/rPeakFinder.h"
 #include "includes/ui.h"
 
-#define TIME_BETWEEN_SENSOR_READ_IN_MS 4
-
 void runScannerOnce(int sensorValue)
 {
 	unsigned short filteredValue = filterData((sensorValue));
 
-	Peak* newPeak = getIfPeak(filteredValue);
-	if(newPeak != NULL)
+	if(foundPeak(filteredValue))
 	{
-		if(isRPeak(newPeak)){
+		Peak newPeak = getNewPeak();
+		if(isRPeak(&newPeak)){
 			//TODO verify this is correct
+			setFoundNewRRPeak();
 			updateNewPeak(newPeak, isPulseUnstable());
 		}
 	}
@@ -30,7 +29,7 @@ void runScanner()
 
 	while(1)
 	{
-		int newData = waitForNextValue(file, TIME_BETWEEN_SENSOR_READ_IN_MS);
+		int newData = getNextData(file);
 		if(!hasMoreData(file))
 		{
 			break;

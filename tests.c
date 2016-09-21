@@ -167,45 +167,6 @@ char testWholeFilter(int* data)
 	printf("Passed whole filter test\n");
 	return 1;
 }
-/*TODO write describtion
- * Assumes the initialization works.
- * */
-char testSearchBackTripleSearchTest(){
-	int dataSize = 702;
-	int* testData = loadDataArray("verification_files/testSearchbackDouble.txt", dataSize);
-	if (testData == NULL){
-		free(testData);
-		return 0;
-	}
-	for(int i = 0; i < dataSize; i++)
-		{
-			short filteredData = testData[i];
-			getIfPeak(filteredData);
-			/*TODO uncomment
-			if (hasNewPeak() &&
-				   isRPeak(getPeakValue(0), getPeakTime(0)))
-			{
-				PeakCircularArray* trueRPeaks = getTrueRPeaks();
-				//The expected first 3 new peaks recorded, have value 2000,2000 and 5000:
-				if (getPeakCircArrayValue(trueRPeaks,-3)->intensity != 2000 || getPeakCircArrayValue(trueRPeaks,-2)->intensity != 2000 ||
-						getPeakCircArrayValue(trueRPeaks,-1)->intensity != 5000){
-					printf("%d,%d,%d \n",getPeakCircArrayValue(trueRPeaks,-3)->intensity, getPeakCircArrayValue(trueRPeaks,-2)->intensity,
-							getPeakCircArrayValue(trueRPeaks,-1)->intensity);
-					return 0;
-				}
-				//The expecte RR values are 174, (248 - 174) = 74 og (700 - 248)=452:
-				if (getPeakCircArrayValue(trueRPeaks,-3)->RR != 174 || getPeakCircArrayValue(trueRPeaks,-2)->RR != 74 ||
-						getPeakCircArrayValue(trueRPeaks,-1)->RR != 452)
-					return 0;
-				//else:
-				printf("Triple searchback test passed");
-				return 1;
-			}
-			*/
-		}
-	free(testData);
-	return 1;
-}
 
 char testRPeakSearcher(int* data)
 {
@@ -221,12 +182,10 @@ char testRPeakSearcher(int* data)
 
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
 	{
-		short filteredData = data[i];
-		Peak* newPeak = getIfPeak(filteredData);
-		if (newPeak != NULL &&
-			isRPeak(newPeak))
+		if(foundPeak(data[i]))
 		{
-			if (isRPeak(newPeak)){
+			Peak newPeak = getNewPeak();
+			if (isRPeak(&newPeak)){
 				printf("%d\n",i);
 			}
 		}
@@ -330,12 +289,6 @@ void testAll()
 		return;
 	}
 	free(mwi_after);
-
-
-	if (!testSearchBackTripleSearchTest()){
-		printf("Failed triple searchback test");
-		return;
-	}
 
 	printf("All tests finished successfully\n");
 }

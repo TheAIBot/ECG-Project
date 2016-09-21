@@ -5,10 +5,10 @@
 
 #define PEAK_AREA 5
 #define MIDDLE_INDEX (PEAK_AREA / 2)
+#define MINIMUM_TIME_BETWEEM_RR_PEAKS 60 - PEAK_AREA
 
-/*TODO Think about removing the value below, and calcultating it on the go. Discuss with Andreas - don't remove - Jesper*/
 static unsigned short lastPeakTime = 0;
-static unsigned short timeSinceLastPeak = -(PEAK_AREA - 1) / 2 + 1; /*It starts at -(PEAK_AREA - 1)/2 + , because of the delay of (PEAK_AREA - 1)/2*/
+static unsigned short timeSinceLastRRPeak = -(PEAK_AREA) / 2; /*It starts at -(PEAK_AREA - 1)/2 + , because of the delay of (PEAK_AREA - 1)/2*/
 
 static unsigned short last5Values[PEAK_AREA] = {0};
 
@@ -17,53 +17,53 @@ static char isPeak()
 	static unsigned short formerDifferentValue = 0;
 	/*TODO Talk about the following extra check with the teachers*/
 	/*To avoid registrating a peak in case of a fall, then a plateu, then a fall in values.*/
-	if (last5Values[MIDDLE_INDEX - 1] != last5Values[MIDDLE_INDEX])
+	unsigned short potentialPeak = last5Values[MIDDLE_INDEX];
+
+	if (last5Values[MIDDLE_INDEX - 1] != potentialPeak)
 	{
 		formerDifferentValue = last5Values[MIDDLE_INDEX - 1];
 	}
 
 	//TODO make these values a macro
-	if (last5Values[MIDDLE_INDEX] < 100 || timeSinceLastPeak <= 20)
+	if (last5Values[MIDDLE_INDEX] < 100)
 	{
 		return 0;
 	}
 
-	if (last5Values[MIDDLE_INDEX - 2] <= last5Values[MIDDLE_INDEX] &&
-		last5Values[MIDDLE_INDEX - 1] <= last5Values[MIDDLE_INDEX] &&
-		last5Values[MIDDLE_INDEX + 1] < last5Values[MIDDLE_INDEX] &&
-		last5Values[MIDDLE_INDEX + 2] < last5Values[MIDDLE_INDEX] &&
-		formerDifferentValue < last5Values[MIDDLE_INDEX])
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
+	return (last5Values[MIDDLE_INDEX - 2] <= potentialPeak &&
+			last5Values[MIDDLE_INDEX - 1] <= potentialPeak &&
+			last5Values[MIDDLE_INDEX + 1] <  potentialPeak &&
+			last5Values[MIDDLE_INDEX + 2] <  potentialPeak &&
+			formerDifferentValue          <  potentialPeak);
 }
 
 //TODO add description
-Peak getIfPeak(unsigned short newDataPoint)
+char foundPeak(unsigned short newDataPoint)
 {
+	timeSinceLastRRPeak++;
+
+	if(timeSinceLastRRPeak <= MINIMUM_TIME_BETWEEM_RR_PEAKS)
+	{
+		return 0;
+	}
 	//Move the whole array back once so the new data can be inserted at the last index
 	memcpy( last5Values, last5Values + 1, sizeof(last5Values));
 	last5Values[PEAK_AREA - 1] = newDataPoint;
 
-	if (isPeak())
-	{
-		Peak newPeak = {last5Values[MIDDLE_INDEX], timeSinceLastPeak};
+	return isPeak();
+}
 
-		lastPeakTime = timeSinceLastPeak;
-		timeSinceLastPeak = 0;
+Peak getNewPeak()
+{
+	return (Peak){last5Values[MIDDLE_INDEX], timeSinceLastRRPeak};
+}
 
-		return newPeak;
-	}
-
-	timeSinceLastPeak++;
-	return NULL;
+void setFoundNewRRPeak()
+{
+	lastPeakTime = timeSinceLastRRPeak;
+	timeSinceLastRRPeak = 0;
 }
 
 void addRRTimeFromFormer()
 {
-	timeSinceLastPeak += lastPeakTime;
 }

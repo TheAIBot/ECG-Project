@@ -11,6 +11,6 @@
 #include "peak.h"
 
 void ShowNormalInformation();
-void updateNewPeak(Peak* newPeak, char isPulseUnstable);
+void updateNewPeak(Peak newPeak, char isPulseUnstable);
 
 #endif /* INCLUDES_UI_H_ */

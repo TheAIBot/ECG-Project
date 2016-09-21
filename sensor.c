@@ -74,12 +74,3 @@ int* loadDataArray(char* filename, int arrayLength)
 
 	return inputArray;
 }
-
-int waitForNextValue(FILE* file, int timeToWait)
-{
-	int startTime = BENCHMARK_START;
-	while(BENCHMARK_TIME(startTime) < timeToWait)
-	{}
-
-	return getNextData(file);
-}

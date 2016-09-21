@@ -15,7 +15,6 @@ int getNextData(FILE* file);
 unsigned short* loadPeakData(FILE* file, int fileSizeInLines);
 void stopInputData(FILE* file);
 int* loadDataArray(char* filename, int arrayLength);
-int waitForNextValue(FILE* file, int timeToWait);
 
 
 #endif /* INPUTMANAGER_H_ */
