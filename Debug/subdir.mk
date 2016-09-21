@@ -4,13 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../ECGScanner.c \
 ../avgCircularArray.c \
 ../benchmarks.c \
 ../circularArray.c \
 ../derSqrMwiFilter.c \
 ../filter.c \
 ../highPassFilter.c \
-../inputManager.c \
 ../lowPassFilter.c \
 ../main.c \
 ../peak.c \
@@ -18,16 +18,18 @@ C_SRCS += \
 ../peakSearcher.c \
 ../rPeakFinder.c \
 ../rawData.c \
-../tests.c 
+../sensor.c \
+../tests.c \
+../ui.c 
 
 OBJS += \
+./ECGScanner.o \
 ./avgCircularArray.o \
 ./benchmarks.o \
 ./circularArray.o \
 ./derSqrMwiFilter.o \
 ./filter.o \
 ./highPassFilter.o \
-./inputManager.o \
 ./lowPassFilter.o \
 ./main.o \
 ./peak.o \
@@ -35,16 +37,18 @@ OBJS += \
 ./peakSearcher.o \
 ./rPeakFinder.o \
 ./rawData.o \
-./tests.o 
+./sensor.o \
+./tests.o \
+./ui.o 
 
 C_DEPS += \
+./ECGScanner.d \
 ./avgCircularArray.d \
 ./benchmarks.d \
 ./circularArray.d \
 ./derSqrMwiFilter.d \
 ./filter.d \
 ./highPassFilter.d \
-./inputManager.d \
 ./lowPassFilter.d \
 ./main.d \
 ./peak.d \
@@ -52,7 +56,9 @@ C_DEPS += \
 ./peakSearcher.d \
 ./rPeakFinder.d \
 ./rawData.d \
-./tests.d 
+./sensor.d \
+./tests.d \
+./ui.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

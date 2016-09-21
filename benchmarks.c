@@ -101,7 +101,7 @@ static int benchmarkPeakSearcher(int* data)
 	for(; i < ECG_10800K_LENGTH; i++)
 	{
 		//searchPeak(data[i] * data[i]);
-		searchPeak(data[i] * data[i]);
+		getIfPeak(data[i] * data[i]);
 		/*TODO uncomment
 		if (hasNewPeak() &&	isRPeak(getPeakValue(0), getPeakTime(0)))
 		{

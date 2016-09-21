@@ -188,7 +188,9 @@ char searchBack(){
 		}
 	}
 	/*indexMostBackwards is the position of the last registrated RR-peak */
-	tempIndexPeaksForSearchback -= indexMostBackwards + 1;
+	tempIndexPeaksForSearchback -= (indexMostBackwards + 1);
+	recalculateAverageAvgCircAverage(&allPeaks);
+	recalculateAverageAvgCircAverage(&threshold1PassPeaks);
 	//(*) denne funktion kan kun returnere 1
 	return 1;
 
@@ -303,7 +305,6 @@ PeakCircularArray* getTrueRPeaks(){
 	return &trueRPeaks;
 }
 
-
 Peak* getNewestPeak()
 {
 	return getCircArrayValue(trueRPeaks, 0);
@@ -311,7 +312,7 @@ Peak* getNewestPeak()
 
 char isPulseUnstable()
 {
-	return concurrentMissedRRLOWAndHigh < MISSES_FOR_UNSTABLE;
+	return concurrentMissedRRLOWAndHigh >= MISSES_FOR_UNSTABLE;
 }
 
 

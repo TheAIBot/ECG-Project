@@ -30,10 +30,16 @@ char initAvgCircArray(AvgCircularArray* avgCirc, int size, int startIndex, int a
 	}
 
 	for(int i = 0; i < avgCirc->size; i++){
+		Peak copDefPeak = defaultPeak;
+		avgCirc->data[i] = &defaultPeak;
+
+
+		/*
 		Peak* copyDefaultPeak = malloc(sizeof(Peak));
 		memcpy(copyDefaultPeak, &defaultPeak, sizeof(Peak));
 
 		avgCirc->data[i] = copyDefaultPeak;
+		*/
 	}
 	return 1;
 }
@@ -120,6 +126,13 @@ void insertAvgCircData(AvgCircularArray* avgCirc, Peak* newPeak){
 int getAvgCircAverageRR(const AvgCircularArray* avgCirc)
 {
 	return avgCirc->averageSum / avgCirc->averageLength;
+}
+
+void recalculateAverageAvgCircAverage(AvgCircularArray* avgCirc){
+	avgCirc->averageSum = 0;
+	for(int i = 0; i < avgCirc->averageLength; i++){
+		avgCirc->averageSum += getAvgCircValue(avgCirc, -i)->RR;
+	}
 }
 
 //TODO is it correct after using peaks?
