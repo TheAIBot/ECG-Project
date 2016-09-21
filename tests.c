@@ -162,7 +162,6 @@ char testWholeFilter(int* data)
 			return 0;
 		}
 
-		/*TODO. Temp test of peaksearcher. To be removed.*/
 	}
 	stopInputData(file);
 	printf("Passed whole filter test\n");

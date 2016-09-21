@@ -13,9 +13,7 @@
 #define MISSES_FOR_UNSTABLE 5
 //TODO delete
 typedef struct TPeak Peak;
-
-/*Storing*/
-/*TODO Explain why the different values*/
+/*TODO Hvad vis sample raten er forskellig?*/
 
 /*TODO
  * The peaks that pass threshold 1 should not be re-recorded. All should be updated.
@@ -42,7 +40,6 @@ static unsigned short Threshold2 = 550; /*Answers to Threshold1/2*/
 
 /*Variables for finding the RR-interval
  * Given as though calculated from RR_Average2
- *TODO What about macros? But problems.
  *TODO should it be from RR_Average1 or 2 at the beggining. What are they?
   */
 static unsigned short RR_Low = 138;  /*TODO, check if there is a possibility of the values becoming "locked"*/
@@ -50,8 +47,10 @@ static unsigned short RR_High = 173;
 static unsigned short RR_Miss = 249;
 static unsigned int concurrentMissedRRLOWAndHigh = 0;
 
-void initializeRPeakFinder()
-{
+/* Initializes the rPeakFinder, by setting inserting in to it's different circular and average circular arrays,
+ * some initial values. Must be run before isRPeak.
+ *  */
+void initializeRPeakFinder(){
 	/* Looking from the data, the intensity of a normal heart beat is at least 3500.
 	 * Looking at the Internet, see http://www.heart.org/HEARTORG/HealthyLiving/PhysicalActivity/Target-Heart-Rates_UCM_434341_Article.jsp
 	 * the average resting heat rate, the time between an heart beat, and thus also the RR-interval, is around 60-100 bpm.
@@ -68,10 +67,12 @@ void initializeRPeakFinder()
 	initPeakCircArray(&trueRPeaks, AVERAGE_NUMBER_MEMBERS, 0, defaultTrueRPeak);
 	initAvgCircArray(&allPeaks, AVERAGE_NUMBER_MEMBERS, 0, AVERAGE_NUMBER_MEMBERS, defaultAllPeak);
 	initAvgCircArray(&threshold1PassPeaks, AVERAGE_NUMBER_MEMBERS, 0, AVERAGE_NUMBER_MEMBERS, defaultThreshold1Peak);
-
 }
 
-//TODO check this method
+/*Given the pointer to a new Peak to be recorded as a new true R peak, it records it as such.
+   *
+ * Peak* newPeak; Pointer to the new Peak to be recorded.
+ * */
 void recordNewProperRPeak(Peak* newPeak){
 	//Calulates the new values for determining if a peak is an RR peak:
 	Spkf = newPeak->intensity / 8 + 7 * Spkf / 8;
@@ -81,19 +82,17 @@ void recordNewProperRPeak(Peak* newPeak){
 	RR_High = 29 * RR_AVERAGE2 / 25; /*29/25= 1.16*/
 	RR_Miss = 83 * RR_AVERAGE2 / 50; /*83/50 = 1.66*/
 	/*TODO Discuss Andreas, what if the RR interval becomes large enough that multiplying by 83 makes an overflow error,
-	 * For example in the case of a searchback?
+	 * For example in the case of a searchback? This is a definite possibility,
 	 * */
 	//The peak is registrated as a true RR peak.
 	insertPeakCircArrayData(&trueRPeaks, newPeak);
 }
-
+/* Records a peak found during a searchback, that meet the requirements to be taken as a true R peak.
+ *
+ * Peak* peak; the peak to be recorded.
+ * returns 1 if it works, else 0.
+ */
 int registerSearchBackPeak(Peak* peak){
-
-	/*When it gets classified as an R-peak, what must be done?
-	 *  See removing from the average.
-	 *  What if it is an already seen R-peak?
-	 *  TODO
-	   */
 	//Calulates the new values for determining if a peak is an RR peak:
 	Spkf = peak->intensity / 4 + 3 * Spkf / 4;
 	Threshold1 = Npkf + (Spkf - Npkf) / 4;
@@ -102,12 +101,21 @@ int registerSearchBackPeak(Peak* peak){
 	RR_High = 29 * RR_AVERAGE1 / 25; /*29/25= 1.16*/
 	RR_Miss = 83 * RR_AVERAGE1 / 50; /*83/50 = 1.66*/
 
-	/*Recording it as an proper R-peak. Will always be later than the current RPeaks*/
+	/*Recording it as an proper R-peak. Will always be later than or the same as the current RPeak*/
 	insertPeakCircArrayData(&trueRPeaks, peak);
-	/*TODO Ask. Should the later RR values be updated so that this is the latest RR peak?*/
 	return 1;
 }
 
+/* Finds the index of the most suitable peak to be recorded as a true R peak in tempPeaksForSearchback,
+ * up to the index, indexMiss. Used during searchbacks.
+ * Calculates the suitability as the RR distance from the average, taking the peaks that has an RR value greater the RR_HIGH,
+ * as being double as close as those below RR_LOW.
+ *
+ * int indexMiss; the index of the last peak in tempPeaksForSearchback, to take into account for the calculations.
+ *
+ * returns
+ *
+ * */
 int searchBackBackwardsGoer(int indexMiss){
 	//The lower the value, the more likely is it to be a true peak.
 	int minInverseLikelyhoodIsTruePeak = INT_MAX;
@@ -116,13 +124,13 @@ int searchBackBackwardsGoer(int indexMiss){
 
 	/*TODO Don't know the average currently used. Using number two currently*/
 	/*TODO Discuss with Andreas, up to the missed peak
-	 * TODO check for pointer error after done*/
+	 */
 	for(int i = 0; i <= indexMiss; i++){
 		if(tempPeaksForSearchback[i]->intensity > Threshold2){
 			if(tempPeaksForSearchback[i]->RR <= RR_Low)
 				currentInverseLikelyhood = RR_AVERAGE2 - tempPeaksForSearchback[i]->RR;
 			else
-				currentInverseLikelyhood = (tempPeaksForSearchback[i]->RR - RR_AVERAGE2)/2;
+				currentInverseLikelyhood = (tempPeaksForSearchback[i]->RR - RR_AVERAGE2)/2; /*TODO might make it into multiplication of the above, ie. adding it to itself.*/
 			if(currentInverseLikelyhood <= minInverseLikelyhoodIsTruePeak){
 				minInverseLikelyhoodIsTruePeak = currentInverseLikelyhood;
 				indexMaxLikelyhoodIsTruePeak = i;
@@ -131,10 +139,8 @@ int searchBackBackwardsGoer(int indexMiss){
 	}
 	//It records the peak:
 	registerSearchBackPeak(tempPeaksForSearchback[indexMaxLikelyhoodIsTruePeak]);
-
 	//Returns the index to the most likely-to-be-a-proper-R-peak peak.
 	//There will always be one, as the peak triggering the searchback is a candidate.
-
 	return indexMaxLikelyhoodIsTruePeak;
 }
 
@@ -177,7 +183,6 @@ char searchBack(){
 				 *have been moved to position i - indexMostBackwards, if the position exists.
 				   */
 				i = indexMostBackwards;
-				//TODO wrong update. Maybe fixed?
 				newRRRemoval += currentPeak->RR;
 			}
 		}
@@ -189,6 +194,8 @@ char searchBack(){
 
 }
 
+/*Checks if a given Peak peak(pointer), has an intensity greater than THRESHOLD1,
+ * */
 int passThreshold1(Peak* peak){
 	/*TODO Discuss with the teacher.
 		 * Does RR_Average1 only have to updated if (RR_Low < peakTime_0 && peakTime_0 < RR_High)==True below?.
@@ -257,9 +264,14 @@ char isRPeak(Peak* newPeak){
 	insertAvgCircData(&allPeaks,newPeak);
 	//allPeaks Move one forward to fast, but still fine. TODO
 
-
-	tempPeaksForSearchback[tempIndexPeaksForSearchback] = newPeak;
-	tempIndexPeaksForSearchback++;
+	/*TODO check.
+	 * Only adds the peak if it is above threshold2. This is so that most peaks will be found,
+	 * but only a limited amount of space is necessary.
+	 */
+	if(newPeak->intensity > Threshold2){
+		tempPeaksForSearchback[tempIndexPeaksForSearchback] = newPeak;
+		tempIndexPeaksForSearchback++;
+	}
 	return rPeakChecks(newPeak);
 }
 
