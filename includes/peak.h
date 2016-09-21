@@ -13,6 +13,7 @@ struct TPeak
 {
 	const unsigned short intensity;
 	unsigned short RR;
+	unsigned char refCount;
 };
 
 typedef struct TPeak Peak;

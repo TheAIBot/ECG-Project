@@ -12,13 +12,15 @@ void runScannerOnce(int sensorValue)
 	unsigned short filteredValue = filterData((sensorValue));
 
 	Peak* newPeak = getIfPeak(filteredValue);
-
+	printf("fisk\n");
 	if(newPeak != NULL &&
 	   isRPeak(newPeak))
 	{
 		//TODO verify this is correct
+		printf("kage\n");
 		updateNewPeak(newPeak);
 	}
+	printf("derp\n");
 	ShowNormalInformation(isPulseUnstable());
 }
 
