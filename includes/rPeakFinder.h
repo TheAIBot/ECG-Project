@@ -13,13 +13,16 @@
 typedef struct TPeak Peak;
 typedef struct TPeakCircularArray PeakCircularArray;
 
+void initializeRPeakFinder();
 char isRPeak(Peak* newPeak);
 void recordNewProperRRPeak(int peakValue, int peakTime_0, int peakTime_7);
 char searchBack();
 int backwardCircularArray(int size, int currentIndex, int offset);
 int forwardCircularArray(int size, int currentIndex, int offset);
-int* getNewestTrueRRPeakTimes(int timesCount);
-int* getNewestTrueRRPeakValues();
+unsigned short* getPeakTimes(int timesCount);
+unsigned short* getPeakValues();
 PeakCircularArray* getTrueRPeaks();
+Peak* getNewestPeak();
+char isPulseUnstable();
 
 #endif /* INCLUDES_RPEAKFINDER_H_ */

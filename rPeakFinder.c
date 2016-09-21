@@ -10,6 +10,7 @@
 #define AVERAGE_NUMBER_MEMBERS 8
 #define RR_AVERAGE1 getAvgCircAverageRR(&allPeaks)
 #define RR_AVERAGE2 getAvgCircAverageRR(&threshold1PassPeaks)
+#define MISSES_FOR_UNSTABLE 5
 //TODO delete
 typedef struct TPeak Peak;
 
@@ -25,28 +26,29 @@ typedef struct TPeak Peak;
  * */
 
 
-PeakCircularArray trueRPeaks; //Last eight true r peak
-AvgCircularArray threshold1PassPeaks; //Last eight peaks which intensity surpassed Threshold1 (making them R peaks)
-AvgCircularArray allPeaks;//Last eight peaks found, no matter what.
+static PeakCircularArray trueRPeaks; //Last eight true r peak
+static AvgCircularArray threshold1PassPeaks; //Last eight peaks which intensity surpassed Threshold1 (making them R peaks)
+static AvgCircularArray allPeaks;//Last eight peaks found, no matter what.
 /*TODO Andreas, what about freeing the memory of the peaks?*/
-Peak * tempPeaksForSearchback[16]; //Last peaks since last register of a true R peak. Used in searchback.
-int tempIndexPeaksForSearchback = 0; //Index of tempPeaksForSearchback, pointing to the next free space.
+static Peak * tempPeaksForSearchback[16]; //Last peaks since last register of a true R peak. Used in searchback.
+static int tempIndexPeaksForSearchback = 0; //Index of tempPeaksForSearchback, pointing to the next free space.
 
 /*Variables for detecting R peaks*/
-int Spkf = 3500;
-int Npkf = 300;
+static unsigned short Spkf = 3500;
+static unsigned short Npkf = 300;
 //TODO Might want to make to macros. Depends on performance.
-int Threshold1 =  1100; /*Answers to: Npkf + (Spkf-Npkf)/4*/
-int Threshold2 = 550; /*Answers to Threshold1/2*/
+static unsigned short Threshold1 =  1100; /*Answers to: Npkf + (Spkf-Npkf)/4*/
+static unsigned short Threshold2 = 550; /*Answers to Threshold1/2*/
 
 /*Variables for finding the RR-interval
  * Given as though calculated from RR_Average2
  *TODO What about macros? But problems.
  *TODO should it be from RR_Average1 or 2 at the beggining. What are they?
   */
-int RR_Low = 138;  /*TODO, check if there is a possibility of the values becoming "locked"*/
-int RR_High = 173;
-int RR_Miss = 249;
+static unsigned short RR_Low = 138;  /*TODO, check if there is a possibility of the values becoming "locked"*/
+static unsigned short RR_High = 173;
+static unsigned short RR_Miss = 249;
+static unsigned int concurrentMissedRRLOWAndHigh = 0;
 
 void initializeRPeakFinder()
 {
@@ -72,16 +74,17 @@ void initializeRPeakFinder()
 //TODO check this method
 void recordNewProperRPeak(Peak* newPeak){
 	//Calulates the new values for determining if a peak is an RR peak:
-	Spkf = newPeak->intensity/8 + 7*Spkf/8;
-	Threshold1 = Npkf + (Spkf-Npkf)/4;
-	Threshold2 = Threshold1/2;
-	RR_Low = 23*RR_AVERAGE2/25; /*23/25= 0.92*/
-	RR_High = 29*RR_AVERAGE2/25; /*29/25= 1.16*/
-	RR_Miss = 83*RR_AVERAGE2/50; /*83/50 = 1.66*/
+	Spkf = newPeak->intensity / 8 + 7 * Spkf / 8;
+	Threshold1 = Npkf + (Spkf - Npkf) / 4;
+	Threshold2 = Threshold1 / 2;
+	RR_Low = 23 * RR_AVERAGE2 / 25; /*23/25= 0.92*/
+	RR_High = 29 * RR_AVERAGE2 / 25; /*29/25= 1.16*/
+	RR_Miss = 83 * RR_AVERAGE2 / 50; /*83/50 = 1.66*/
 	/*TODO Discuss Andreas, what if the RR interval becomes large enough that multiplying by 83 makes an overflow error,
 	 * For example in the case of a searchback?
 	 * */
 	//The peak is registrated as a true RR peak.
+	printf("time: %hu\n", newPeak->RR);
 	insertPeakCircArrayData(&trueRPeaks, newPeak);
 }
 
@@ -93,12 +96,12 @@ int registerSearchBackPeak(Peak* peak){
 	 *  TODO
 	   */
 	//Calulates the new values for determining if a peak is an RR peak:
-	Spkf = peak->intensity/4 + 3*Spkf/4;
-	Threshold1 = Npkf + (Spkf-Npkf)/4;
-	Threshold2 = Threshold1/2;
-	RR_Low = 23*RR_AVERAGE1/25; /*23/25= 0.92*/
-	RR_High = 29*RR_AVERAGE1/25; /*29/25= 1.16*/
-	RR_Miss = 83*RR_AVERAGE1/50; /*83/50 = 1.66*/
+	Spkf = peak->intensity / 4 + 3 * Spkf / 4;
+	Threshold1 = Npkf + (Spkf - Npkf) / 4;
+	Threshold2 = Threshold1 / 2;
+	RR_Low = 23 * RR_AVERAGE1 / 25; /*23/25= 0.92*/
+	RR_High = 29 * RR_AVERAGE1 / 25; /*29/25= 1.16*/
+	RR_Miss = 83 * RR_AVERAGE1 / 50; /*83/50 = 1.66*/
 
 	/*Recording it as an proper R-peak. Will always be later than the current RPeaks*/
 	insertPeakCircArrayData(&trueRPeaks, peak);
@@ -141,11 +144,10 @@ char searchBack(){
 	//TODO check if -1 below is correct
 	int indexMostBackwards = searchBackBackwardsGoer(tempIndexPeaksForSearchback - 1);
 	//For decreasing the value of the RR, since the now last registrated peak;
-	int newRRRemoval = tempPeaksForSearchback[indexMostBackwards]->RR;
+	unsigned short newRRRemoval = tempPeaksForSearchback[indexMostBackwards]->RR;
 	//TODO fix indexMostBackwards after tests.
-	int i = indexMostBackwards+1;
 	/*i needs to be less than tempIndexPeaksForSearchback, as it is 1 greater the RR_MISS peak*/
-	for(; i < tempIndexPeaksForSearchback; i++){
+	for(int i = indexMostBackwards+1; i < tempIndexPeaksForSearchback; i++){
 		Peak* currentPeak = tempPeaksForSearchback[i];
 		currentPeak->RR -= newRRRemoval;
 		/*The data is moved back in the array, so the peaks have the right position to the last true RR peak found,
@@ -201,7 +203,7 @@ int passThreshold1(Peak* peak){
 			Threshold2 = Threshold1/2;
 			/*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
 			addRRTimeFromFormer();
-			return (0);
+			return 0;
 		} else{
 			/*Now it is classified as an R-peak, but not neccesarily a proper one. It is recorded as such.*/
 			insertAvgCircData(&threshold1PassPeaks, peak);
@@ -213,17 +215,28 @@ char rPeakChecks(Peak* newPeak){
 	if (passThreshold1(newPeak)){
 		/*If it is in the RR-interval*/
 		if (RR_Low < newPeak->RR && newPeak->RR < RR_High){
+			concurrentMissedRRLOWAndHigh = 0;
+
 			recordNewProperRPeak(newPeak);
 			//Sets it so that there have been no new peaks found, since this RR peak.
 			tempIndexPeaksForSearchback = 0;
-			return (1);
-		} else if(newPeak->RR > RR_Miss){
-			return (searchBack());
-		} else{
-			 /*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
-			addRRTimeFromFormer();
-			return 0;
+			return 1;
 		}
+		else
+		{
+			concurrentMissedRRLOWAndHigh++;
+			if(newPeak->RR > RR_Miss)
+			{
+				return searchBack();
+			}
+			else
+			{
+				 /*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
+				addRRTimeFromFormer();
+				return 0;
+			}
+		}
+
 	}
 	else
 	{
@@ -256,26 +269,43 @@ PeakCircularArray* getTrueRPeaksArray(){
 }
 
 //TODO check this method
-int* getNewestTrueRRPeakTimes(int timesCount){
-	/*
-	int* timesSums = malloc(timesCount * sizeof(int));
-	int timeSum = 0;
-	for(int i = 8; i < timesCount + 8; i++)
+unsigned short* getPeakTimes(int timesCount){
+
+	/*unsigned short* timesSums = malloc(timesCount * sizeof(unsigned short));
+	unsigned short timeSum = 0;
+	for(int i = 0; i < 8; i++)
 	{
-		timeSum += trueRRPeakRR[i];
-		timesSums[i - 8] = timeSum;
+		timeSum += getAvgCircAverageRR(trueRPeaks, -i);
+		timesSums[i] = timeSum;
 	}
 	//printf("%d\n", timeSum);
-	 *
-	 */
-	return malloc(31 * sizeof(int));
+	return timesSums;
+	*/
+	return malloc(31 * sizeof(unsigned short));
 }
 
-int* getNewestTrueRRPeakValues(){
-	return malloc(31 * sizeof(int));
+unsigned short* getPeakValues(){
+	return malloc(31 * sizeof(unsigned short));
 }
 
 PeakCircularArray* getTrueRPeaks(){
 	return &trueRPeaks;
 }
+
+
+Peak* getNewestPeak()
+{
+	return getCircArrayValue(trueRPeaks, 0);
+}
+
+char isPulseUnstable()
+{
+	return concurrentMissedRRLOWAndHigh < MISSES_FOR_UNSTABLE;
+}
+
+
+
+
+
+
 

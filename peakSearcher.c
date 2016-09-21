@@ -21,10 +21,6 @@ static char isPeak()
 	{
 		formerDifferentValue = last5Values[MIDDLE_INDEX - 1];
 	}
-	else
-	{
-		return 0;
-	}
 
 	//TODO make these values a macro
 	if (last5Values[MIDDLE_INDEX] < 100 || timeSinceLastPeak <= 20)
@@ -59,7 +55,7 @@ Peak* getIfPeak(unsigned short newDataPoint)
 
 	if (isPeak())
 	{
-		Peak newPeak = {timeSinceLastPeak, last5Values[MIDDLE_INDEX]};
+		Peak newPeak = {last5Values[MIDDLE_INDEX], timeSinceLastPeak};
 		Peak* returnablePeak = malloc(sizeof(Peak));
 		memcpy(returnablePeak, &newPeak, sizeof(Peak));
 
@@ -71,6 +67,7 @@ Peak* getIfPeak(unsigned short newDataPoint)
 	}
 
 	timeSinceLastPeak++;
+	return NULL;
 }
 
 void addRRTimeFromFormer()

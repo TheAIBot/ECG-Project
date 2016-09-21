@@ -215,9 +215,9 @@ char testRPeakSearcher(int* data)
 	{
 		return 0;
 	}
-	int* timesAndMeasurements = loadPeakData(file, TEST_DATA_R_PEAK_LENGTH);
-	int* times = timesAndMeasurements;
-	int* measurements = &timesAndMeasurements[TEST_DATA_R_PEAK_LENGTH];
+	unsigned short* timesAndMeasurements = loadPeakData(file, TEST_DATA_R_PEAK_LENGTH);
+	unsigned short* times = timesAndMeasurements;
+	unsigned short* measurements = &timesAndMeasurements[TEST_DATA_R_PEAK_LENGTH];
 	char* timeMeasurementTaken = calloc(TEST_DATA_R_PEAK_LENGTH, sizeof(char));
 
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
@@ -230,15 +230,16 @@ char testRPeakSearcher(int* data)
 			if (isRPeak(newPeak)){
 				printf("%d\n",i);
 			}
-			//else free(newPeak);
 		}
 	}
-	int* peakValues = getNewestTrueRRPeakValues();
-	int* peakTimes = getNewestTrueRRPeakTimes(TEST_DATA_R_PEAK_LENGTH);
+	printf("fisk\n");
+	unsigned short* peakValues = getPeakValues();
+	unsigned short* peakTimes = getPeakTimes(TEST_DATA_R_PEAK_LENGTH);
+	printf("sdfsd\n");
 	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)
 	{
-		int peakValue = peakValues[i];
-		int peakTime = peakTimes[i];
+		unsigned short peakValue = peakValues[i];
+		unsigned short peakTime = peakTimes[i];
 		char isCorrect = 0;
 
 		for(int y = 0; y < TEST_DATA_R_PEAK_LENGTH; y++)

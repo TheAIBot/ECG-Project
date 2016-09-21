@@ -25,15 +25,15 @@ int getNextData(FILE* file)
 	return data;
 }
 
-void getPeakData(FILE* file, int* time, int* measurement)
+void getPeakData(FILE* file, unsigned short* time, unsigned short* measurement)
 {
-	fscanf(file, "%d %d", time, measurement);
+	fscanf(file, "%hu %hu", time, measurement);
 }
 
-int* loadPeakData(FILE* file, int fileSizeInLines)
+unsigned short* loadPeakData(FILE* file, int fileSizeInLines)
 {
 	//first array is time and second is measurements
-	int* timeAndMeasurements = malloc(2 * fileSizeInLines * sizeof(int));
+	int* timeAndMeasurements = malloc(2 * fileSizeInLines * sizeof(unsigned short));
 	for(int i = 0; i < fileSizeInLines; i++)
 	{
 		getPeakData(file, &timeAndMeasurements[i], &timeAndMeasurements[i + fileSizeInLines]);
