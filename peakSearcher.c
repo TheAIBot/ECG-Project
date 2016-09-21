@@ -43,12 +43,8 @@ static char isPeak()
 }
 
 //TODO add description
-Peak* getIfPeak(unsigned short newDataPoint)
+Peak getIfPeak(unsigned short newDataPoint)
 {
-	/*TODO Fix recording first data point as a peak.
-	 *  Needs to be discussed with the teacher or the teaching assistants. - Jesper
-	 */
-
 	//Move the whole array back once so the new data can be inserted at the last index
 	memcpy( last5Values, last5Values + 1, sizeof(last5Values));
 	last5Values[PEAK_AREA - 1] = newDataPoint;
@@ -56,14 +52,11 @@ Peak* getIfPeak(unsigned short newDataPoint)
 	if (isPeak())
 	{
 		Peak newPeak = {last5Values[MIDDLE_INDEX], timeSinceLastPeak};
-		Peak* returnablePeak = malloc(sizeof(Peak));
-		memcpy(returnablePeak, &newPeak, sizeof(Peak));
-
 
 		lastPeakTime = timeSinceLastPeak;
 		timeSinceLastPeak = 0;
 
-		return returnablePeak;
+		return newPeak;
 	}
 
 	timeSinceLastPeak++;
