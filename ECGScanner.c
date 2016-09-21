@@ -14,8 +14,8 @@ void runScannerOnce(int sensorValue)
 	Peak* newPeak = getIfPeak(filteredValue);
 	if(newPeak != NULL)
 	{
-		if(isRPeak(newPeak)){
-			//TODO verify this is correct
+		if(isRPeak(*newPeak)){
+			//TODO verify this is correct. It is not - Jesper
 			updateNewPeak(newPeak, isPulseUnstable());
 		}
 	}
