@@ -84,7 +84,6 @@ void recordNewProperRPeak(Peak* newPeak){
 	 * For example in the case of a searchback?
 	 * */
 	//The peak is registrated as a true RR peak.
-	printf("time: %hu\n", newPeak->RR);
 	insertPeakCircArrayData(&trueRPeaks, newPeak);
 }
 
