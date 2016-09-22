@@ -21,8 +21,10 @@ void recordNewProperRRPeak(int peakValue, int peakTime_0, int peakTime_7);
 char searchBack();
 int backwardCircularArray(int size, int currentIndex, int offset);
 int forwardCircularArray(int size, int currentIndex, int offset);
-PeakCircularArray* getTrueRPeaks();
+PeakCircularArray* getTrueRPeaksArray();
 Peak* getNewestPeak();
+char getNumberNewRPeaksFound();
 char isPulseUnstable();
+void moveLastPeaksBackInArray();
 
 #endif /* INCLUDES_RPEAKFINDER_H_ */

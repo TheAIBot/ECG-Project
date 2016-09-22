@@ -43,8 +43,7 @@ static char isPeak()
 }
 
 //TODO add description
-Peak* getIfPeak(unsigned short newDataPoint)
-{
+Peak* getIfPeak(unsigned short newDataPoint){
 	/*TODO Fix recording first data point as a peak.
 	 *  Needs to be discussed with the teacher or the teaching assistants. - Jesper
 	 */
