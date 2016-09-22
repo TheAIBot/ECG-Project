@@ -114,8 +114,9 @@ char searchBackBackwardsGoer(int indexMiss){
 }
 
 char checkSearchback(int indexToCheck){
-	if(allPeaks[indexToCheck].intensity <= Threshold2)
-		return 0; //Else:
+	if(allPeaks[indexToCheck].intensity <= Threshold2) {
+		return 0;
+	}
 	//Calulates the new values for determining if a peak is an RR peak:
 	insertPeakCircArrayData(&trueRPeaks, allPeaks[indexToCheck]);
 	Spkf = (3 * Spkf + allPeaks[indexToCheck].RR) / 4;

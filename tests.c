@@ -179,7 +179,7 @@ char testRPeakSearcher(int* data)
 	unsigned short* times = timesAndMeasurements;
 	unsigned short* measurements = &timesAndMeasurements[TEST_DATA_R_PEAK_LENGTH];
 	char* timeMeasurementTaken = calloc(TEST_DATA_R_PEAK_LENGTH, sizeof(char));
-
+/*
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
 	{
 		if(foundPeak(data[i]))
@@ -191,6 +191,7 @@ char testRPeakSearcher(int* data)
 		}
 	}
 	printf("fisk\n");
+	*/
 	//TODO fix test.
 	/*
 	unsigned short* peakValues = getPeakValues();
