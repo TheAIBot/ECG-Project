@@ -12,7 +12,7 @@ void runScannerOnce(int sensorValue)
 	if(foundPeak(filteredValue))
 	{
 		Peak newPeak = getNewPeak();
-		if(isRPeak(&newPeak)){
+		if(isRPeak(newPeak)){
 			//TODO verify this is correct
 			setFoundNewRRPeak();
 			updateNewPeak(newPeak, isPulseUnstable());

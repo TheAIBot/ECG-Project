@@ -9,11 +9,9 @@
 #define INCLUDES_PEAK_H_
 
 
-struct TPeak
-{
-	const unsigned short intensity;
+struct TPeak{
+	unsigned short intensity;
 	unsigned short RR;
-	unsigned char refCount;
 };
 
 typedef struct TPeak Peak;

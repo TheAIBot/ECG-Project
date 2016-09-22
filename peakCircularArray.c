@@ -6,25 +6,18 @@ typedef struct TPeak Peak;
 typedef struct TPeakCircularArray PeakCircularArray;
 
 
-char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex, Peak defaultPeak)
-{
+char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex){
 	circArray->size = size;
 	circArray->startIndex = startIndex;
-	circArray->data = malloc(size * sizeof(Peak*));
+	circArray->data = malloc(size * sizeof(Peak));
 	if(circArray->data == NULL){
 		fprintf(stderr, "Failed to allocate memory for peak circular array");
 		return 0;
 	}
-	for(int i = 0; i < size; i++){
-		Peak* copyDefaultPeak = malloc(sizeof(Peak));
-		memcpy(copyDefaultPeak, &defaultPeak, sizeof(Peak));
-
-		circArray->data[i] = copyDefaultPeak;
-	}
 	return 1;
 }
 
-Peak* getPeakCircArrayValue(PeakCircularArray* circArray, int offset){
+Peak getPeakCircArrayValue(PeakCircularArray* circArray, int offset){
 	int correctIndex = circArray->startIndex + offset;
 	if(correctIndex < 0)
 		correctIndex += circArray->size;
@@ -32,32 +25,19 @@ Peak* getPeakCircArrayValue(PeakCircularArray* circArray, int offset){
 		correctIndex -= circArray->size;
 	return circArray->data[correctIndex];
 }
-//TODO delete
-Peak* getPeakArrayDataValue(Peak* data[], int startIndex, int arraySize, int offset)
-{
-	int correctIndex = startIndex + offset;
-	if(correctIndex < 0)
-		correctIndex += arraySize;
-	else if (correctIndex >= arraySize)
-		correctIndex -= arraySize;
-	return data[correctIndex];
-}
 
-void insertPeakCircArrayData(PeakCircularArray* circArray, Peak* newData){
-	moveCircArrayStartIndex(circArray);
+void insertPeakCircArrayData(PeakCircularArray* circArray, Peak newData){
+	movePeakCircArrayStartIndex(circArray);
 	circArray->data[circArray->startIndex] = newData;
 }
 
-void movePeakCircArrayStartIndex(PeakCircularArray* circArray)
-{
+void movePeakCircArrayStartIndex(PeakCircularArray* circArray){
 	circArray->startIndex++;
-	if(circArray->startIndex == circArray->size){
+	if(circArray->startIndex == circArray->size)
 		circArray->startIndex = 0;
-	}
 }
 
-void freePeakCircArray(PeakCircularArray* circArray)
-{
+void freePeakCircArray(PeakCircularArray* circArray){
 	free(circArray->data);
 }
 

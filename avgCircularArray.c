@@ -4,6 +4,7 @@
 #include "includes/peak.h"
 #include "includes/avgCircularArray.h"
 
+//TODO update description.
 /* Initializes a new AvgCircularArray avgCirc (pointer), filling it up with a given Peak, defaultPeak,
  * setting its size to a given size, it's averageLength, and placing the current index at a given value startIndex.
  * Returns 1 if it works, 0 otherwise.
@@ -15,31 +16,19 @@
  * Peak defaultPeak; the Peak to fill the array up with.
  *
  * */
-char initAvgCircArray(AvgCircularArray* avgCirc, int size, int startIndex, int averageLength, Peak defaultPeak)
-{
+char initAvgCircArray(AvgCircularArray* avgCirc, int size, int startIndex, int defaultValue){
 	avgCirc->size = size;
 	avgCirc->startIndex = startIndex;
-	avgCirc->averageSum = defaultPeak.RR*size;
-	avgCirc->averageLength = averageLength;
-	avgCirc->data = malloc(avgCirc->size * sizeof(Peak*));
+	avgCirc->averageSum = defaultValue*size;
+	avgCirc->data = malloc(avgCirc->size * sizeof(int));
 
-	if(avgCirc->data == NULL)
-	{
+	if(avgCirc->data == NULL)	{
 		fprintf(stderr, "Failed to allocate memory for average circular array");
 		return 0;
 	}
 
 	for(int i = 0; i < avgCirc->size; i++){
-		Peak copDefPeak = defaultPeak;
-		avgCirc->data[i] = &defaultPeak;
-
-
-		/*
-		Peak* copyDefaultPeak = malloc(sizeof(Peak));
-		memcpy(copyDefaultPeak, &defaultPeak, sizeof(Peak));
-
-		avgCirc->data[i] = copyDefaultPeak;
-		*/
+		avgCirc->data[i] = defaultValue;
 	}
 	return 1;
 }
@@ -64,21 +53,6 @@ static int getCorrectAvgCircIndex(int startIndex, int offset, int sizeArray){
 	return correctIndex;
 }
 
-/** Sets a Peak in the average circular array, with an given "offset" from the current index,
- *  to a given the address to a new Peak, peak.
- *
- *  AvgCircularArray* avgCirc; pointer to the AvgCircularArray where the peak should be set.
- *  const int offset; the offset from the current index.
- *  const Peak* peak; The address to the peak that should be inserted.
- *
- */
-void setAvgCircValue(AvgCircularArray* avgCirc, const int offset, const Peak* peak){
-	int correctIndex = getCorrectAvgCircIndex(avgCirc->startIndex,offset, avgCirc->averageLength);
-	//It also updates the average, given the new insertion/deletion.
-	avgCirc->averageSum += peak->RR - avgCirc->data[correctIndex]->RR;
-	avgCirc->data[correctIndex] = peak;
-}
-
 /** Gets the value in a given AvgCircularArray (with a pointer to it),
  *  and an offset, offset, from the current index.
  *
@@ -87,7 +61,7 @@ void setAvgCircValue(AvgCircularArray* avgCirc, const int offset, const Peak* pe
  *
  *  returns a pointer to the Peak found.
  */
-Peak* getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
+int getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
 	int correctIndex = avgCirc->startIndex + offset;
 	if(correctIndex < 0){
 		correctIndex += avgCirc->size;
@@ -98,55 +72,44 @@ Peak* getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
 }
 
 /*Moves the current index of a given AvgCircularArray (pointer) one forwards.*/
-static inline void moveAvgCircIndexForward(AvgCircularArray* avgCirc)
-{
+static inline void moveAvgCircIndexForward(AvgCircularArray* avgCirc){
 	avgCirc->startIndex++;
 	if(avgCirc->startIndex == avgCirc->size)	{
 		avgCirc->startIndex = 0;
 	}
 }
 
-/*Moves the current index in a given AvgCircularArray (pointer) one forwards,
+/* Moves the current index in a given AvgCircularArray (pointer) one forwards,
  * and inserts the pointer to a new Peak, newPeak.
    *
  * AvgCircularArray* avgCirc; pointer to the AvgCircularArray.
  *  Peak* newPeak; pointer to the new Peak.
    *
    * */
-void insertAvgCircData(AvgCircularArray* avgCirc, Peak* newPeak){
+void insertAvgCircData(AvgCircularArray* avgCirc, int newValue){
 	moveAvgCircIndexForward(avgCirc);
-	avgCirc->averageSum += newPeak->RR - getAvgCircValue(avgCirc, -avgCirc->averageLength)->RR;
-	avgCirc->data[avgCirc->startIndex] = newPeak;
+	//The value to be deleted is the value one is currently at:
+	avgCirc->averageSum += newValue - avgCirc->data[avgCirc->startIndex];
+	avgCirc->data[avgCirc->startIndex] = newValue;
 }
 
 /*Gets the average value of a given AvgCircularArray (pointer) avgCirc
  *
  * const AvgCircularArray* avgCirc; pointer to the AvgCircularArray.
    */
-int getAvgCircAverageRR(const AvgCircularArray* avgCirc)
-{
-	return avgCirc->averageSum / avgCirc->averageLength;
+int getAvgCircAverageValue(const AvgCircularArray* avgCirc){
+	return avgCirc->averageSum / avgCirc->size;
 }
-
-void recalculateAverageAvgCircAverage(AvgCircularArray* avgCirc){
-	avgCirc->averageSum = 0;
-	for(int i = 0; i < avgCirc->averageLength; i++){
-		avgCirc->averageSum += getAvgCircValue(avgCirc, -i)->RR;
-	}
-}
-
 //TODO is it correct after using peaks?
-void resetAvgCirc(struct TAvgCircularArray* avgCirc)
-{
-	memset(avgCirc->data, 0, avgCirc->size * sizeof(Peak*));
+void resetAvgCirc(struct TAvgCircularArray* avgCirc){
+	memset(avgCirc->data, 0, avgCirc->size * sizeof(int));
 	avgCirc->averageSum = 0;
 }
 /*Frees the given AvgCircularArray (pointer)
   *
  * AvgCircularArray* avgCirc; the pointer to the AvgCircularArray.
  * */
-void freeAvgCirc(AvgCircularArray* avgCirc)
-{
+void freeAvgCirc(AvgCircularArray* avgCirc){
 	free(avgCirc->data);
 }
 
