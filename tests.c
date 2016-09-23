@@ -175,81 +175,87 @@ char testRPeakSearcher(int* data)
 	{
 		return 0;
 	}
-	unsigned short* timesAndMeasurements = loadPeakData(file, TEST_DATA_R_PEAK_LENGTH);
-	unsigned short* times = timesAndMeasurements;
-	unsigned short* measurements = &timesAndMeasurements[TEST_DATA_R_PEAK_LENGTH];
-	char* timeMeasurementTaken = calloc(TEST_DATA_R_PEAK_LENGTH, sizeof(char));
-/*
+	int* timesAndMeasurements = loadPeakData(file, TEST_DATA_R_PEAK_LENGTH);
+	int* times = timesAndMeasurements;
+	int* measurements = &timesAndMeasurements[TEST_DATA_R_PEAK_LENGTH];
+	char timeMeasurementTaken[TEST_DATA_R_PEAK_LENGTH] = {0};
+	int timeSum = 0;
+
+	//printf("started\n");
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)
 	{
 		if(foundPeak(data[i]))
 		{
 			Peak newPeak = getNewPeak();
 			if (isRPeak(newPeak)){
-				printf("%d\n",i);
-			}
-		}
-	}
-	printf("fisk\n");
-	*/
-	//TODO fix test.
-	/*
-	unsigned short* peakValues = getPeakValues();
-	unsigned short* peakTimes = getPeakTimes(TEST_DATA_R_PEAK_LENGTH);
-	printf("sdfsd\n");
-	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)
-	{
-		unsigned short peakValue = peakValues[i];
-		unsigned short peakTime = peakTimes[i];
-		char isCorrect = 0;
+				setFoundNewRRPeak();
+				int newRPeakCount = getNewRPeaksFoundCount();
+				PeakCircularArray* trueRRPeaks = getTrueRPeaksArray();
+				for(int y = 0; y < newRPeakCount; y++)
+				{
+					Peak newRRPeak = getPeakCircArrayValue(trueRRPeaks, -((newRPeakCount - 1) - y));
+					//printf("found peak, Time: %hu, Intensity: %hu\n", newRRPeak.RR + timeSum, newRRPeak.intensity);
+					char isCorrect = 0;
 
-		for(int y = 0; y < TEST_DATA_R_PEAK_LENGTH; y++)
-		{
-			if(timeMeasurementTaken[y] == 0 &&
-			   times[y] + ALLOWED_TIME_DEVIANTION >= peakTime &&
-			   times[y] - ALLOWED_TIME_DEVIANTION <= peakTime &&
-			   measurements[y] + ALLOWED_MEASUREMENT_DEVIATION >= peakValue &&
-			   measurements[y] - ALLOWED_MEASUREMENT_DEVIATION <= peakValue)
-			{
-				timeMeasurementTaken[y] = 1;
-				isCorrect = 1;
-				break;
+					for(int z = 0; z < TEST_DATA_R_PEAK_LENGTH; z++)
+					{
+						//printf("expected Time: %d, intensity: %d, given Time: %hu, intensity: %hu\n", times[z], measurements[z], newRRPeak.RR + timeSum, newRRPeak.intensity);
+						if(timeMeasurementTaken[z] == 0 &&
+						   times[z] + ALLOWED_TIME_DEVIANTION >= newRRPeak.RR + timeSum &&
+						   times[z] - ALLOWED_TIME_DEVIANTION <= newRRPeak.RR + timeSum &&
+						   measurements[z] + ALLOWED_MEASUREMENT_DEVIATION >= newRRPeak.intensity &&
+						   measurements[z] - ALLOWED_MEASUREMENT_DEVIATION <= newRRPeak.intensity)
+						{
+							timeMeasurementTaken[z] = 1;
+							isCorrect = 1;
+							//printf("found match\n");
+							break;
+						}
+					}
+
+					if(!isCorrect)
+					{
+						printf("Failed to find matching peak for time: %d, measurement: %d\n", newRRPeak.RR + timeSum, newRRPeak.intensity);
+						free(timesAndMeasurements);
+						return 0;
+					}
+
+					timeSum += newRRPeak.RR;
+				}
 			}
 		}
-		if(!isCorrect)
-		{
-			printf("Failed to find matching peak for time: %d, measurement: %d\n", peakTime, peakValue);
-			free(timesAndMeasurements);
-			free(timeMeasurementTaken);
-			return 0;
-		}
 	}
+
 	char foundAll = 1;
+	timeSum = 0;
 	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)
 	{
 		if(timeMeasurementTaken[i] == 0)
 		{
 			foundAll = 0;
-			printf("Couldn't find a match for time: %d, value: %d\n", times[i], measurements[i]);
+			printf("Couldn't find a match for time: %d, value: %d\n", times[i] + timeSum, measurements[i]);
 			break;
 		}
+		timeSum += times[i];
 	}
 	if(!foundAll)
 	{
 		printf("Failed to find all peaks\n");
+		free(timesAndMeasurements);
+		return 0;
 	}
 	else
 	{
 		printf("Passed r peak searcher test\n");
 	}
 	free(timesAndMeasurements);
-	free(timeMeasurementTaken);
-	*/
 	return 1;
 }
 
 void testAll()
 {
+	initializeRPeakFinder();
+
 	int* ecgData = loadDataArray("ECG.txt", TEST_DATA_LENGTH);
 	if(ecgData == NULL ||
 	   !testLowPassFilter(ecgData))

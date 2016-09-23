@@ -12,7 +12,7 @@
 FILE* startInputData(char* fileName);
 char hasMoreData(FILE* file);
 int getNextData(FILE* file);
-unsigned short* loadPeakData(FILE* file, int fileSizeInLines);
+int* loadPeakData(FILE* file, int fileSizeInLines);
 void stopInputData(FILE* file);
 int* loadDataArray(char* filename, int arrayLength);
 

@@ -15,7 +15,7 @@ void ShowNormalInformation()
 
 void updateNewPeak(Peak newPeak, char isPulseUnstable)
 {
-	memcpy(&newestPeak, &newPeak, sizeof(Peak));
+	newestPeak = newPeak;
 
 	//printf("Pulse: %d BPM\n", MINUTE / averageRRTIme);
 	printf("\n\nIntensity: %hu\n", newestPeak.intensity);

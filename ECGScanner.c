@@ -2,8 +2,11 @@
 #include "includes/filter.h"
 #include "includes/peak.h"
 #include "includes/peakSearcher.h"
+#include "includes/peakCircularArray.h"
 #include "includes/rPeakFinder.h"
 #include "includes/ui.h"
+
+#define TIME_BETWEEN_SENSOR_READ_IN_MS 4
 
 void runScannerOnce(int sensorValue)
 {

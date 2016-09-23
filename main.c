@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
 
 	//initializeRPeakFinder();
 
-	//testAll();
-	//exit(1);
+	testAll();
+	exit(1);
 
 	runBenchmarks();
 	exit(1);

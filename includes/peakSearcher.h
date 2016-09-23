@@ -14,6 +14,5 @@
 char foundPeak(unsigned short newDataPoint);
 Peak getNewPeak();
 void setFoundNewRRPeak();
-void addRRTimeFromFormer();
 
 #endif /* INCLUDES_PEAKSEARCHER_H_ */
