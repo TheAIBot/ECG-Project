@@ -11,7 +11,6 @@
 #define AVERAGE_NUMBER_MEMBERS 8
 #define MISSES_FOR_UNSTABLE 5
 //TODO delete
-typedef struct TPeak Peak;
 /*TODO Hvad vis sample raten er forskellig?*/
 
 /*TODO
@@ -39,8 +38,8 @@ static unsigned short Threshold2 = 550; /*Answers to Threshold1/2*/
  * Given as though calculated from RR_Average2
  *TODO should it be from RR_Average1 or 2 at the beggining. What are they?
   */
-static unsigned short RR_AVERAGE1 = 150;
-static unsigned short RR_AVERAGE2 = 150;
+static unsigned int RR_AVERAGE1 = 150;
+static unsigned int RR_AVERAGE2 = 150;
 static unsigned short RR_Low = 138;  /*TODO, check if there is a possibility of the values becoming "locked"*/
 static unsigned short RR_High = 173;
 static unsigned short RR_Miss = 249;
@@ -100,6 +99,28 @@ void recordNewProperRPeak(Peak newPeak){
 	//The peak is registrated as a true RR peak.
 }
 
+char checkSearchback(Peak peakToCheck){
+	if(peakToCheck.intensity <= Threshold2) {
+		return 0;
+	}
+	//Calulates the new values for determining if a peak is an RR peak:
+	insertPeakCircArrayData(&trueRPeaks, peakToCheck);
+	Spkf = (3 * Spkf + peakToCheck.intensity) / 4;
+	insertAvgCircData(&RecentRR, peakToCheck.RR);
+	RR_AVERAGE1 = getAvgCircAverageValue(&RecentRR);
+	//TODO make it so they are all divided witha power of two
+	//because they allows optimization to bitshift when writing assembler
+	RR_Low = 23 * RR_AVERAGE1 / 25; /*23/25= 0.92*/
+	RR_High = 29 * RR_AVERAGE1 / 25; /*29/25= 1.16*/
+	RR_Miss = 83 * RR_AVERAGE1 / 50; /*83/50 = 1.66*/
+	Threshold1 = Npkf + (Spkf - Npkf) / 4;
+	Threshold2 = Threshold1 / 2;
+	//TODO move this to where the RPeak is inserted
+	numberNewRPeaksFound++;
+	/*Recording it as an proper R-peak. Will always be later than or the same as the current RPeak*/
+	return 1;
+}
+
 /* Finds the index of the most suitable peak to be recorded as a true R peak in tempPeaksForSearchback,
  * up to the index, indexMiss. Used during searchbacks.
  * Calculates the suitability as the RR distance from the average, taking the peaks that has an RR value greater the RR_HIGH,
@@ -120,25 +141,16 @@ char searchBackBackwardsGoer(int indexMiss){
 	return -1;
 }
 
-char checkSearchback(Peak peakToCheck){
-	if(peakToCheck.intensity <= Threshold2) {
-		return 0;
-	}
-	//Calulates the new values for determining if a peak is an RR peak:
-	insertPeakCircArrayData(&trueRPeaks, peakToCheck);
-	Spkf = (3 * Spkf + peakToCheck.intensity) / 4;
-	insertAvgCircData(&RecentRR, peakToCheck.RR);
-	RR_AVERAGE1 = getAvgCircAverageValue(&RecentRR);
-	//TODO make it so they are all divided witha power of two
-	//because they allows optimization to bitshift when writing assembler
-	RR_Low = 23 * RR_AVERAGE1 / 25; /*23/25= 0.92*/
-	RR_High = 29 * RR_AVERAGE1 / 25; /*29/25= 1.16*/
-	RR_Miss = 83 * RR_AVERAGE1 / 50; /*83/50 = 1.66*/
-	Threshold1 = Npkf + (Spkf - Npkf) / 4;
-	Threshold2 = Threshold1 / 2;
-	numberNewRPeaksFound++;
-	/*Recording it as an proper R-peak. Will always be later than or the same as the current RPeak*/
-	return 1;
+/*Checks if a given Peak peak(pointer), has an intensity greater than THRESHOLD1,
+ * */
+char passThreshold1(unsigned short intensity){
+	if (!(intensity > Threshold1)) { /*If it isn't an R-Peak..*/
+			Npkf = (intensity + 7*Npkf)/8; // More precise (and faster) than peak.intensity8 + 7*Npkf/8
+			Threshold1 = Npkf + (Spkf-Npkf)/4;
+			Threshold2 = Threshold1/2;
+			/*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
+			return 0;
+	} else return 1;
 }
 
 char searchBack(){
@@ -149,9 +161,11 @@ char searchBack(){
 	} //Else:
 	//For decreasing the value of the RR, since the now last registrated peak;
 	unsigned short newRRRemoval = allPeaks[indexMostBackwards].RR;
+	//TODO this is probably wrong because the variable is initialized inside the foor loop again
 	for(int i = indexMostBackwards + 1; i < indexAllPeaksForSearchback; i++){
 		allPeaks[i].RR -= newRRRemoval;
 		//Moves the peak back in the array.
+		//TODO can this be moved outside thefor loop?
 		allPeaks[i - indexMostBackwards - 1] = allPeaks[i];
 		/*Makes the checks for the peak*/
 		if(passThreshold1(allPeaks[i].intensity)){
@@ -164,6 +178,7 @@ char searchBack(){
 			} else{
 				concurrentMissedRRLOWAndHigh++;
 				if(allPeaks[i].RR > RR_Miss)	{
+					//TODO why -1 here?
 					int newIndexMostBackwards =  searchBackBackwardsGoer(i - 1);
 					if(newIndexMostBackwards != -1){
 						indexMostBackwards = newIndexMostBackwards;
@@ -175,18 +190,6 @@ char searchBack(){
 	}
 	indexAllPeaksForSearchback = indexAllPeaksForSearchback - indexMostBackwards - 1;
 	return 1;
-}
-
-/*Checks if a given Peak peak(pointer), has an intensity greater than THRESHOLD1,
- * */
-char passThreshold1(unsigned short intensity){
-	if (!(intensity > Threshold1)) { /*If it isn't an R-Peak..*/
-			Npkf = (intensity + 7*Npkf)/8; // More precise (and faster) than peak.intensity8 + 7*Npkf/8
-			Threshold1 = Npkf + (Spkf-Npkf)/4;
-			Threshold2 = Threshold1/2;
-			/*Makes it so that the RR value for the later peaks, doesn't take this as an RR peak.*/
-			return 0;
-	} else return 1;
 }
 
 char rPeakChecks(Peak newPeak){
@@ -206,6 +209,16 @@ char rPeakChecks(Peak newPeak){
 		}
 	}
 	return 0;
+}
+
+void moveLastPeaksBackInArray(){
+	//No rounding errors when dividing will occur since SIZE_ALL_PEAKS_ARRAY is a power of two.
+	indexAllPeaksForSearchback = SIZE_ALL_PEAKS_ARRAY/2;
+	//TODO talk if this is correct
+	memcpy(allPeaks, allPeaks + indexAllPeaksForSearchback, indexAllPeaksForSearchback * sizeof(Peak));
+	//for(int i = 0; i < indexAllPeaksForSearchback; i++){
+	//	allPeaks[i] = allPeaks[i+indexAllPeaksForSearchback];
+	//}
 }
 
 /*Determines whether a given new peak, is actually an R-peak.
@@ -228,6 +241,7 @@ char isRPeak(Peak newPeak){
 		moveLastPeaksBackInArray();
 	}
 	allPeaks[indexAllPeaksForSearchback] = newPeak;
+	//TODO maybe this should be inside an else statement
 	indexAllPeaksForSearchback++;
 	return rPeakChecks(newPeak);
 }
@@ -236,18 +250,8 @@ PeakCircularArray* getTrueRPeaksArray(){
 	return &trueRPeaks;
 }
 
-void moveLastPeaksBackInArray(){
-	//No rounding errors when dividing will occur since SIZE_ALL_PEAKS_ARRAY is a power of two.
-	indexAllPeaksForSearchback = SIZE_ALL_PEAKS_ARRAY/2;
-	//TODO talk if this is correct
-	memcpy(allPeaks, allPeaks + indexAllPeaksForSearchback, indexAllPeaksForSearchback * sizeof(Peak));
-	//for(int i = 0; i < indexAllPeaksForSearchback; i++){
-	//	allPeaks[i] = allPeaks[i+indexAllPeaksForSearchback];
-	//}
-}
-
 char isPulseUnstable(){
-	return concurrentMissedRRLOWAndHigh >= 5;
+	return concurrentMissedRRLOWAndHigh >= MISSES_FOR_UNSTABLE;
 }
 
 char getNewRPeaksFoundCount(){
