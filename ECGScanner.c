@@ -21,7 +21,7 @@ void runScannerOnce(int sensorValue)
 			updateNewPeak(newPeak, isPulseUnstable());
 		}
 	}
-	ShowNormalInformation();
+	tickUITimer();
 }
 
 void runScanner()

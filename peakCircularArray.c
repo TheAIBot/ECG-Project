@@ -19,10 +19,10 @@ char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex){
 
 Peak getPeakCircArrayValue(PeakCircularArray* circArray, int offset){
 	int correctIndex = circArray->startIndex + offset;
-	if(correctIndex < 0)
+	//assumes that offset is always negative
+	if(correctIndex < 0) {
 		correctIndex += circArray->size;
-	else if (correctIndex >= circArray->size)
-		correctIndex -= circArray->size;
+	}
 	return circArray->data[correctIndex];
 }
 
@@ -33,8 +33,9 @@ void insertPeakCircArrayData(PeakCircularArray* circArray, Peak newData){
 
 void movePeakCircArrayStartIndex(PeakCircularArray* circArray){
 	circArray->startIndex++;
-	if(circArray->startIndex == circArray->size)
+	if(circArray->startIndex == circArray->size) {
 		circArray->startIndex = 0;
+	}
 }
 
 void freePeakCircArray(PeakCircularArray* circArray){

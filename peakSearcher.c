@@ -7,7 +7,7 @@
 #define MIDDLE_INDEX (PEAK_AREA / 2)
 #define MINIMUM_TIME_BETWEEM_RR_PEAKS 60 - PEAK_AREA
 
-static unsigned short timeSinceLastRRPeak = -(PEAK_AREA) / 2; /*It starts at -(PEAK_AREA - 1)/2 + , because of the delay of (PEAK_AREA - 1)/2*/
+static unsigned short timeSinceLastRRPeak = -MIDDLE_INDEX; /*It starts at -(PEAK_AREA - 1)/2 + , because of the delay of (PEAK_AREA - 1)/2*/
 
 static unsigned short last5Values[PEAK_AREA] = {0};
 

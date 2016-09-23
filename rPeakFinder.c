@@ -78,7 +78,7 @@ void initializeRPeakFinder(){
    *
  * Peak* newPeak; Pointer to the new Peak to be recorded.
  * */
-void recordNewProperRPeak(Peak newPeak){
+static void recordNewProperRPeak(Peak newPeak){
 	//Calculates the new values for determining if a peak is an RR peak:
 	insertPeakCircArrayData(&trueRPeaks, newPeak);
 	Spkf = (7*Spkf + newPeak.intensity)/8; //TODO fine with rewrite?
@@ -99,7 +99,7 @@ void recordNewProperRPeak(Peak newPeak){
 	//The peak is registrated as a true RR peak.
 }
 
-char checkSearchback(Peak peakToCheck){
+static char checkSearchback(Peak peakToCheck){
 	if(peakToCheck.intensity <= Threshold2) {
 		return 0;
 	}
@@ -131,7 +131,7 @@ char checkSearchback(Peak peakToCheck){
  * returns
  *
  * */
-char searchBackBackwardsGoer(int indexMiss){
+static char searchBackBackwardsGoer(int indexMiss){
 	for(int i = indexMiss - 1; i >= 0; i--){
 		if(checkSearchback(allPeaks[i])){
 			return i;
@@ -143,7 +143,7 @@ char searchBackBackwardsGoer(int indexMiss){
 
 /*Checks if a given Peak peak(pointer), has an intensity greater than THRESHOLD1,
  * */
-char passThreshold1(unsigned short intensity){
+static char passThreshold1(unsigned short intensity){
 	if (!(intensity > Threshold1)) { /*If it isn't an R-Peak..*/
 			Npkf = (intensity + 7*Npkf)/8; // More precise (and faster) than peak.intensity8 + 7*Npkf/8
 			Threshold1 = Npkf + (Spkf-Npkf)/4;
@@ -153,7 +153,7 @@ char passThreshold1(unsigned short intensity){
 	} else return 1;
 }
 
-char searchBack(){
+static char searchBack(){
 	int indexMostBackwards = searchBackBackwardsGoer(indexAllPeaksForSearchback - 1);
 	if(indexMostBackwards == -1){
 		indexAllPeaksForSearchback = 0;
@@ -192,7 +192,7 @@ char searchBack(){
 	return 1;
 }
 
-char rPeakChecks(Peak newPeak){
+static char rPeakChecks(Peak newPeak){
 	if (passThreshold1(newPeak.intensity)){
 		/*If it is in the RR-interval*/
 		if (RR_Low < newPeak.RR && newPeak.RR < RR_High){
@@ -211,7 +211,7 @@ char rPeakChecks(Peak newPeak){
 	return 0;
 }
 
-void moveLastPeaksBackInArray(){
+static void moveLastPeaksBackInArray(){
 	//No rounding errors when dividing will occur since SIZE_ALL_PEAKS_ARRAY is a power of two.
 	indexAllPeaksForSearchback = SIZE_ALL_PEAKS_ARRAY/2;
 	//TODO talk if this is correct

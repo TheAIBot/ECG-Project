@@ -8,7 +8,7 @@
 static Peak newestPeak = {0};
 static int timeSinceStart = 0;
 
-void ShowNormalInformation()
+void tickUITimer()
 {
 	timeSinceStart++;
 }

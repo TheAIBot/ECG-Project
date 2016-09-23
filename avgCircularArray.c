@@ -16,7 +16,7 @@
  * Peak defaultPeak; the Peak to fill the array up with.
  *
  * */
-char initAvgCircArray(AvgCircularArray* avgCirc, int size, int startIndex, int defaultValue){
+char initAvgCircArray(AvgCircularArray* const avgCirc, const int size, const int startIndex, const int defaultValue){
 	avgCirc->size = size;
 	avgCirc->startIndex = startIndex;
 	avgCirc->averageSum = defaultValue*size;
@@ -31,26 +31,6 @@ char initAvgCircArray(AvgCircularArray* avgCirc, int size, int startIndex, int d
 		avgCirc->data[i] = defaultValue;
 	}
 	return 1;
-}
-
-/* Given an offset from the current index, it calculates the resulting index,
- * given that it is an index in an AvgCircularArray.
- * The offset must not be bigger than the size of the array.
-   *
- *  int startIndex; the current index in the array.
- *  int offset; the offset from the startIndex.
- *  int sizeArray; the size of the circular array.
-   *
- * returns the new index,
- *
- * */
-static int getCorrectAvgCircIndex(int startIndex, int offset, int sizeArray){
-	int correctIndex = startIndex + offset;
-	if (correctIndex < 0)
-		correctIndex += sizeArray;
-	else if (correctIndex >= sizeArray)
-		correctIndex -= sizeArray;
-	return correctIndex;
 }
 
 /** Gets the value in a given AvgCircularArray (with a pointer to it),
@@ -72,9 +52,9 @@ int getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
 }
 
 /*Moves the current index of a given AvgCircularArray (pointer) one forwards.*/
-static inline void moveAvgCircIndexForward(AvgCircularArray* avgCirc){
+static inline void moveAvgCircIndexForward(AvgCircularArray* const avgCirc){
 	avgCirc->startIndex++;
-	if(avgCirc->startIndex == avgCirc->size)	{
+	if(avgCirc->startIndex == avgCirc->size) {
 		avgCirc->startIndex = 0;
 	}
 }
@@ -86,7 +66,7 @@ static inline void moveAvgCircIndexForward(AvgCircularArray* avgCirc){
  *  Peak* newPeak; pointer to the new Peak.
    *
    * */
-void insertAvgCircData(AvgCircularArray* avgCirc, int newValue){
+void insertAvgCircData(AvgCircularArray* const avgCirc, const int newValue){
 	moveAvgCircIndexForward(avgCirc);
 	//The value to be deleted is the value one is currently at:
 	avgCirc->averageSum += newValue - avgCirc->data[avgCirc->startIndex];
@@ -101,7 +81,7 @@ int getAvgCircAverageValue(const AvgCircularArray* avgCirc){
 	return avgCirc->averageSum / avgCirc->size;
 }
 //TODO is it correct after using peaks?
-void resetAvgCirc(struct TAvgCircularArray* avgCirc){
+void resetAvgCirc(AvgCircularArray*  const avgCirc){
 	memset(avgCirc->data, 0, avgCirc->size * sizeof(int));
 	avgCirc->averageSum = 0;
 }
@@ -109,7 +89,7 @@ void resetAvgCirc(struct TAvgCircularArray* avgCirc){
   *
  * AvgCircularArray* avgCirc; the pointer to the AvgCircularArray.
  * */
-void freeAvgCirc(AvgCircularArray* avgCirc){
+void freeAvgCirc(AvgCircularArray* const avgCirc){
 	free(avgCirc->data);
 }
 

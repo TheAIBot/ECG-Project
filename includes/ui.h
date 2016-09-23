@@ -10,7 +10,7 @@
 
 #include "peak.h"
 
-void ShowNormalInformation();
+void tickUITimer();
 void updateNewPeak(Peak newPeak, char isPulseUnstable);
 
 #endif /* INCLUDES_UI_H_ */
