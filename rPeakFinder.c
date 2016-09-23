@@ -10,16 +10,6 @@
 #define SIZE_ALL_PEAKS_ARRAY 16
 #define AVERAGE_NUMBER_MEMBERS 8
 #define MISSES_FOR_UNSTABLE 5
-//TODO delete
-/*TODO Hvad vis sample raten er forskellig?*/
-
-/*TODO
- * The peaks that pass threshold 1 should not be re-recorded. All should be updated.
- * The array that calcultates RR_AVERAGE1 should be updated when a searchback has been run.
- * Should all Peaks be recorded forever? Same with R peaks?
- * Make static? What?
- * Removing Peaks from memory when done with them.
- * */
 
 //TODO RR time is probably 1 wrong. Check out later - Jesper
 static AvgCircularArray RecentRR;
@@ -37,7 +27,10 @@ static unsigned short Threshold2 = 550; /*Answers to Threshold1/2*/
 /*Variables for finding the RR-interval
  * Given as though calculated from RR_Average2
  *TODO should it be from RR_Average1 or 2 at the beggining. What are they?
+ *TODO TODO check if the averages have the right values below
   */
+
+//write why this is int
 static unsigned int RR_AVERAGE1 = 150;
 static unsigned int RR_AVERAGE2 = 150;
 static unsigned short RR_Low = 138;  /*TODO, check if there is a possibility of the values becoming "locked"*/
@@ -93,9 +86,6 @@ static void recordNewProperRPeak(Peak newPeak){
 	Threshold1 = Npkf + (Spkf - Npkf) / 4;
 	Threshold2 = Threshold1 / 2;
 	numberNewRPeaksFound++;
-	/*TODO Discuss Andreas, what if the RR interval becomes large enough that multiplying by 83 makes an overflow error,
-	 * For example in the case of a searchback? This is a definite possibility,
-	 * */
 	//The peak is registrated as a true RR peak.
 }
 
@@ -165,7 +155,6 @@ static char searchBack(){
 	for(int i = indexMostBackwards + 1; i < indexAllPeaksForSearchback; i++){
 		allPeaks[i].RR -= newRRRemoval;
 		//Moves the peak back in the array.
-		//TODO can this be moved outside thefor loop?
 		allPeaks[i - indexMostBackwards - 1] = allPeaks[i];
 		/*Makes the checks for the peak*/
 		if(passThreshold1(allPeaks[i].intensity)){
@@ -214,11 +203,7 @@ static char rPeakChecks(Peak newPeak){
 static void moveLastPeaksBackInArray(){
 	//No rounding errors when dividing will occur since SIZE_ALL_PEAKS_ARRAY is a power of two.
 	indexAllPeaksForSearchback = SIZE_ALL_PEAKS_ARRAY/2;
-	//TODO talk if this is correct
 	memcpy(allPeaks, allPeaks + indexAllPeaksForSearchback, indexAllPeaksForSearchback * sizeof(Peak));
-	//for(int i = 0; i < indexAllPeaksForSearchback; i++){
-	//	allPeaks[i] = allPeaks[i+indexAllPeaksForSearchback];
-	//}
 }
 
 /*Determines whether a given new peak, is actually an R-peak.

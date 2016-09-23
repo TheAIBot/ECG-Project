@@ -6,8 +6,8 @@
 
 int main(int argc, char *argv[])
 {
-	//runScanner();
-	//exit(1);
+	runScanner();
+	exit(1);
 
 	//testAll();
 	//exit(1);

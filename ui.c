@@ -5,7 +5,6 @@
 #define MINUTE 1000 * 60 //number of milliseconds in  minute
 #define MINIMUM_INTENSITY 2000
 
-static Peak newestPeak = {0};
 static int timeSinceStart = 0;
 
 void tickUITimer()
@@ -15,13 +14,11 @@ void tickUITimer()
 
 void updateNewPeak(Peak newPeak, char isPulseUnstable)
 {
-	newestPeak = newPeak;
-
 	//printf("Pulse: %d BPM\n", MINUTE / averageRRTIme);
-	printf("\n\nIntensity: %hu\n", newestPeak.intensity);
-	printf("RR time:   %hu\n", newestPeak.RR);
+	printf("\n\nIntensity: %hu\n", newPeak.intensity);
+	printf("RR time:   %hu\n", newPeak.RR);
 	printf("Time:      %d\n", timeSinceStart);
-	if(newestPeak.intensity < MINIMUM_INTENSITY)
+	if(newPeak.intensity < MINIMUM_INTENSITY)
 	{
 		printf("Warning! Intensity is low\n");
 	}

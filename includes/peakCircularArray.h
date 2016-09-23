@@ -10,13 +10,13 @@
 
 #include "peak.h"
 
-typedef struct TPeakCircularArray PeakCircularArray;
-
 struct TPeakCircularArray{
 	int size;
 	int startIndex;
 	Peak * data;
 };
+
+typedef struct TPeakCircularArray PeakCircularArray;
 
 char initPeakCircArray(PeakCircularArray* const circArray, const int size, const int startIndex);
 Peak getPeakCircArrayValue(const PeakCircularArray* circArray, const int offset);

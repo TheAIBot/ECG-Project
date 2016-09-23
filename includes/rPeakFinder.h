@@ -10,9 +10,6 @@
 #include "peak.h"
 #include "peakCircularArray.h"
 
-typedef struct TPeak Peak;
-typedef struct TPeakCircularArray PeakCircularArray;
-
 void initializeRPeakFinder();
 char isRPeak(Peak newPeak);
 PeakCircularArray* getTrueRPeaksArray();

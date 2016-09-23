@@ -18,7 +18,8 @@ void runScannerOnce(int sensorValue)
 		if(isRPeak(newPeak)){
 			//TODO verify this is correct
 			setFoundNewRRPeak();
-			updateNewPeak(newPeak, isPulseUnstable());
+			Peak correctPeak = getPeakCircArrayValue(getTrueRPeaksArray(), 0);
+			updateNewPeak(correctPeak, isPulseUnstable());
 		}
 	}
 	tickUITimer();
