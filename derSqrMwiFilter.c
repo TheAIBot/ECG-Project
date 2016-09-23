@@ -24,16 +24,18 @@ unsigned short derivativeSquareMovingWindowFilter(const short x, const short x_1
 
 	//derivate filter
 	unsigned short newY = (2 * x + x_1 - x_3 - 2 * x_4) / 8;
+	//unsigned int newY = (2 * x + x_1 - x_3 - 2 * x_4);
 
 	//square filter
 	unsigned short squared = newY * newY;
-
+	//printf("%d\n", squared);
 	unsigned short lastSquaredValue = rawSquare[arrayStartIndex];
 	rawSquare[arrayStartIndex] = squared;
 
 	//moving window filter
 	totalValue += squared - lastSquaredValue;
 	return totalValue / N;
+	//return totalValue / (N * 8 * 8);
 }
 
 void resetDerSqrMwiFilter()

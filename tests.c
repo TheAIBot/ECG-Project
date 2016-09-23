@@ -21,13 +21,15 @@ typedef struct TPeakCircularArray PeakCircularArray;
 #define TEST_DATA_R_PEAK_LENGTH 31
 #define ALLOWED_TIME_DEVIANTION 10
 #define ALLOWED_MEASUREMENT_DEVIATION 300
+#define ALLOWED_FILTER_DEVIATION 0
 
 char isFilterCorrect(int filterOutput, FILE* file, char* filterName)
 {
 	if(file != NULL)
 	{
 		int expectedOutput = getNextData(file);
-		if(filterOutput != expectedOutput)
+		if(expectedOutput + ALLOWED_FILTER_DEVIATION < filterOutput ||
+		   expectedOutput - ALLOWED_FILTER_DEVIATION > filterOutput)
 		{
 			fprintf(stderr, "wrong output from %s filter: Given %hd != %hd Expected\n", filterName, filterOutput, expectedOutput);
 			return 0;
