@@ -25,9 +25,9 @@ void runScannerOnce(int sensorValue)
 	tickUITimer();
 }
 
-void runScanner()
-{
+void runScanner(){
 	FILE* file = startInputData("ECG.txt");
+	//FILE* file = startInputData("benchmark_files/ECG10800K.txt");
 
 	initializeRPeakFinder();
 
