@@ -27,7 +27,8 @@ void runScannerOnce(int sensorValue)
 
 void runScanner()
 {
-	FILE* file = startInputData("ECG.txt");
+	//FILE* file = startInputData("ECG.txt");
+	FILE* file = startInputData("benchmark_files/ECG10800K.txt");
 
 	initializeRPeakFinder();
 

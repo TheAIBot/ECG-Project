@@ -14,6 +14,7 @@ void tickUITimer()
 
 void updateNewPeak(Peak newPeak, char isPulseUnstable)
 {
+	/*
 	//printf("Pulse: %d BPM\n", MINUTE / averageRRTIme);
 	printf("\n\nIntensity: %hu\n", newPeak.intensity);
 	printf("RR time:   %hu\n", newPeak.RR);
@@ -26,4 +27,5 @@ void updateNewPeak(Peak newPeak, char isPulseUnstable)
 	{
 		printf("Warning! Pulse is unstable\n");
 	}
+	*/
 }
