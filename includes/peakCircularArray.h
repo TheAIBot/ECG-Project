@@ -18,11 +18,9 @@ struct TPeakCircularArray{
 	Peak * data;
 };
 
-char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex);
-Peak getPeakCircArrayValue(PeakCircularArray* circArray, int offset);
-Peak getPeakCircArrayDataValue(Peak data[], int startIndex, int arraySize, int offset);
-void movePeakCircArrayStartIndex(PeakCircularArray* circArray);
-void insertPeakCircArrayData(PeakCircularArray* circArray, Peak newData);
-void freePeakCircArray(PeakCircularArray* circArray);
+char initPeakCircArray(PeakCircularArray* const circArray, const int size, const int startIndex);
+Peak getPeakCircArrayValue(const PeakCircularArray* circArray, const int offset);
+void insertPeakCircArrayData(PeakCircularArray* const circArray, const Peak newData);
+void freePeakCircArray(PeakCircularArray* const circArray);
 
 #endif /* INCLUDES_PEAKCIRCULARARRAY_H_ */

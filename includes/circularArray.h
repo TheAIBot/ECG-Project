@@ -17,11 +17,11 @@ struct TCircularArray
 
 typedef struct TCircularArray CircularArray;
 
-char initCircArray(CircularArray* circArray, int size, int startIndex);
-int getCircArrayValue(CircularArray* circArray, int offset);
-int getArrayDataValue(int data[], int startIndex, int arraySize, int offset);
-void insertCircArrayData(CircularArray* circArray, int newData);
-void insertCircArrayDataAt(CircularArray* circArray, int newData, int offset);
-void freeCircArray(CircularArray* circArray);
+char initCircArray(CircularArray* const circArray, const int size, const int startIndex);
+int getCircArrayValue(const CircularArray* circArray, const int offset);
+int getArrayDataValue(const int data[], const int startIndex, const int arraySize, const int offset);
+void insertCircArrayData(CircularArray* circArray, const int newData);
+void insertCircArrayDataAt(CircularArray* circArray, const int newData, const int offset);
+void freeCircArray(CircularArray* const circArray);
 
 #endif /* CIRCULARARRAY_H_ */

@@ -19,7 +19,7 @@
 char initAvgCircArray(AvgCircularArray* const avgCirc, const int size, const int startIndex, const int defaultValue){
 	avgCirc->size = size;
 	avgCirc->startIndex = startIndex;
-	avgCirc->averageSum = defaultValue*size;
+	avgCirc->averageSum = defaultValue * size;
 	avgCirc->data = malloc(avgCirc->size * sizeof(int));
 
 	if(avgCirc->data == NULL)	{
@@ -45,6 +45,7 @@ int getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
 	int correctIndex = avgCirc->startIndex + offset;
 	if(correctIndex < 0){
 		correctIndex += avgCirc->size;
+	//TODO can remove this else?
 	} else if (correctIndex >= avgCirc->size){
 		correctIndex -= avgCirc->size;
 	}

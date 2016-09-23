@@ -2,11 +2,8 @@
 #include <stdio.h>
 #include "includes/peakCircularArray.h"
 
-typedef struct TPeak Peak;
-typedef struct TPeakCircularArray PeakCircularArray;
 
-
-char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex){
+char initPeakCircArray(PeakCircularArray* const circArray, const int size, const int startIndex){
 	circArray->size = size;
 	circArray->startIndex = startIndex;
 	circArray->data = malloc(size * sizeof(Peak));
@@ -17,28 +14,28 @@ char initPeakCircArray(PeakCircularArray* circArray, int size, int startIndex){
 	return 1;
 }
 
-Peak getPeakCircArrayValue(PeakCircularArray* circArray, int offset){
+Peak getPeakCircArrayValue(const PeakCircularArray* circArray, const int offset){
 	int correctIndex = circArray->startIndex + offset;
-	//assumes that offset is always negative
+	//assumes that offset is always negative or 0
 	if(correctIndex < 0) {
 		correctIndex += circArray->size;
 	}
 	return circArray->data[correctIndex];
 }
 
-void insertPeakCircArrayData(PeakCircularArray* circArray, Peak newData){
-	movePeakCircArrayStartIndex(circArray);
-	circArray->data[circArray->startIndex] = newData;
-}
-
-void movePeakCircArrayStartIndex(PeakCircularArray* circArray){
+static void movePeakCircArrayStartIndex(PeakCircularArray* const circArray){
 	circArray->startIndex++;
 	if(circArray->startIndex == circArray->size) {
 		circArray->startIndex = 0;
 	}
 }
 
-void freePeakCircArray(PeakCircularArray* circArray){
+void insertPeakCircArrayData(PeakCircularArray* const circArray, const Peak newData){
+	movePeakCircArrayStartIndex(circArray);
+	circArray->data[circArray->startIndex] = newData;
+}
+
+void freePeakCircArray(PeakCircularArray* const circArray){
 	free(circArray->data);
 }
 

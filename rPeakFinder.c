@@ -89,7 +89,7 @@ static void recordNewProperRPeak(Peak newPeak){
 	/*TODO remember the update of calculation of the values below*/
 	RR_Low = (23 * RR_AVERAGE2) / 25; /*23/25= 0.92*/
 	RR_High = (29 * RR_AVERAGE2) / 25; /*29/25= 1.16*/
-	RR_Miss = (5 * RR_AVERAGE2)/3; /*83/50 = 1.66*/
+	RR_Miss = (5 * RR_AVERAGE2) / 3; /*83/50 = 1.66*/
 	Threshold1 = Npkf + (Spkf - Npkf) / 4;
 	Threshold2 = Threshold1 / 2;
 	numberNewRPeaksFound++;

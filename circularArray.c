@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "includes/circularArray.h"
 
-char initCircArray(CircularArray* circArray, int size, int startIndex)
+char initCircArray(CircularArray* const circArray, const int size, const int startIndex)
 {
 	circArray->size = size;
 	circArray->startIndex = startIndex;
@@ -16,45 +16,30 @@ char initCircArray(CircularArray* circArray, int size, int startIndex)
 	return 1;
 }
 
-int getCircArrayValue(CircularArray* circArray, int offset)
+int getCircArrayValue(const CircularArray* circArray, const int offset)
 {
 	return getArrayDataValue(circArray->data, circArray->startIndex, circArray->size, offset);
 }
 
 
-static int getOffsettedIndex(int startIndex, int arraySize, int offset)
+static int getOffsettedIndex(const int startIndex, const int arraySize, const int offset)
 {
 	int correctIndex = startIndex + offset;
+	//assumes that offset is always negative or 0
 	if(correctIndex < 0)
 	{
 		correctIndex += arraySize;
 	}
-	else if(correctIndex >= arraySize)
-	{
-		correctIndex -= arraySize;
-	}
 	return correctIndex;
 }
 
-int getArrayDataValue(int data[], int startIndex, int arraySize, int offset)
+int getArrayDataValue(const int data[], const int startIndex, const int arraySize, const int offset)
 {
 
 	return data[getOffsettedIndex(startIndex, arraySize, offset)];
 }
 
-void insertCircArrayData(CircularArray* circArray, int newData)
-{
-	moveCircArrayStartIndex(circArray);
-	circArray->data[circArray->startIndex] = newData;
-}
-
-void insertCircArrayDataAt(CircularArray* circArray, int newData, int offset)
-{
-	moveCircArrayStartIndex(circArray);
-	circArray->data[getOffsettedIndex(circArray->startIndex, circArray->size, offset)] = newData;
-}
-
-void moveCircArrayStartIndex(CircularArray* circArray)
+static void moveCircArrayStartIndex(CircularArray* const circArray)
 {
 	circArray->startIndex++;
 	if(circArray->startIndex == circArray->size)
@@ -63,7 +48,19 @@ void moveCircArrayStartIndex(CircularArray* circArray)
 	}
 }
 
-void freeCircArray(CircularArray* circArray)
+void insertCircArrayData(CircularArray* circArray, const int newData)
+{
+	moveCircArrayStartIndex(circArray);
+	circArray->data[circArray->startIndex] = newData;
+}
+
+void insertCircArrayDataAt(CircularArray* circArray, const int newData, const int offset)
+{
+	moveCircArrayStartIndex(circArray);
+	circArray->data[getOffsettedIndex(circArray->startIndex, circArray->size, offset)] = newData;
+}
+
+void freeCircArray(CircularArray* const circArray)
 {
 	free(circArray->data);
 }
