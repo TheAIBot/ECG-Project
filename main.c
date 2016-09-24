@@ -4,9 +4,13 @@
 #include "includes/tests.h"
 #include "includes/ECGScanner.h"
 
-int main(int argc, char *argv[]){
-	runScanner();
-	exit(1);
+int main(int argc, char *argv[])
+{
+	//runScanner();
+	//exit(1);
+
+	//testAll();
+	//exit(1);
 
 	runBenchmarks();
 	exit(1);

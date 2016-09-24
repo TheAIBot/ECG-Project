@@ -50,7 +50,9 @@ char testLowPassFilter(int* data)
 {
 	resetLowFilter();
 	FILE* file = startInputData("verification_files/x_low.txt");
-	if(file == NULL)
+	FILE* writeFile = fopen("test_results/low_results.txt", "w");
+	if(file == NULL ||
+	   writeFile == NULL)
 	{
 		return 0;
 	}
@@ -69,12 +71,15 @@ char testLowPassFilter(int* data)
 		if(!isFilterCorrect(dataLowFiltered, file, "low"))
 		{
 			stopInputData(file);
-			free(circArray.data);
+			freeCircArray(&circArray);
+			fclose(writeFile);
 			return 0;
 		}
+		fprintf(writeFile, "%d\n", dataLowFiltered);
 	}
 	stopInputData(file);
 	freeCircArray(&circArray);
+	fclose(writeFile);
 	printf("Passed low pass filter test\n");
 	return 1;
 }
@@ -83,7 +88,9 @@ char testHighPassFilter(int* data)
 {
 	resetHighFilter();
 	FILE* file = startInputData("verification_files/x_high.txt");
-	if(file == NULL)
+	FILE* writeFile = fopen("test_results/high_results.txt", "w");
+	if(file == NULL ||
+	   writeFile == NULL)
 	{
 		return 0;
 	}
@@ -102,12 +109,15 @@ char testHighPassFilter(int* data)
 		if(!isFilterCorrect(dataLowFiltered, file, "high"))
 		{
 			stopInputData(file);
-			free(circArray.data);
+			freeCircArray(&circArray);
+			fclose(writeFile);
 			return 0;
 		}
+		fprintf(writeFile, "%d\n", dataLowFiltered);
 	}
 	stopInputData(file);
 	freeCircArray(&circArray);
+	fclose(writeFile);
 	printf("Passed high pass filter test\n");
 	return 1;
 }
@@ -116,7 +126,9 @@ char testDerivSqrFilter(int* data)
 {
 	resetDerSqrMwiFilter();
 	FILE* file = startInputData("verification_files/x_mwi_div_after.txt");
-	if(file == NULL)
+	FILE* writeFile = fopen("test_results/dersqrmwi_results.txt", "w");
+	if(file == NULL ||
+	   writeFile == NULL)
 	{
 		return 0;
 	}
@@ -135,12 +147,15 @@ char testDerivSqrFilter(int* data)
 		if(!isFilterCorrect(mwiFiltered, file, "derivative square moving window"))
 		{
 			stopInputData(file);
-			free(circArray.data);
+			freeCircArray(&circArray);
+			fclose(writeFile);
 			return 0;
 		}
+		fprintf(writeFile, "%d\n", mwiFiltered);
 	}
 	stopInputData(file);
 	freeCircArray(&circArray);
+	fclose(writeFile);
 	printf("Passed derivative square moving window filter test\n");
 	return 1;
 }
@@ -149,7 +164,9 @@ char testWholeFilter(int* data)
 {
 	flushFilterBuffers();
 	FILE* file = startInputData("verification_files/x_mwi_div_after.txt");
-	if(file == NULL)
+	FILE* writeFile = fopen("test_results/wholefilter_results.txt", "w");
+	if(file == NULL ||
+	   writeFile == NULL)
 	{
 		return 0;
 	}
@@ -161,11 +178,14 @@ char testWholeFilter(int* data)
 		if(!isFilterCorrect(dataLowFiltered, file, "whole"))
 		{
 			stopInputData(file);
+			fclose(writeFile);
 			return 0;
 		}
+		fprintf(writeFile, "%d\n", dataLowFiltered);
 
 	}
 	stopInputData(file);
+	fclose(writeFile);
 	printf("Passed whole filter test\n");
 	return 1;
 }
@@ -173,10 +193,13 @@ char testWholeFilter(int* data)
 char testRPeakSearcher(int* data)
 {
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
-	if(file == NULL)
+	FILE* writeFile = fopen("test_results/rpeaks_results.txt", "w");
+	if(file == NULL ||
+	   writeFile == NULL)
 	{
 		return 0;
 	}
+
 	int* timesAndMeasurements = loadPeakData(file, TEST_DATA_R_PEAK_LENGTH);
 	int* times = timesAndMeasurements;
 	int* measurements = &timesAndMeasurements[TEST_DATA_R_PEAK_LENGTH];
@@ -196,12 +219,10 @@ char testRPeakSearcher(int* data)
 				for(int y = 0; y < newRPeakCount; y++)
 				{
 					Peak newRRPeak = getPeakCircArrayValue(trueRRPeaks, -((newRPeakCount - 1) - y));
-					//printf("found peak, Time: %hu, Intensity: %hu\n", newRRPeak.RR + timeSum, newRRPeak.intensity);
 					char isCorrect = 0;
 
 					for(int z = 0; z < TEST_DATA_R_PEAK_LENGTH; z++)
 					{
-						//printf("expected Time: %d, intensity: %d, given Time: %hu, intensity: %hu\n", times[z], measurements[z], newRRPeak.RR + timeSum, newRRPeak.intensity);
 						if(timeMeasurementTaken[z] == 0 &&
 						   times[z] + ALLOWED_TIME_DEVIANTION >= newRRPeak.RR + timeSum &&
 						   times[z] - ALLOWED_TIME_DEVIANTION <= newRRPeak.RR + timeSum &&
@@ -210,7 +231,7 @@ char testRPeakSearcher(int* data)
 						{
 							timeMeasurementTaken[z] = 1;
 							isCorrect = 1;
-							//printf("found match\n");
+							fprintf(writeFile, "%d %d\n", newRRPeak.RR + timeSum, newRRPeak.intensity);
 							break;
 						}
 					}
@@ -219,6 +240,7 @@ char testRPeakSearcher(int* data)
 					{
 						printf("Failed to find matching peak for time: %d, measurement: %d\n", newRRPeak.RR + timeSum, newRRPeak.intensity);
 						free(timesAndMeasurements);
+						fclose(writeFile);
 						return 0;
 					}
 
@@ -244,6 +266,7 @@ char testRPeakSearcher(int* data)
 	{
 		printf("Failed to find all peaks\n");
 		free(timesAndMeasurements);
+		fclose(writeFile);
 		return 0;
 	}
 	else
@@ -251,6 +274,7 @@ char testRPeakSearcher(int* data)
 		printf("Passed r peak searcher test\n");
 	}
 	free(timesAndMeasurements);
+	fclose(writeFile);
 	return 1;
 }
 
