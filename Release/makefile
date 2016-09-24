@@ -43,13 +43,13 @@ all: libECG-Project
 libECG-Project: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -shared -o "libECG-Project" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS) -flto -ffunction-sections -Wl,--gc-sections -fno-asynchronous-unwind-tables -Wl,--strip-all
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(LIBRARIES)$(CC_DEPS)$(C++_DEPS)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) libECG-Project
+	-$(RM) $(LIBRARIES)$(CC_DEPS)$(C++_DEPS)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) ECG-Project
 	-@echo ' '
 
 .PHONY: all clean dependents
