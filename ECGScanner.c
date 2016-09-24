@@ -31,11 +31,9 @@ void runScanner(){
 
 	initializeRPeakFinder();
 
-	while(1)
-	{
+	while(1)	{
 		int newData = getNextData(file);
-		if(!hasMoreData(file))
-		{
+		if(!hasMoreData(file))		{
 			break;
 		}
 

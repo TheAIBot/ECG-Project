@@ -6,7 +6,6 @@
 C_SRCS += \
 ../ECGScanner.c \
 ../avgCircularArray.c \
-../benchmarks.c \
 ../circularArray.c \
 ../derSqrMwiFilter.c \
 ../filter.c \
@@ -18,13 +17,11 @@ C_SRCS += \
 ../rPeakFinder.c \
 ../rawData.c \
 ../sensor.c \
-../tests.c \
 ../ui.c 
 
 OBJS += \
 ./ECGScanner.o \
 ./avgCircularArray.o \
-./benchmarks.o \
 ./circularArray.o \
 ./derSqrMwiFilter.o \
 ./filter.o \
@@ -36,13 +33,11 @@ OBJS += \
 ./rPeakFinder.o \
 ./rawData.o \
 ./sensor.o \
-./tests.o \
 ./ui.o 
 
 C_DEPS += \
 ./ECGScanner.d \
 ./avgCircularArray.d \
-./benchmarks.d \
 ./circularArray.d \
 ./derSqrMwiFilter.d \
 ./filter.d \
@@ -54,7 +49,6 @@ C_DEPS += \
 ./rPeakFinder.d \
 ./rawData.d \
 ./sensor.d \
-./tests.d \
 ./ui.d 
 
 
@@ -62,7 +56,7 @@ C_DEPS += \
 %.o: ../%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C Compiler'
-	gcc -O3 -g -pg -Wall -c -fmessage-length=0 -std=c99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	gcc -Os -Wall -c -fmessage-length=0 -std=c99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
