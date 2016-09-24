@@ -43,7 +43,7 @@ all: ECG-Project
 ECG-Project: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -pg -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++  -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
