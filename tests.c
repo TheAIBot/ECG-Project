@@ -192,6 +192,7 @@ char testWholeFilter(int* data)
 
 char testRPeakSearcher(int* data)
 {
+	flushFilterBuffers();
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
 	FILE* writeFile = fopen("test_results/rpeaks_results.txt", "w");
 	if(file == NULL ||

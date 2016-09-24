@@ -37,13 +37,13 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: libECG-Project
+all: ECG-Project
 
 # Tool invocations
-libECG-Project: $(OBJS) $(USER_OBJS)
+ECG-Project: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS) -flto -ffunction-sections -Wl,--gc-sections -fno-asynchronous-unwind-tables -Wl,--strip-all
+	gcc -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS) -flto -ffunction-sections -Wl,--gc-sections -fno-asynchronous-unwind-tables -Wl,--strip-all
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -5,7 +5,7 @@
 //represents the bits that are allowed to be set when the max index is RAW_DATA_SIZE_LOW - 1
 //this only works when RAW_DATA_SIZE_LOW is a power of two
 //this also assumes that the array start index is only incremented by one
-#define ALLOWED_ENABLED_BITS_FOR_INDEX RAW_DATA_SIZE_LOW // = 0x1F
+#define ALLOWED_ENABLED_BITS_FOR_INDEX RAW_DATA_SIZE_LOW - 1 // = 0x1F
 
 static int rawLow[RAW_DATA_SIZE_LOW];
 static short arrayStartIndex = 0;
