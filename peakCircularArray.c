@@ -7,11 +7,13 @@
  * PeakCircularArray* const circArray; Pointer to the circular array that should be initialized.
  * const int size; The size that the initialized array should have.
  * const int startIndex; The startindex that the initialized circular array should have.
+ *
+ * Returns whether it was succesfull or not.
  * */
 char initPeakCircArray(PeakCircularArray* const circArray, const int size, const int startIndex){
 	circArray->size = size;
 	circArray->startIndex = startIndex;
-	circArray->data = malloc(size * sizeof(Peak)); //Allocates memory for the array.
+	circArray->data = malloc(size * sizeof(Peak));
 	if(circArray->data == NULL){
 		fprintf(stderr, "Failed to allocate memory for peak circular array");
 		return 0;
@@ -31,6 +33,11 @@ Peak getPeakCircArrayValue(const PeakCircularArray* circArray, const int offset)
 	return circArray->data[correctIndex];
 }
 
+/*Moves the given circular arrays (pointer) startindex one forward or resets it at zero when the end the
+ * end of the array has been reached.
+ *
+ * PeakCircularArray* const circArray; pointer for the new circular array
+ */
 static void movePeakCircArrayStartIndex(PeakCircularArray* const circArray){
 	circArray->startIndex++;
 	if(circArray->startIndex == circArray->size) {
