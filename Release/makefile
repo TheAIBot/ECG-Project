@@ -43,7 +43,7 @@ all: ECG-Project
 ECG-Project: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	gcc -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS) -flto -ffunction-sections -Wl,--gc-sections -fno-asynchronous-unwind-tables -Wl,--strip-all
+	gcc -o "ECG-Project" $(OBJS) $(USER_OBJS) $(LIBS) -O3 -flto -ffunction-sections -Wl,--gc-sections -fno-asynchronous-unwind-tables -Wl,--strip-all
 	@echo 'Finished building target: $@'
 	@echo ' '
 
