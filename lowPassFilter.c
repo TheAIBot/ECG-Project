@@ -47,6 +47,7 @@ int lowPassFilter(const int x, const int x_6, const int x_12)
 
 	//the low pass filter equation.
 	int newY = (2 * y_1) - y_2 + ((x - (2 * x_6) + x_12) / 32);
+	//int newY =   (2 * y_1) - y_2 + x - 2 * x_6 + x_12;
 	//save the overridden value because so the high pass filter
 	//doesn't have to use getLowPassValue to get it.
 	low_y_32 = rawLow[arrayStartIndex];

@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
 	//exit(1);
 
 	testAll();
-	//exit(1);
-	printf("kage«n");
-	//runBenchmarks();
+	exit(1);
+
+	runBenchmarks();
 	exit(1);
 
 	return 0;

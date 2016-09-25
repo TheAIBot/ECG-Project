@@ -23,6 +23,8 @@ char initPeakCircArray(PeakCircularArray* const circArray, const int size, const
 
 /* Gets the element in the circular array (pointer), that has a given offset from the startindex.
  * The offset must be negative, and greater than or equal to minus the size of the circular array.
+ *
+ * returns The peak with the given offset from the current/startindex.
  * */
 Peak getPeakCircArrayValue(const PeakCircularArray* circArray, const int offset){
 	int correctIndex = circArray->startIndex + offset;
@@ -46,7 +48,7 @@ static void movePeakCircArrayStartIndex(PeakCircularArray* const circArray){
 }
 
 /*Inserts a new element in a given circular array (pointer), at the position after the current startindex,
- *with a loopback if the startindex is at the last position in the array
+ *with a loopback if the startindex is at the last position in the array.
   *
  * PeakCircularArray* const circArray; pointer for the new circular array, wherein the data point should be inserted.
  * const Peak newData; the element to be inserted.

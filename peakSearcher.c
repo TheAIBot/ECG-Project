@@ -24,7 +24,7 @@ static unsigned short last5Values[PEAK_AREA] = {0};
 
 static char isPeak()
 {
-	//contains the last valuethat wasn't the same as th new value
+	//contains the last value that wasn't the same as th new value
 	static unsigned short formerDifferentValue = 0;
 	/*TODO Talk about the following extra check with the teachers*/
 
@@ -76,12 +76,11 @@ char foundPeak(unsigned short newDataPoint)
 	return isPeak();
 }
 
-Peak getNewPeak()
-{
+/*Returns the middle value of last5Values as a Peak.*/
+Peak getNewPeak(){
 	return (Peak){last5Values[MIDDLE_INDEX], timeSinceLastRRPeak};
 }
-
-void setFoundNewRRPeak()
-{
+/*Sets timeSinceLastRPeak to 0, in case a new true R-peak has been found.*/
+void setFoundNewRRPeak(){
 	timeSinceLastRRPeak = 0;
 }

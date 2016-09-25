@@ -163,7 +163,7 @@ static char searchBackBackwardsGoer(int indexMiss){
  * */
 static char passThreshold1(unsigned short intensity){
 	if (!(intensity > Threshold1)) { /*If it isn't an R-Peak..*/
-			Npkf = (intensity + 7*Npkf)/8; // More precise (and faster) than peak.intensity/8 + 7*Npkf/8
+			Npkf = (intensity + 7*Npkf)/8; // More precise (and faster) than NPF = intensity/8 + 7*Npkf/8
 			Threshold1 = Npkf + (Spkf-Npkf)/4;
 			Threshold2 = Threshold1/2;
 			return 0;
@@ -210,6 +210,10 @@ static char searchBack(){
 						newRRRemoval += allPeaks[i].RR;
 						//The index of the last recorded R-peak in the array get's set to the current newly recorded one:
 						indexMostBackwards = newIndexMostBackwards;
+						//TODO Change i. else it wont continue from the newly found peak.
+						//i is set back, so that it will continue from the newly found true R peak.
+						//Since the peaks haven't been deleted from there position, those that have already been gone over, will still be there.
+						i -= indexMostBackwards;
 					} //Else simply continue from there.
 				}
 			}
