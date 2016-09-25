@@ -42,6 +42,7 @@ char initAvgCircArray(AvgCircularArray* const avgCirc, const int size, const int
  *  returns a pointer to the Peak found.
  */
 int getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
+	//TODO OBS. Might not be used, can maybe be deleted.
 	int correctIndex = avgCirc->startIndex + offset;
 	if(correctIndex < 0){
 		correctIndex += avgCirc->size;
@@ -55,9 +56,8 @@ int getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
 /*Moves the current index of a given AvgCircularArray (pointer) one forwards.*/
 static inline void moveAvgCircIndexForward(AvgCircularArray* const avgCirc){
 	avgCirc->startIndex++;
-	if(avgCirc->startIndex == avgCirc->size) {
+	if(avgCirc->startIndex == avgCirc->size)
 		avgCirc->startIndex = 0;
-	}
 }
 
 /* Moves the current index in a given AvgCircularArray (pointer) one forwards,
