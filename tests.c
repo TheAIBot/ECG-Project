@@ -287,6 +287,7 @@ void testAll()
 	if(ecgData == NULL ||
 	   !testLowPassFilter(ecgData))
 	{
+		free(ecgData);
 		return;
 	}
 	/*ecgData is freed at the bottom*/

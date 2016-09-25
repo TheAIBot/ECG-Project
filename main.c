@@ -6,12 +6,12 @@
 
 int main(int argc, char *argv[])
 {
-	runScanner();
+	//runScanner();
 	//exit(1);
 
-	//testAll();
+	testAll();
 	//exit(1);
-	//printf("kage«n");
+	printf("kage«n");
 	//runBenchmarks();
 	exit(1);
 
