@@ -4,23 +4,23 @@
 #include "includes/peak.h"
 #include "includes/avgCircularArray.h"
 
-//TODO update description.
-/* Initializes a new AvgCircularArray avgCirc (pointer), filling it up with a given Peak, defaultPeak,
- * setting its size to a given size, it's averageLength, and placing the current index at a given value startIndex.
+//TODO remember to write comments for the structs themself
+
+/* Initializes a new AvgCircularArray avgCirc (pointer), filling it up with a given default value, defaultValue,
+ * setting its size to a given size, and placing the current index at a given value startIndex.
  * Returns 1 if it works, 0 otherwise.
  *
  * AvgCircularArray* avgCirc; the pointer to the AvgCircularArray.
  * int size; the size of the AvgCircularArray.
  * int startIndex; the current index (to be set) of the  AvgCircularArray.
- * int averageLength; the averageLenght of the AvgCircularArray.
- * Peak defaultPeak; the Peak to fill the array up with.
- *
+ * int defaultValue; the value to fill the array up with.
+ *TODO set to shorts after checking it dosen't crash anything
  * */
 char initAvgCircArray(AvgCircularArray* const avgCirc, const int size, const int startIndex, const int defaultValue){
 	avgCirc->size = size;
 	avgCirc->startIndex = startIndex;
 	avgCirc->averageSum = defaultValue * size;
-	avgCirc->data = malloc(avgCirc->size * sizeof(int));
+	avgCirc->data = malloc(avgCirc->size * sizeof(int)); //Allocates memory for the array
 
 	if(avgCirc->data == NULL)	{
 		fprintf(stderr, "Failed to allocate memory for average circular array");
@@ -33,20 +33,18 @@ char initAvgCircArray(AvgCircularArray* const avgCirc, const int size, const int
 	return 1;
 }
 
-/** Gets the value in a given AvgCircularArray (with a pointer to it),
- *  and an offset, offset, from the current index.
+/* Gets the element in the Avg circular array (pointer), that has a given offset from the startindex.
+ * The absolute value of the offset must be less than or equal to the size of the circular array.
  *
- *  const AvgCircularArray* avgCirc; pointer to the AvgCircularArray.
- *  const int offset; the offset from the current index.
- *
- *  returns a pointer to the Peak found.
- */
+ * returns The peak with the given offset from the current/startindex.
+ * */
 int getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
-	//TODO OBS. Might not be used, can maybe be deleted.
+	//TODO OBS. Might not be used, can maybe be deleted. Same with the other ones.
 	int correctIndex = avgCirc->startIndex + offset;
+	//In the case that the index of the wanted element needs to loop around.
+	//Requires that the absolute value of the offset is less than or equal to the size of the circular array.
 	if(correctIndex < 0){
 		correctIndex += avgCirc->size;
-	//TODO can remove this else?
 	} else if (correctIndex >= avgCirc->size){
 		correctIndex -= avgCirc->size;
 	}
@@ -61,10 +59,10 @@ static inline void moveAvgCircIndexForward(AvgCircularArray* const avgCirc){
 }
 
 /* Moves the current index in a given AvgCircularArray (pointer) one forwards,
- * and inserts the pointer to a new Peak, newPeak.
+ * and inserts the element there.
    *
  * AvgCircularArray* avgCirc; pointer to the AvgCircularArray.
- *  Peak* newPeak; pointer to the new Peak.
+ * const int newValue; The value to be inserted.
    *
    * */
 void insertAvgCircData(AvgCircularArray* const avgCirc, const int newValue){
@@ -74,18 +72,22 @@ void insertAvgCircData(AvgCircularArray* const avgCirc, const int newValue){
 	avgCirc->data[avgCirc->startIndex] = newValue;
 }
 
-/*Gets the average value of a given AvgCircularArray (pointer) avgCirc
+/*Gets the average value of the elements in a given AvgCircularArray (pointer) avgCirc
  *
  * const AvgCircularArray* avgCirc; pointer to the AvgCircularArray.
+ *
+ * returns the average value of the elements in the given AvgCircularArray
    */
 int getAvgCircAverageValue(const AvgCircularArray* avgCirc){
 	return avgCirc->averageSum / avgCirc->size;
 }
-//TODO is it correct after using peaks?
+
+/*Resets a given AvgCircularArray, setting all the values it contains to 0, and it's averageSum to zero*/
 void resetAvgCirc(AvgCircularArray*  const avgCirc){
 	memset(avgCirc->data, 0, avgCirc->size * sizeof(int));
 	avgCirc->averageSum = 0;
 }
+
 /*Frees the given AvgCircularArray (pointer)
   *
  * AvgCircularArray* avgCirc; the pointer to the AvgCircularArray.
