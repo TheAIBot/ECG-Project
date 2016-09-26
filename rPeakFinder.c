@@ -20,7 +20,7 @@ static AvgCircularArray RecentRR;
 //Average circular array for the last 8 true R-peaks found and recorded, with an RR value between RR_LOW and RR_HIGH
 static AvgCircularArray RecentRR_OK;
 static PeakCircularArray trueRPeaks; //Last eight true r peak
-static Peak allPeaks[SIZE_ALL_PEAKS_ARRAY];//Last eight peaks found, no matter what.
+static Peak allPeaks[SIZE_ALL_PEAKS_ARRAY];//Last peaks found since the last R-peak
 static int indexAllPeaksForSearchback = 0; //Index of allPeaks, pointing to the next free space.
 
 /*Variables for detecting R peaks:*/
@@ -89,6 +89,14 @@ void initializeRPeakFinder(){
 	initPeakCircArray(&trueRPeaks, AVERAGE_NUMBER_MEMBERS, 0);
 }
 
+//TODO write description
+void movePeaksBackwardsWithRRUpdate(short indexNewStart, short numberToBeMoved, unsigned short RRValueUpdate){
+	for(int i = 0; i < numberToBeMoved; i++){
+		allPeaks[i] = allPeaks[i + indexNewStart];
+		allPeaks[i].RR -= RRValueUpdate;
+	}
+}
+
 /* Given a new Peak to be recorded as a new true R peak, it records it as such.
    *
  * Peak newPeak; The  peak to be recorded.
@@ -140,6 +148,7 @@ static char checkSearchback(Peak peakToCheck){
 	//Sets the RR value of the later peaks, to be measured from the found one.
 	//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1]), minus the newly recorded peak.
 	setTimeSinceLastRPeakFound(allPeaks[indexAllPeaksForSearchback - 1].RR - peakToCheck.RR);
+	//TODO check above
 	return 1;
 }
 
@@ -178,60 +187,48 @@ static char passThreshold1(unsigned short intensity){
 /* Activates the searchback procedure, in the case that a Peak is found with an intensity above THRESHOLD1,
  * and an RR value above RR_MISS. It will (*)TODO update description and comments*/
 static char searchBack(){
-	//Finds the index to a Peak among the peaks found since the last true R-Peak was found, not including the one triggering the searchback,
-	//where it's intensity is above Treshold2. If there is one, it is registrated as a true R-Peak.
-	int indexMostBackwards = searchBackBackwardsGoer(indexAllPeaksForSearchback - 1);
-	if(indexMostBackwards == -1){ //If there wheren't any, it stops.
-		indexAllPeaksForSearchback = 0;
-		return 0;
-	} //Else:
-	//It then goes through the later Peaks, and checks if they now are true R-peaks.
-	//Since a new true R-peak has been found, the later Peak's RR value should be decreased by it's RR value.
-	unsigned short newRRRemoval = allPeaks[indexMostBackwards].RR;
-	for(int i = indexMostBackwards + 1; i < indexAllPeaksForSearchback; i++){
-		/*Moves the peak back in the array, so that the first peak after the newest found peak is the first in the array:
-		 *This can be seen by the fact that (i - indexMostBackwards - 1) = (indexMostBackwards + 1 - indexMostBackwards - 1) = 0 at the start,
-		 *when i = indexMostBackwards + 1.
-		 */
-		allPeaks[i - indexMostBackwards - 1] = allPeaks[i];
-		//Updates the RR value
-		allPeaks[i - indexMostBackwards - 1].RR -= newRRRemoval;
-		/*Makes the checks for the peak*/
+	concurrentMissedRRLOWAndHigh--; //Will be incremented first time it is run
+	char hasFoundNewPeak = 0;
+	unsigned short newRRRemoval;
+	for(int i = indexAllPeaksForSearchback-1; i < indexAllPeaksForSearchback; i++){
 		if(passThreshold1(allPeaks[i].intensity)){
 			if (RR_Low < allPeaks[i].RR && allPeaks[i].RR < RR_High){
 				concurrentMissedRRLOWAndHigh = 0;
 				recordNewProperRPeak(allPeaks[i]);
 				//Since this peak now is the newest one, the later peaks RR value needs to be updated according to this one:
-				newRRRemoval += allPeaks[i - indexMostBackwards - 1].RR;
-				//The index of the last recorded R-peak in the array get's set to the current newly recorded one:
-				indexMostBackwards = i;
-				//Sets the RR value of the later peaks, to be measured from the found one.
-				//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1]), minus the newly recorded peak.
-				setTimeSinceLastRPeakFound(allPeaks[indexAllPeaksForSearchback - 1].RR - allPeaks[i].RR);
-			} else{
+				newRRRemoval = allPeaks[i].RR;
+				//Updates indexAllPeaksForSearchback:
+				indexAllPeaksForSearchback -= (i+1);
+				//Moves the elements back, and updates their RR value.
+				movePeaksBackwardsWithRRUpdate(i+1,indexAllPeaksForSearchback,newRRRemoval);
+				i = -1;
+			} else {
 				concurrentMissedRRLOWAndHigh++;
 				if(allPeaks[i].RR > RR_Miss)	{
-					//If a peak is above RR_MISS (again...) a new searchback is run from the current peak.
+					//If a peak is above RR_MISS, a new searchback is run from the current peak.
 					//Since the peaks all have been placed at the start of allPeaks, the argument for searchBackBackwardsGoer needs to be i-1
-					int newIndexMostBackwards =  searchBackBackwardsGoer(i - indexMostBackwards - 1);
-					if(newIndexMostBackwards != -1){ //If a new candidate could be found, and is recorded:
+					int indexMostBackwards =  searchBackBackwardsGoer(i);
+					if(indexMostBackwards != -1){ //If a new candidate could be found, and is recorded:
 						//Since this peak now is the newest one, the later peaks RR value needs to be updated according to this one:
-						newRRRemoval += allPeaks[newIndexMostBackwards].RR;
-						//The index of the last recorded R-peak in the array get's set to the current newly recorded one:
-						indexMostBackwards = newIndexMostBackwards;
-						//TODO Change i. else it wont continue from the newly found peak.
-						//i is set back, so that it will continue from the newly found true R peak.
-						//Since the peaks haven't been deleted from there position, those that have already been gone over, will still be there.
-						i -= indexMostBackwards;
-						//TODO ERROR with removing RR value from a Peak from which the RR value already has been removed.
+						newRRRemoval = allPeaks[indexMostBackwards].RR;
+						//Sets the RR value of the later peaks, to be measured from the found one.
+						//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1]), minus the newly recorded peak.
+						setTimeSinceLastRPeakFound(allPeaks[indexAllPeaksForSearchback - 1].RR - newRRRemoval);
+						//Moves the elements back, and updates their RR value.
+						indexAllPeaksForSearchback -= (indexMostBackwards+1);
+						movePeaksBackwardsWithRRUpdate(indexMostBackwards +1,indexAllPeaksForSearchback,newRRRemoval);
+						i = -1;
+						//Only placed here is needed;
+						hasFoundNewPeak = 1;
 					} //Else simply continue from there.
 				}
 			}
 		}
 	}
-	//In the end, indexAllPeaksForSearchback is updated according to the last found peak:
-	indexAllPeaksForSearchback = indexAllPeaksForSearchback - indexMostBackwards - 1;
-	return 1;
+	//Sets the RR value of the later peaks, to be measured from the last found one.
+	//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1])'s RR time
+	setTimeSinceLastRPeakFound(allPeaks[indexAllPeaksForSearchback - 1].RR);
+	return hasFoundNewPeak;
 }
 
 /*Makes the checks to see if a given new Peak should be recorded the normal way as a true R-peak,
