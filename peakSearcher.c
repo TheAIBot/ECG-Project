@@ -65,7 +65,15 @@ char foundPeak(unsigned short newDataPoint){
 Peak getNewPeak(){
 	return (Peak){last5Values[MIDDLE_INDEX], timeSinceLastRPeak};
 }
-/*Sets timeSinceLastRPeak to 0, in case a new true R-peak has been found.*/
-void setFoundNewRRPeak(){
-	timeSinceLastRPeak = 0;
+
+/*Sets timeSinceLastRPeak to a given value, in case a new true R-peak has been found.
+ *
+ * unsigned short newValue; the given value.
+ *TODO update the repport, not what is written there*/
+void setTimeSinceLastRPeakFound(unsigned short newValue){
+	timeSinceLastRPeak = newValue;
+}
+
+int getTimeSinceLastRPeakFound(){
+	return timeSinceLastRPeak;
 }

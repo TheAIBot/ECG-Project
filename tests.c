@@ -13,10 +13,6 @@
 #include "includes/sensor.h"
 #include "includes/peakCircularArray.h"
 
-
-typedef struct TPeakCircularArray PeakCircularArray;
-
-
 #define TEST_DATA_LENGTH 10000 /* 10.000 */
 #define TEST_DATA_R_PEAK_LENGTH 31
 #define ALLOWED_TIME_DEVIANTION 10
@@ -46,30 +42,23 @@ void flushFilterBuffers()
 	resetDerSqrMwiFilter();
 }
 
-char testLowPassFilter(int* data)
-{
+char testLowPassFilter(int* data){
 	resetLowFilter();
 	FILE* file = startInputData("verification_files/x_low.txt");
 	FILE* writeFile = fopen("test_results/low_results.txt", "w");
-	if(file == NULL ||
-	   writeFile == NULL)
-	{
+	if(file == NULL || writeFile == NULL)	{
 		return 0;
 	}
 
 	CircularArray circArray;
-	if(!initCircArray(&circArray, 13, 0))
-	{
+	if(!initCircArray(&circArray, 13, 0))	{
 		return 0;
 	}
 
-	for(int i = 0; i < TEST_DATA_LENGTH; i++)
-	{
+	for(int i = 0; i < TEST_DATA_LENGTH; i++)	{
 		insertCircArrayData(&circArray, data[i]);
-
 		int dataLowFiltered = lowPassFilter(data[i], getCircArrayValue(&circArray, -6), getCircArrayValue(&circArray, -12));
-		if(!isFilterCorrect(dataLowFiltered, file, "low"))
-		{
+		if(!isFilterCorrect(dataLowFiltered, file, "low"))		{
 			stopInputData(file);
 			freeCircArray(&circArray);
 			fclose(writeFile);
@@ -160,8 +149,7 @@ char testDerivSqrFilter(int* data)
 	return 1;
 }
 
-char testWholeFilter(int* data)
-{
+char testWholeFilter(int* data){
 	flushFilterBuffers();
 	FILE* file = startInputData("verification_files/x_mwi_div_after.txt");
 	FILE* writeFile = fopen("test_results/wholefilter_results.txt", "w");
@@ -190,13 +178,10 @@ char testWholeFilter(int* data)
 	return 1;
 }
 
-char testRPeakSearcher(int* data)
-{
+char testRPeakSearcher(int* data){
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
 	FILE* writeFile = fopen("test_results/rpeaks_results.txt", "w");
-	if(file == NULL ||
-	   writeFile == NULL)
-	{
+	if(file == NULL || writeFile == NULL)	{
 		return 0;
 	}
 
@@ -205,24 +190,21 @@ char testRPeakSearcher(int* data)
 	int* measurements = &timesAndMeasurements[TEST_DATA_R_PEAK_LENGTH];
 	char timeMeasurementTaken[TEST_DATA_R_PEAK_LENGTH] = {0};
 	int timeSum = 0;
-
+	//The r-peak finder has already been initialized.
+	PeakCircularArray* trueRRPeaks = getTrueRPeaksArray();
 	//printf("started\n");
-	for(int i = 0; i < TEST_DATA_LENGTH; i++)
-	{
-		if(foundPeak(data[i]))
-		{
+	for(int i = 0; i < TEST_DATA_LENGTH; i++){
+		//TODO something wrong with foundPeak.
+		if(foundPeak(data[i]))	{
 			Peak newPeak = getNewPeak();
 			if (isRPeak(newPeak)){
-				setFoundNewRRPeak();
+				//setFoundNewRRPeak(); Not needed anymore
 				int newRPeakCount = getNewRPeaksFoundCount();
-				PeakCircularArray* trueRRPeaks = getTrueRPeaksArray();
-				for(int y = 0; y < newRPeakCount; y++)
-				{
+				for(int y = 0; y < newRPeakCount; y++){
 					Peak newRRPeak = getPeakCircArrayValue(trueRRPeaks, -((newRPeakCount - 1) - y));
 					char isCorrect = 0;
-
-					for(int z = 0; z < TEST_DATA_R_PEAK_LENGTH; z++)
-					{
+					//TODO rewrite this. It is kluntet.
+					for(int z = 0; z < TEST_DATA_R_PEAK_LENGTH; z++){
 						if(timeMeasurementTaken[z] == 0 &&
 						   times[z] + ALLOWED_TIME_DEVIANTION >= newRRPeak.RR + timeSum &&
 						   times[z] - ALLOWED_TIME_DEVIANTION <= newRRPeak.RR + timeSum &&
@@ -231,19 +213,17 @@ char testRPeakSearcher(int* data)
 						{
 							timeMeasurementTaken[z] = 1;
 							isCorrect = 1;
-							fprintf(writeFile, "%d %d\n", newRRPeak.RR + timeSum, newRRPeak.intensity);
+							int currentTime = newRRPeak.RR + timeSum;
+							fprintf(writeFile, "%d %d\n", currentTime, newRRPeak.intensity);
 							break;
 						}
 					}
-
-					if(!isCorrect)
-					{
+					if(!isCorrect){
 						printf("Failed to find matching peak for time: %d, measurement: %d\n", newRRPeak.RR + timeSum, newRRPeak.intensity);
 						free(timesAndMeasurements);
 						fclose(writeFile);
 						return 0;
 					}
-
 					timeSum += newRRPeak.RR;
 				}
 			}
@@ -251,80 +231,124 @@ char testRPeakSearcher(int* data)
 	}
 
 	char foundAll = 1;
-	timeSum = 0;
-	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)
-	{
-		if(timeMeasurementTaken[i] == 0)
-		{
+	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)	{
+		if(timeMeasurementTaken[i] == 0)		{
 			foundAll = 0;
-			printf("Couldn't find a match for time: %d, value: %d\n", times[i] + timeSum, measurements[i]);
+			printf("Couldn't find a match for time: %d, value: %d\n", times[i], measurements[i]);
 			break;
 		}
-		timeSum += times[i];
 	}
-	if(!foundAll)
-	{
+	if(getTimeSinceLastRPeakFound() != 	TEST_DATA_LENGTH - timeSum - 2){
+		printf("Wrong timeSinceLastRPeakFound in the peak finder. \n");
+		printf("Should be the difference between the lenght of the file, and the sum of all RR values, minus 2, %d, but is %d \n", TEST_DATA_LENGTH - timeSum, getTimeSinceLastRPeakFound());
+	}
+	setTimeSinceLastRPeakFound(0);
+
+
+	if(!foundAll)	{
 		printf("Failed to find all peaks\n");
 		free(timesAndMeasurements);
 		fclose(writeFile);
 		return 0;
-	}
-	else
-	{
+	} else 	{
 		printf("Passed r peak searcher test\n");
+		free(timesAndMeasurements);
+		fclose(writeFile);
+		return 1;
 	}
-	free(timesAndMeasurements);
-	fclose(writeFile);
-	return 1;
 }
 
-void testAll()
-{
-	initializeRPeakFinder();
+char testSearchback(int* data){
+	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
+	FILE* writeFile = fopen("test_results/searchback_results.txt", "w");
+	if(file == NULL || writeFile == NULL)	{
+		return 0;
+	}
+	resetRPeakFinder();
+	PeakCircularArray* trueRRPeaks = getTrueRPeaksArray();
+	for(int i = 0; i < 350; i++){
+		if(foundPeak(data[i]))	{
+			Peak newPeak = getNewPeak();
+			if (isRPeak(newPeak)){
+				if (i != 342 - 1){
+					printf("Detected a peak at the wrong time, should have been at place 341 instead of %d \n", i);
+					return 0;
+				} else {
+					if((getPeakCircArrayValue(&trueRRPeaks, 0).RR == 230 && getPeakCircArrayValue(&trueRRPeaks, 0).intensity == 4000) &&
+							(getPeakCircArrayValue(&trueRRPeaks, -1).RR == 50 && getPeakCircArrayValue(&trueRRPeaks, -1).intensity == 60) &&
+							(getPeakCircArrayValue(&trueRRPeaks, -2).RR == 80 && getPeakCircArrayValue(&trueRRPeaks, -2).intensity == 800)){
+						//TODO ((*)In the repport, descripe the finding of peaks with a low RR value, with searchbacks. Low delays)
+						printf("The three peaks searched for, is found\n");
+						if(getNewRPeaksFoundCount() != 3){
+							printf("The number of peaks found is also correct");
+						} else {
+							printf("FAIL!!! The number of peaks found is not correct");
+							return 0;
+						}
+					} else{
+						printf("FAIL!!! The peaks supposed to be found by the searchback is not the ones found.");
+						return 0;
+					}
 
+				}
+				return 1;
+			}
+		}
+	}
+}
+
+void testAll(){
+	initializeRPeakFinder();
+	//TODO needs to return something to check if it works?
 	int* ecgData = loadDataArray("ECG.txt", TEST_DATA_LENGTH);
-	if(ecgData == NULL ||
-	   !testLowPassFilter(ecgData))
-	{
+	if(ecgData == NULL || !testLowPassFilter(ecgData))	{
+		printf("FAIL!!! Didn't pass lowpass filter test\n");
 		return;
 	}
 	/*ecgData is freed at the bottom*/
 
 	int* lowData = loadDataArray("verification_files/x_low.txt", TEST_DATA_LENGTH);
-	if(lowData == NULL ||
-	   !testHighPassFilter(lowData))
-	{
+	if(lowData == NULL || !testHighPassFilter(lowData))	{
+		printf("FAIL!!! Didn't pass highpass filter test\n");
 		free(lowData);
 		return;
 	}
 	free(lowData);
 
 	int* highData = loadDataArray("verification_files/x_high.txt", TEST_DATA_LENGTH);
-		if(highData == NULL ||
-		   !testDerivSqrFilter(highData))
-		{
+		if(highData == NULL || !testDerivSqrFilter(highData))		{
+			printf("FAIL!!! Didn't pass DerivSqrFilter filter test\n");
 			free(highData);
 			return;
-		}
+	}
 	free(highData);
 
-	if(ecgData == NULL ||
-	   !testWholeFilter(ecgData))
-	{
+	if(ecgData == NULL || !testWholeFilter(ecgData))	{
+		printf("FAIL!!! Didn't pass whole filter test\n");
 		free(ecgData);
 		return;
 	}
 	free(ecgData);
 
 
+/*
 	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
-	if(mwi_after == NULL ||
-	   !testRPeakSearcher(mwi_after))
-	{
+	if(mwi_after == NULL || !testRPeakSearcher(mwi_after)){
+		printf("FAIL!!! Didn't pass R-peak searcher test\n");
 		free(mwi_after);
 		return;
 	}
 	free(mwi_after);
+*/
+
+
+	int* searchbackTestData = loadDataArray("searchbackTest.txt", 350);
+	if(searchbackTestData == NULL || !testSearchback(searchbackTestData)){
+		printf("FAIL!!! Didn't pass searchback test\n");
+		free(searchbackTestData);
+		return;
+	}
+	free(searchbackTestData);
 
 	printf("All tests finished successfully\n");
 }

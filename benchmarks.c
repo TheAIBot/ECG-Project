@@ -105,9 +105,9 @@ static clock_t benchmarkPeakSearcher(int* data)
 			Peak newPeak = getNewPeak();
 			result += newPeak.RR;
 			//simulate a found RR peak every 150 values
-			if(peakTime >= 150)
-			{
-				setFoundNewRRPeak();
+			if(peakTime >= 150)	{
+				//TODO Wrong. update.
+				//setFoundNewRRPeak();
 				peakTime = 0;
 			}
 		}
@@ -127,7 +127,8 @@ static clock_t benchmarkRPeakFinder(int* data)
 			Peak newPeak = getNewPeak();
 			if(isRPeak(newPeak)){
 				//TODO verify this is correct
-				setFoundNewRRPeak();
+				//TODO Wrong. update.
+				//setFoundNewRRPeak();
 				result = result + 1;
 			}
 		}
@@ -147,7 +148,8 @@ static clock_t benchmarkWholeScanner(int* data)
 			Peak newPeak = getNewPeak();
 			if(isRPeak(newPeak)){
 				//TODO verify this is correct
-				setFoundNewRRPeak();
+				//TODO Wrong. update.
+				//setFoundNewRRPeak();
 				result = result + 1;
 			}
 		}

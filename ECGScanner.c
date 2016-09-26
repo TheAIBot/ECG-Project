@@ -17,7 +17,7 @@ void runScannerOnce(int sensorValue)
 		Peak newPeak = getNewPeak();
 		if(isRPeak(newPeak)){
 			//TODO verify this is correct
-			setFoundNewRRPeak();
+			//Removed as this is done by the R-peak finder itself. And it is incorrect. setFoundNewRRPeak();
 			Peak correctPeak = getPeakCircArrayValue(getTrueRPeaksArray(), 0);
 			updateNewPeak(correctPeak, isPulseUnstable());
 		}

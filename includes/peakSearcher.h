@@ -13,6 +13,6 @@
 
 char foundPeak(unsigned short newDataPoint);
 Peak getNewPeak();
-void setFoundNewRRPeak();
+void setFoundNewRRPeak(unsigned short newValue);
 
 #endif /* INCLUDES_PEAKSEARCHER_H_ */
