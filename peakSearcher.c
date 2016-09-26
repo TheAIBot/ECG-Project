@@ -51,11 +51,18 @@ static char isPeak()
 
 	//is potential peak larger than all values or
 	//is potential peak at the end of a plateau
-	return (last5Values[MIDDLE_INDEX + 2] <  potentialPeak &&
-			last5Values[MIDDLE_INDEX + 1] <  potentialPeak &&
-			last5Values[MIDDLE_INDEX - 1] <= potentialPeak &&
-			last5Values[MIDDLE_INDEX - 2] <= potentialPeak &&
-			formerDifferentValue          <  potentialPeak);
+	if(last5Values[MIDDLE_INDEX + 2] <  potentialPeak &&
+	   last5Values[MIDDLE_INDEX + 1] <  potentialPeak &&
+	   last5Values[MIDDLE_INDEX - 1] <= potentialPeak &&
+	   last5Values[MIDDLE_INDEX - 2] <= potentialPeak &&
+	   formerDifferentValue          <  potentialPeak)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 //newDataPoint will be a potential peak in MIDDLE_INDEX more times this function has run

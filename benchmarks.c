@@ -108,7 +108,9 @@ static clock_t benchmarkPeakSearcher(int* data)
 			if(peakTime >= 150)
 			{
 				setFoundNewRRPeak();
+				//printf("ad%d\n", peakTime);
 				peakTime = 0;
+
 			}
 		}
 		peakTime++;
