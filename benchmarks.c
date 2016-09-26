@@ -43,7 +43,7 @@ static clock_t benchmarkLowPassFilter(int* data)
 	for(; i < ECG_10800K_LENGTH; i++)
 	{
 		int lowFiler = lowPassFilter(data[i], getArrayDataValue(data, i, ECG_10800K_LENGTH, -6), getArrayDataValue(data, i, ECG_10800K_LENGTH, -12));
-		result += result;
+		result += lowFiler;
 
 	}
 	return BENCHMARK_TIME(startTime);
