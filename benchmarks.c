@@ -42,7 +42,9 @@ static clock_t benchmarkLowPassFilter(int* data)
 	int i = 0;
 	for(; i < ECG_10800K_LENGTH; i++)
 	{
-		result += lowPassFilter(data[i], getArrayDataValue(data, i, ECG_10800K_LENGTH, -6), getArrayDataValue(data, i, ECG_10800K_LENGTH, -12));
+		int lowFiler = lowPassFilter(data[i], getArrayDataValue(data, i, ECG_10800K_LENGTH, -6), getArrayDataValue(data, i, ECG_10800K_LENGTH, -12));
+		result += result;
+
 	}
 	return BENCHMARK_TIME(startTime);
 }
@@ -83,7 +85,6 @@ static clock_t benchmarkDerivativeSquareFilter(int* data)
 
 static clock_t benchmarhWholeFilter(int* data)
 {
-	FILE* file = fopen("filtered10800K.txt", "w");
 	clock_t startTime = BENCHMARK_START;
 	result = 0;
 	int i = 0;
@@ -91,17 +92,7 @@ static clock_t benchmarhWholeFilter(int* data)
 	{
 		unsigned short filteredResult =  filterData(data[i]);
 		result += filteredResult;
-		fprintf(file, "%d\n", filteredResult);
 	}
-	fclose(file);
-	file = fopen("filtered10800K.txt", "r");
-	int length = 0;
-	while(hasMoreData(file))
-	{
-		getNextData(file);
-		length++;
-	}
-	printf("%d\n", length);
 	return BENCHMARK_TIME(startTime);
 }
 
@@ -174,12 +165,12 @@ void runBenchmarks()
 	int* data = loadDataArray("benchmark_files/ECG10800K.txt", ECG_10800K_LENGTH);
 	if(data != NULL)
 	{
-		//benchmarkXTimes(&benchmarkLowPassFilter, 40, data, "low");
-		//benchmarkXTimes(&benchmarkHighPassFilter, 40, data, "high");
-		//benchmarkXTimes(&benchmarkDerivativeSquareFilter, 40, data, "derivative square moving window");
+		benchmarkXTimes(&benchmarkLowPassFilter, 40, data, "low");
+		benchmarkXTimes(&benchmarkHighPassFilter, 40, data, "high");
+		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 40, data, "derivative square moving window");
 		benchmarkXTimes(&benchmarhWholeFilter, 1, data, "whole");
 
-/*
+
 		int* filteredData = malloc(ECG_10800K_LENGTH * sizeof(int));
 		for(int i = 0; i < ECG_10800K_LENGTH; i++)
 		{
@@ -192,7 +183,6 @@ void runBenchmarks()
 		benchmarkXTimes(&benchmarkWholeScanner, 40, data, "whole scanner");
 
 		free(filteredData);
-		*/
 	}
 
 	free(data);

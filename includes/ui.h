@@ -12,6 +12,6 @@
 
 void tickUITimer();
 void printAnyWarnings(char isPulseUnstable);
-void updateNewPeak(Peak newPeak);
+void printNewestPeakDetails(Peak newPeak);
 
 #endif /* INCLUDES_UI_H_ */

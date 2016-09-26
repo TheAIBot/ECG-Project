@@ -19,7 +19,7 @@ void runScannerOnce(int sensorValue)
 			//TODO verify this is correct
 			setFoundNewRRPeak();
 			Peak correctPeak = getPeakCircArrayValue(getTrueRPeaksArray(), 0);
-			updateNewPeak(correctPeak);
+			printNewestPeakDetails(correctPeak);
 		}
 		printAnyWarnings(isPulseUnstable());
 	}

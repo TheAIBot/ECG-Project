@@ -25,7 +25,7 @@ void printAnyWarnings(char isPulseUnstable)
 	}
 }
 
-void updateNewPeak(Peak newPeak)
+void printNewestPeakDetails(Peak newPeak)
 {
 	newestPeak = newPeak;
 
