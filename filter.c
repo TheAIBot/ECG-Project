@@ -17,7 +17,7 @@ unsigned short filterData(const short rawData)
 	insertRawData(rawData);
 
 	/*low pass filter*/
-	int dataLowFiltered = lowPassFilter(rawData, getRawDataValue(-6), GET_RAW_VALUE_X_12);
+	int dataLowFiltered = lowPassFilter(rawData, getRawDataValue(-6), getRawDataValue(-12));
 
 	/*high pass filter*/
 	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), GET_LOW_FILTER_VALUE_X_32);

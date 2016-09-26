@@ -1,35 +1,31 @@
 #include <string.h>
 #include "includes/rawData.h"
 
-#define RAW_DATA_SIZE 12
+#define RAW_DATA_SIZE 16
+#define ALLOWED_ENABLED_BITS_FOR_INDEX (RAW_DATA_SIZE - 1) // 0x0F
 
 static short rawData[RAW_DATA_SIZE];
 static short arrayStartIndex = 0;
-//instead of a filter calling getRawDataValue to get the last value
-//from rawData it can directly fetch it via this variable.
-short raw_y_12 = 0;
 
 //offset is either negative or 0.
-//return a previous raw data value.
-short getRawDataValue(int offset)
+//return a previous low pass value.
+short getRawDataValue(const int offset)
 {
-	short correctIndex = arrayStartIndex + offset;
-	if(correctIndex < 0)
-	{
-		correctIndex += RAW_DATA_SIZE;
-	}
-	return rawData[correctIndex];
+	//when arrayStartindex == RAW_DATA_SIZE the circular array start index has to begin
+	//at 0 again and because the length of the array is a power of two it's possible to do just that
+	//with a bitwise and which sets all the bits above the fifth bit to zero zero.
+	return rawData[(arrayStartIndex + offset) & ALLOWED_ENABLED_BITS_FOR_INDEX];
 }
 
-//moves the start index of the circular array rawData forward
+//moves the start index of the circular array rawLow forward.
 //with looping when the end of the array has been passed.
 static void moveArrayStartIndex()
 {
 	arrayStartIndex++;
-	if(arrayStartIndex == RAW_DATA_SIZE)
-	{
-		arrayStartIndex = 0;
-	}
+	//when arrayStartindex == RAW_DATA_SIZE the circular array start index has to begin
+	//at 0 again and because the length of the array is a power of two it's possible to do just that
+	//with a bitwise and which sets all the bits above the fifth bit to zero zero.
+	arrayStartIndex &= ALLOWED_ENABLED_BITS_FOR_INDEX;
 }
 
 //inserts a short value into the circular array.
@@ -39,7 +35,6 @@ void insertRawData(const short data)
 	moveArrayStartIndex();
 	//save the overridden value because so the low pass filter
 	//doesn't have to use getLowPassValue to get it.
-	raw_y_12 = rawData[arrayStartIndex];
 	rawData[arrayStartIndex] = data;
 }
 
@@ -48,5 +43,4 @@ void insertRawData(const short data)
 void resetRawBuffer()
 {
 	memset(rawData, 0, RAW_DATA_SIZE * sizeof(short));
-	raw_y_12 = 0;
 }
