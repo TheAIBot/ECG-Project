@@ -3,6 +3,7 @@
 #include "includes/peak.h"
 #include "includes/peakSearcher.h"
 #include "includes/peakCircularArray.h"
+#include "includes/peakAvgCircularArray.h"
 #include "includes/rPeakFinder.h"
 #include "includes/ui.h"
 
@@ -18,7 +19,8 @@ void runScannerOnce(int sensorValue)
 		if(isRPeak(newPeak)){
 			//TODO verify this is correct
 			//Removed as this is done by the R-peak finder itself. And it is incorrect. setFoundNewRRPeak();
-			Peak correctPeak = getPeakCircArrayValue(getTrueRPeaksArray(), 0);
+			PeakAvgCircularArray* nn  = getTrueRPeaksArray();
+			Peak correctPeak = getPeakAvgCircValue(getTrueRPeaksArray(), 0);
 			updateNewPeak(correctPeak, isPulseUnstable());
 		}
 	}

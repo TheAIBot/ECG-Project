@@ -10,7 +10,7 @@
 /*Indicates the RR time since the last found true R-peak.
  *It starts at -(PEAK_AREA - 1)/2 + , because of the delay of (PEAK_AREA - 1)/2
   */
-static unsigned short timeSinceLastRPeak = -MIDDLE_INDEX;
+static unsigned short timeSinceLastRPeak = -MIDDLE_INDEX; //Since it's unsigned, it is the max value minus 2 #Hack
 //Array of the last five intensity found. Used to check if the middle value is a peak.
 static unsigned short last5Values[PEAK_AREA] = {0};
 
@@ -34,8 +34,9 @@ static char isPeak(){
 		formerDifferentValue = last5Values[MIDDLE_INDEX - 1];
 
 	//If the intensity of the datapoint is less than 100, it cannot be a true R-peak.
-	if (last5Values[MIDDLE_INDEX] < 100)
+	if (potentialPeak < 100)
 		return 0;
+
 	//Makes the last checks.
 	return (last5Values[MIDDLE_INDEX - 2] <= potentialPeak &&
 			last5Values[MIDDLE_INDEX - 1] <= potentialPeak &&

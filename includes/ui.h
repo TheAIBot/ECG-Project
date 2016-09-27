@@ -11,6 +11,6 @@
 #include "peak.h"
 
 void tickUITimer();
-void updateNewPeak(Peak newPeak, char isPulseUnstable);
+void updateNewPeak(Peak newPeak, char isPulseUnstable, , unsigned short pulse);
 
 #endif /* INCLUDES_UI_H_ */

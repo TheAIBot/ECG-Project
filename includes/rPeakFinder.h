@@ -7,13 +7,15 @@
 
 #ifndef INCLUDES_RPEAKFINDER_H_
 #define INCLUDES_RPEAKFINDER_H_
-#include "peak.h"
-#include "peakCircularArray.h"
+
+#include "peakAvgCircularArray.h"
 
 void initializeRPeakFinder();
 char isRPeak(Peak newPeak);
-PeakCircularArray* getTrueRPeaksArray();
+PeakAvgCircularArray* getTrueRPeaksArray();
 char getNewRPeaksFoundCount();
 char isPulseUnstable();
+char getPulse();
+void freeRPeakFinder();
 
 #endif /* INCLUDES_RPEAKFINDER_H_ */

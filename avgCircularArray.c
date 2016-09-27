@@ -52,7 +52,7 @@ int getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
 }
 
 /*Moves the current index of a given AvgCircularArray (pointer) one forwards.*/
-static inline void moveAvgCircIndexForward(AvgCircularArray* const avgCirc){
+static void moveAvgCircIndexForward(AvgCircularArray* const avgCirc){
 	avgCirc->startIndex++;
 	if(avgCirc->startIndex == avgCirc->size)
 		avgCirc->startIndex = 0;

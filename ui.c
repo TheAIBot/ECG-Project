@@ -2,7 +2,6 @@
 #include "includes/ui.h"
 #include "includes/peak.h"
 
-#define MINUTE 1000 * 60 //number of milliseconds in  minute
 #define MINIMUM_INTENSITY 2000
 
 static int timeSinceStart = 0;
@@ -12,10 +11,10 @@ void tickUITimer()
 	timeSinceStart++;
 }
 
-void updateNewPeak(Peak newPeak, char isPulseUnstable)
+void updateNewPeak(Peak newPeak, char isPulseUnstable, unsigned short pulse)
 {
 
-	//printf("Pulse: %d BPM\n", MINUTE / averageRRTIme);
+	printf("Pulse: %d BPM\n", pulse);
 	printf("\n\nIntensity: %hu\n", newPeak.intensity);
 	printf("RR time:   %hu\n", newPeak.RR);
 	printf("Time:      %d\n", timeSinceStart);

@@ -191,7 +191,7 @@ char testRPeakSearcher(int* data){
 	char timeMeasurementTaken[TEST_DATA_R_PEAK_LENGTH] = {0};
 	int timeSum = 0;
 	//The r-peak finder has already been initialized.
-	PeakCircularArray* trueRRPeaks = getTrueRPeaksArray();
+	PeakAvgCircularArray* trueRRPeaks = getTrueRPeaksArray();
 	//printf("started\n");
 	for(int i = 0; i < TEST_DATA_LENGTH; i++){
 		//TODO something wrong with foundPeak.
@@ -201,7 +201,7 @@ char testRPeakSearcher(int* data){
 				//setFoundNewRRPeak(); Not needed anymore
 				int newRPeakCount = getNewRPeaksFoundCount();
 				for(int y = 0; y < newRPeakCount; y++){
-					Peak newRRPeak = getPeakCircArrayValue(trueRRPeaks, -((newRPeakCount - 1) - y));
+					Peak newRRPeak = getPeakAvgCircValue(trueRRPeaks, -((newRPeakCount - 1) - y));
 					char isCorrect = 0;
 					//TODO rewrite this. It is kluntet.
 					for(int z = 0; z < TEST_DATA_R_PEAK_LENGTH; z++){
@@ -260,11 +260,11 @@ char testRPeakSearcher(int* data){
 
 char testSearchback(int* data){
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
-	if(file == NULL || writeFile == NULL)	{
+	if(file == NULL)	{
 		return 0;
 	}
 	resetRPeakFinder();
-	PeakCircularArray* trueRRPeaks = getTrueRPeaksArray();
+	PeakAvgCircularArray* trueRRPeaks = getTrueRPeaksArray();
 	for(int i = 0; i < 350; i++){
 		if(foundPeak(data[i]))	{
 			Peak newPeak = getNewPeak();
@@ -273,33 +273,33 @@ char testSearchback(int* data){
 					printf("Detected a peak at the wrong time, should have been at place 341 instead of %d \n", i);
 					return 0;
 				} else {
-					if((getPeakCircArrayValue(trueRRPeaks, 0).RR == 50 &&
-							 getPeakCircArrayValue(trueRRPeaks, 0).intensity == 800) &&
-							(getPeakCircArrayValue(trueRRPeaks, -1).RR == 80 &&
-							 getPeakCircArrayValue(trueRRPeaks, -1).intensity == 1000)){
+					if((getPeakAvgCircValue(trueRRPeaks, 0).RR == 50 &&
+							 getPeakAvgCircValue(trueRRPeaks, 0).intensity == 800) &&
+							(getPeakAvgCircValue(trueRRPeaks, -1).RR == 80 &&
+							 getPeakAvgCircValue(trueRRPeaks, -1).intensity == 1000)){
 						//TODO ((*)In the repport, descripe the finding of peaks with a low RR value, with searchbacks. Low delays)
-						printf("The three peaks searched for, is found\n");
+						printf("The two peaks searched for, has been found\n");
 						if(getNewRPeaksFoundCount() == 2){
-							printf("The number of peaks found is also correct");
+							printf("The number of peaks found is also correct \n");
 						} else {
-							printf("FAIL!!! The number of peaks found is not correct");
+							printf("FAIL!!! The number of peaks found is not correct \n");
 							stopInputData(file);
 							return 0;
 						}
 					} else{
-						printf("FAIL!!! The peaks supposed to be found by the searchback is not the ones found.");
+						printf("FAIL!!! The peaks supposed to be found by the searchback, \n is not the ones found.\n");
 						stopInputData(file);
 						return 0;
 					}
 				}
 				stopInputData(file);
-				printf("The super edge case for the searchback worked!.");
+				printf("The super edge case for the searchback worked! \n");
 				return 1;
 			}
 		}
 	}
 	stopInputData(file);
-	printf("Something went wrong in the searchback test.");
+	printf("Something went wrong in the searchback test. \n");
 	return 1;
 }
 
@@ -336,7 +336,7 @@ void testAll(){
 	}
 	free(ecgData);
 
-	/*
+
 
 	int* mwi_after = loadDataArray("verification_files/x_mwi_div_after.txt", TEST_DATA_LENGTH);
 	if(mwi_after == NULL || !testRPeakSearcher(mwi_after)){
@@ -345,7 +345,7 @@ void testAll(){
 		return;
 	}
 	free(mwi_after);
-	*/
+
 
 
 	int* searchbackTestData = loadDataArray("searchbackTest.txt", 350);
