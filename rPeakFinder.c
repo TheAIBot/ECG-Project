@@ -9,6 +9,7 @@
 #include "includes/avgCircularArray.h"
 #include "includes/peakAvgCircularArray.h"
 
+
 #define MILISECONDS_PER_MINUTE (1000 * 60)
 #define SIZE_ALL_PEAKS_ARRAY 16
 #define AVERAGE_NUMBER_MEMBERS 8 //Number of members in the average arrays, meaning RecentRR and RecentRR_OK

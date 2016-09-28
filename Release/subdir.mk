@@ -13,6 +13,7 @@ C_SRCS += \
 ../highPassFilter.c \
 ../lowPassFilter.c \
 ../main.c \
+../peakAvgCircularArray.c \
 ../peakCircularArray.c \
 ../peakSearcher.c \
 ../rPeakFinder.c \
@@ -31,6 +32,7 @@ OBJS += \
 ./highPassFilter.o \
 ./lowPassFilter.o \
 ./main.o \
+./peakAvgCircularArray.o \
 ./peakCircularArray.o \
 ./peakSearcher.o \
 ./rPeakFinder.o \
@@ -49,6 +51,7 @@ C_DEPS += \
 ./highPassFilter.d \
 ./lowPassFilter.d \
 ./main.d \
+./peakAvgCircularArray.d \
 ./peakCircularArray.d \
 ./peakSearcher.d \
 ./rPeakFinder.d \
