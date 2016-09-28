@@ -10,7 +10,6 @@
 
 #include "peak.h"
 
-
 char foundPeak(unsigned short newDataPoint);
 Peak getNewPeak();
 void setFoundNewRRPeak(unsigned short newValue);

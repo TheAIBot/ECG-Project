@@ -179,6 +179,7 @@ char testWholeFilter(int* data){
 }
 
 char testRPeakSearcher(int* data){
+	flushFilterBuffers();
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
 	FILE* writeFile = fopen("test_results/rpeaks_results.txt", "w");
 	if(file == NULL || writeFile == NULL)	{
@@ -194,7 +195,6 @@ char testRPeakSearcher(int* data){
 	PeakAvgCircularArray* trueRRPeaks = getTrueRPeaksArray();
 	//printf("started\n");
 	for(int i = 0; i < TEST_DATA_LENGTH; i++){
-		//TODO something wrong with foundPeak.
 		if(foundPeak(data[i]))	{
 			Peak newPeak = getNewPeak();
 			if (isRPeak(newPeak)){
@@ -203,7 +203,6 @@ char testRPeakSearcher(int* data){
 				for(int y = 0; y < newRPeakCount; y++){
 					Peak newRRPeak = getPeakAvgCircValue(trueRRPeaks, -((newRPeakCount - 1) - y));
 					char isCorrect = 0;
-					//TODO rewrite this. It is kluntet.
 					for(int z = 0; z < TEST_DATA_R_PEAK_LENGTH; z++){
 						if(timeMeasurementTaken[z] == 0 &&
 						   times[z] + ALLOWED_TIME_DEVIANTION >= newRRPeak.RR + timeSum &&
@@ -229,7 +228,6 @@ char testRPeakSearcher(int* data){
 			}
 		}
 	}
-
 	char foundAll = 1;
 	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)	{
 		if(timeMeasurementTaken[i] == 0)		{
@@ -277,10 +275,9 @@ char testSearchback(int* data){
 							 getPeakAvgCircValue(trueRRPeaks, 0).intensity == 800) &&
 							(getPeakAvgCircValue(trueRRPeaks, -1).RR == 80 &&
 							 getPeakAvgCircValue(trueRRPeaks, -1).intensity == 1000)){
-						//TODO ((*)In the repport, descripe the finding of peaks with a low RR value, with searchbacks. Low delays)
-						printf("The two peaks searched for, has been found\n");
+						//printf("The two peaks searched for, has been found\n");
 						if(getNewRPeaksFoundCount() == 2){
-							printf("The number of peaks found is also correct \n");
+							//printf("The number of peaks found is also correct \n");
 						} else {
 							printf("FAIL!!! The number of peaks found is not correct \n");
 							stopInputData(file);
@@ -293,7 +290,7 @@ char testSearchback(int* data){
 					}
 				}
 				stopInputData(file);
-				printf("The super edge case for the searchback worked! \n");
+				printf("Passed searchback test. The super edge case for the searchback worked! \n");
 				return 1;
 			}
 		}
@@ -305,7 +302,7 @@ char testSearchback(int* data){
 
 void testAll(){
 	initializeRPeakFinder();
-	//TODO needs to return something to check if it works?
+
 	int* ecgData = loadDataArray("ECG.txt", TEST_DATA_LENGTH);
 	if(ecgData == NULL || !testLowPassFilter(ecgData))	{
 		printf("FAIL!!! Didn't pass lowpass filter test\n");

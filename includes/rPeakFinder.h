@@ -15,7 +15,7 @@ char isRPeak(Peak newPeak);
 PeakAvgCircularArray* getTrueRPeaksArray();
 char getNewRPeaksFoundCount();
 char isPulseUnstable();
-char getPulse();
+unsigned short getPulse();
 void freeRPeakFinder();
-
+int getNoicePeakAverage();
 #endif /* INCLUDES_RPEAKFINDER_H_ */

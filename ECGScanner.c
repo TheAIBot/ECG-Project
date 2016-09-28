@@ -13,23 +13,22 @@ void runScannerOnce(int sensorValue)
 {
 	unsigned short filteredValue = filterData((sensorValue));
 
-	if(foundPeak(filteredValue))
-	{
+	if(foundPeak(filteredValue))	{
 		Peak newPeak = getNewPeak();
 		if(isRPeak(newPeak)){
-			//TODO verify this is correct
-			//Removed as this is done by the R-peak finder itself. And it is incorrect. setFoundNewRRPeak();
-			PeakAvgCircularArray* nn  = getTrueRPeaksArray();
 			Peak correctPeak = getPeakAvgCircValue(getTrueRPeaksArray(), 0);
-			updateNewPeak(correctPeak, isPulseUnstable());
+			printNewestPeakDetails(correctPeak, getPulse());
 		}
+		printAnyWarnings(isPulseUnstable());
 	}
 	tickUITimer();
 }
 
-void runScanner(){
-	FILE* file = startInputData("ECG.txt");
-	//FILE* file = startInputData("benchmark_files/ECG10800K.txt");
+void runScanner(char* filepath){
+	FILE* file = startInputData(filepath);
+	if(file == NULL)	{
+		return;
+	}
 
 	initializeRPeakFinder();
 
@@ -42,4 +41,5 @@ void runScanner(){
 		runScannerOnce(newData);
 	}
 	stopInputData(file);
+	freeRPeakFinder();
 }

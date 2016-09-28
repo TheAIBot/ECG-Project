@@ -4,8 +4,6 @@
 #include "includes/peak.h"
 #include "includes/avgCircularArray.h"
 
-//TODO remember to write comments for the structs themself
-
 /* Initializes a new AvgCircularArray avgCirc (pointer), filling it up with a given default value, defaultValue,
  * setting its size to a given size, and placing the current index at a given value startIndex.
  * Returns 1 if it works, 0 otherwise.
@@ -14,7 +12,6 @@
  * int size; the size of the AvgCircularArray.
  * int startIndex; the current index (to be set) of the  AvgCircularArray.
  * int defaultValue; the value to fill the array up with.
- *TODO set to shorts after checking it dosen't crash anything
  * */
 char initAvgCircArray(AvgCircularArray* const avgCirc, const int size, const int startIndex, const int defaultValue){
 	avgCirc->size = size;
@@ -39,7 +36,6 @@ char initAvgCircArray(AvgCircularArray* const avgCirc, const int size, const int
  * returns The peak with the given offset from the current/startindex.
  * */
 int getAvgCircValue(const AvgCircularArray* avgCirc, const int offset){
-	//TODO OBS. Might not be used, can maybe be deleted. Same with the other ones.
 	int correctIndex = avgCirc->startIndex + offset;
 	//In the case that the index of the wanted element needs to loop around.
 	//Requires that the absolute value of the offset is less than or equal to the size of the circular array.

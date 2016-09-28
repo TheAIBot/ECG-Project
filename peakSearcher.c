@@ -3,78 +3,89 @@
 #include "includes/circularArray.h"
 #include "includes/peak.h"
 
-#define PEAK_AREA 5 //The size of the arrea investigated during the checks for if a value is a peak.
-#define MIDDLE_INDEX (PEAK_AREA / 2) //The middle index of last5Values.
-//Minimum time required to pass since the last detection of a true R-peak, before a new peak can be registrated.
-#define MINIMUM_TIME_BETWEEM_R_PEAKS 60 - PEAK_AREA
-/*Indicates the RR time since the last found true R-peak.
- *It starts at -(PEAK_AREA - 1)/2 + , because of the delay of (PEAK_AREA - 1)/2
-  */
-static unsigned short timeSinceLastRPeak = -MIDDLE_INDEX; //Since it's unsigned, it is the max value minus 2 #Hack
-//Array of the last five intensity found. Used to check if the middle value is a peak.
-static unsigned short last5Values[PEAK_AREA] = {0};
+//the number - itself of numbers the peak should be larger of
+//to be a peak. Has to be an odd number
+#define PEAK_AREA 5
+//the middle index of the array last5Values
+#define MIDDLE_INDEX (PEAK_AREA / 2)
+//with a time between potential peaks at 4ms and an assumption that 250 BPM is
+//the max which is humanly possible the minimum amount of time between RR peaks is 60 * 4ms = 240ms.
+//60 is subtracted the sizeof the array so he array is filled up with fresh values when it reaches the
+//time where a new potential RR peak is physically possible
+#define MINIMUM_TIME_BETWEEM_RR_PEAKS 60 - PEAK_AREA
+#define MINIMUM_ALLOWED_PEAK_INTENSITY 100
 
-/* Returns if the middle value in last5Values is a peak.
- * This corresponds to it being bigger than the last value/intensity bigger than itself,
- * greater than 100, and being greater than or equal to the two values before it,
- * and greater than (but not equal to) the two values after itself.
- *
- * returns 1 if the middle value is a peak, else 0*/
-static char isPeak(){
-	//Used to check that if a datapoint corresponds to a peak, but it is on a plateu,
-	//that the value just before the plateu is less than those on the lateu, so only a true peak is found.
+//There is a delay of PEAK_AREA / 2 input values on the determination of a peak so to start out with it has to start
+//with that as negative for the first RR time to be correct.
+static unsigned short timeSinceLastRRPeak = -MIDDLE_INDEX;
+
+//array of the last 5 filtered values
+static unsigned short last5Values[PEAK_AREA] = { 0 };
+
+static char isPeak() {
+	//contains the last value that wasn't the same as th new value
 	static unsigned short formerDifferentValue = 0;
 
-	//TODO make into a macro?
+	//the middle value is the value that has potential to be the peak
+	//because the values around is the ncomparedagainst the middle value
 	unsigned short potentialPeak = last5Values[MIDDLE_INDEX];
 
-	//Sets formerDifferentValue so that on a plateau (even of lenght 1, meaning one datapoint)
-	//it is the value before the plateau
-	if (last5Values[MIDDLE_INDEX - 1] != potentialPeak)
-		formerDifferentValue = last5Values[MIDDLE_INDEX - 1];
-
-	//If the intensity of the datapoint is less than 100, it cannot be a true R-peak.
-	if (potentialPeak < 100)
+	//if the intensity is too low then it's not possible for the peak to be an r peak
+	//it's not nessesary to update ormerDifferentValue before this because when potential peak passes this
+	//it will also,the first time, update formerDifferentValue.
+	if (potentialPeak < MINIMUM_ALLOWED_PEAK_INTENSITY) {
 		return 0;
+	}
 
-	//Makes the last checks.
-	return (last5Values[MIDDLE_INDEX - 2] <= potentialPeak &&
-			last5Values[MIDDLE_INDEX - 1] <= potentialPeak &&
-			last5Values[MIDDLE_INDEX + 1] <  potentialPeak &&
-			last5Values[MIDDLE_INDEX + 2] <  potentialPeak &&
-			formerDifferentValue          <  potentialPeak);
+	//At the end of a plateau this makes sure that the start of the plateau is lower
+	//than potential peak because formerDifferentValue always
+	//holds the last value that was different than potentialPeak
+	if (last5Values[MIDDLE_INDEX - 1] != potentialPeak) {
+		formerDifferentValue = last5Values[MIDDLE_INDEX - 1];
+	}
+
+	//is potential peak larger than all values or
+	//is potential peak at the end of a plateau
+	if (last5Values[MIDDLE_INDEX + 2] < potentialPeak
+			&& last5Values[MIDDLE_INDEX + 1] < potentialPeak
+			&& last5Values[MIDDLE_INDEX - 1] <= potentialPeak
+			&& last5Values[MIDDLE_INDEX - 2] <= potentialPeak
+			&& formerDifferentValue < potentialPeak) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
-/*Returns whether or not the second former datapoint before the given one, is a peak.
- *
- * unsigned short newDataPoint; The given datapoint, that is the intensity of the filtered data measured from the electrodes.
- *
- * Returns 1 if the second former datapoint before the given one is a peak, else 0*/
-char foundPeak(unsigned short newDataPoint){
-	timeSinceLastRPeak++;
+//newDataPoint will be a potential peak in MIDDLE_INDEX more times this function has run
+//returns whether a peak was found or not
+char foundPeak(unsigned short newDataPoint) {
+	timeSinceLastRRPeak++;
 
-	if(timeSinceLastRPeak <= MINIMUM_TIME_BETWEEM_R_PEAKS) //TODO some discussion with this - Jesper
+	//no need to check if there is a peak if it isn't physically possible for one to be there
+	if (timeSinceLastRRPeak <= MINIMUM_TIME_BETWEEM_RR_PEAKS) { //(*)Change back to MINIMUM_TIME_BETWEEM_RR_PEAKS
 		return 0;
+	}
 	//Move the whole array back once so the new data can be inserted at the last index
-	memcpy( last5Values, last5Values + 1, sizeof(last5Values));
+	memcpy(last5Values, last5Values + 1, sizeof(last5Values));
 	last5Values[PEAK_AREA - 1] = newDataPoint;
 
 	return isPeak();
 }
 
 /*Returns the middle value of last5Values as a Peak.*/
-Peak getNewPeak(){
-	return (Peak){last5Values[MIDDLE_INDEX], timeSinceLastRPeak};
+Peak getNewPeak() {
+	return (Peak ) { last5Values[MIDDLE_INDEX], timeSinceLastRRPeak } ;
 }
 
 /*Sets timeSinceLastRPeak to a given value, in case a new true R-peak has been found.
- *
- * unsigned short newValue; the given value.
- *TODO update the repport, not what is written there*/
-void setTimeSinceLastRPeakFound(unsigned short newValue){
-	timeSinceLastRPeak = newValue;
+*
+* unsigned short newValue; the given value.
+* */
+void setTimeSinceLastRPeakFound(unsigned short newValue) {
+timeSinceLastRRPeak = newValue;
 }
 
-int getTimeSinceLastRPeakFound(){
-	return timeSinceLastRPeak;
+int getTimeSinceLastRPeakFound() {
+return timeSinceLastRRPeak;
 }

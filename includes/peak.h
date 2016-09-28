@@ -17,5 +17,4 @@ struct TPeak{
 
 typedef struct TPeak Peak;
 
-
 #endif /* INCLUDES_PEAK_H_ */

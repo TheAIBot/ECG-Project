@@ -8,7 +8,7 @@ FILE* startInputData(char* fileName)
 	FILE* file = fopen(fileName, "r");
 	if(file == NULL)
 	{
-		fprintf(stderr, "ERROR: Cannot open file %s.\n", fileName);
+		fprintf(stderr, "ERROR: Cannot open file %s\n", fileName);
 	}
 	return file;
 }

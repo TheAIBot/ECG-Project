@@ -13,11 +13,10 @@
 #define SIZE_ALL_PEAKS_ARRAY 16
 #define AVERAGE_NUMBER_MEMBERS 8 //Number of members in the average arrays, meaning RecentRR and RecentRR_OK
 #define MISSES_FOR_UNSTABLE 5 //Number of time a peak can be missed before the pulse is unstable (*)
-#define DEFAULT_TRUE_RPEAK_RR_VALUE 150 //TODO describe
-#define DEFAULT_AVERAGE_TRUE_RPEAK_RR_VALUE 100
-#define DEFAULT_AVERAGE_TRUE_RPEAK_INTENSITY 4500
+#define DEFAULT_RPEAK_RR_VALUE 150 //The default RR value for a R-peak.
+#define DEFAULT_AVERAGE_RPEAK_INTENSITY 4500 //The average intensity of a true R-peak.
+#define DEFAULT_AVERAGE_NOICEPEAK_INTENSITY 1000 //The average value of a noice peak.
 
-//TODO RR time is probably 1 wrong. Check out later - Jesper
 //Average circular array for the last 8 true R-peaks found and recorded
 static AvgCircularArray RecentRR;
 //Average circular array for the last 8 true R-peaks found and recorded, with an RR value between RR_LOW and RR_HIGH
@@ -26,33 +25,32 @@ static PeakAvgCircularArray trueRPeaks; //Last eight true r peak, also containin
 static Peak allPeaks[SIZE_ALL_PEAKS_ARRAY];//Last peaks found since the last R-peak
 static int indexAllPeaks = 0; //Index of allPeaks, pointing to the next free space.
 
-//TODO update the values
 /*Variables for detecting R peaks:*/
-//Represent the average size of a true R-peak.
+//Represent the average intensity of a true R-peak.
 //Looking at the data (see initializeRPeakFinder), this is approximately the value found on average.
-static unsigned short Spkf = 4500;
+static unsigned short Spkf = DEFAULT_AVERAGE_RPEAK_INTENSITY;
 //Represents the average value of a noice peak. Looking at the data, this is approximately the value found, though it vary's quite a bit.
-static unsigned short Npkf = 700;
+static unsigned short Npkf = DEFAULT_AVERAGE_NOICEPEAK_INTENSITY;
 //Peaks need to have a higher intensity than Threshold1, to get checked if it is an R-peak, or trigger a searchback.
-static unsigned short Threshold1 =  1650; /*Answers to: Npkf + (Spkf-Npkf)/4*/
+static unsigned short Threshold1 =  1875; /*Answers to: Npkf + (Spkf-Npkf)/4*/
 //Peaks found through searchback must have a value above Threshold2 to be able to be recorded as a true R-peak.
-static unsigned short Threshold2 = 825; /*Answers to Threshold1/2*/
+static unsigned short Threshold2 = 938; /*Answers to Threshold1/2, rounded up*/
+
 
 /*Variables for finding the RR-interval
  * Given as though calculated from RR_Average2
- *TODO TODO check if the averages have the right values below
   */
 
 /*Average of all the peaks in RecentRR. Value explanation in initializeRPeakFinder.
  *It is an int instead of a short, so that when it is used to calculate RR_Low, RR_High and RR_Miss,
  *no overflow will happen; see code for that.
  */
-static unsigned int RR_AVERAGE1 = DEFAULT_AVERAGE_TRUE_RPEAK_RR_VALUE;
+static unsigned int RR_AVERAGE1 = DEFAULT_RPEAK_RR_VALUE;
 /*Average of all the peaks in RecentRR_OK. Value explanation in initializeRPeakFinder.
  *It is an int instead of a short, so that when it is used to calculate RR_Low, RR_High and RR_Miss,
  *no overflow will happen; see code for that.
  */
-static unsigned int RR_AVERAGE2 = DEFAULT_TRUE_RPEAK_RR_VALUE;
+static unsigned int RR_AVERAGE2 = DEFAULT_RPEAK_RR_VALUE;
 //Estimate of how much the RR value of a peak must at least be, for it to be a true R peak. This is unless it is in a searchback.
 //0.92 times the current average used, rounded down, starting with RR_AVERAGE2 and thus 0.92*150=138
 static unsigned short RR_Low = 138;
@@ -65,7 +63,6 @@ static unsigned short RR_High = 173;
 static unsigned short RR_Miss = 249;
 
 //Number of times the check for a peak's RR value being between RR_LOW and RR_HIGH has been missed in a row.
-//Used for... TODO check this (*)
 static unsigned short concurrentMissedRRLOWAndHigh = 0;
 //Number of new true R peaks found since the last time checked with getNewRPeaksFoundCount().
 static unsigned char numberNewRPeaksFound = 0;
@@ -74,27 +71,23 @@ static unsigned char numberNewRPeaksFound = 0;
  * some initial values. Must be run before isRPeak.
  *  */
 void initializeRPeakFinder(){
-
 	//Initializes the arrays with the given default value (the first two), start index and size;
 	/* Looking from the data, the intensity of a normal heart beat is around 4500.
-	 * Sometimes lower, but more often than not, greater. //TODO check(*)
 	 * Looking at the Internet, see http://www.heart.org/HEARTORG/HealthyLiving/PhysicalActivity/Target-Heart-Rates_UCM_434341_Article.jsp
 	 * the average resting heat rate, the average number of heartbeats per minut, is around 60-100 bpm.
 	 * Taking 100 as the average, with 250 measurements in a second, it corresponds to about 150 measurements per heartbeat.
 	 * This also fits the data well.
 	 */
-	initAvgCircArray(&RecentRR_OK, AVERAGE_NUMBER_MEMBERS, 0, DEFAULT_TRUE_RPEAK_RR_VALUE);
-	//TODO checks true value, this is wrong.
-	/* Lets say that one average there is detected one true R peak per non-R-peak detected, and let the later have an
-	 * Average RR value of 50 and an intensity of 700. The the Average RR value is (50 + 150 /2)=100,
-	 * and the average intensity is (4500 + 700)/2 = 2600
+	initAvgCircArray(&RecentRR_OK, AVERAGE_NUMBER_MEMBERS, 0, DEFAULT_RPEAK_RR_VALUE);
+	/* About the same as above.
 	 * */
-	initAvgCircArray(&RecentRR, AVERAGE_NUMBER_MEMBERS, 0, DEFAULT_AVERAGE_TRUE_RPEAK_RR_VALUE);
-	Peak defaultPeak = {.RR = DEFAULT_AVERAGE_TRUE_RPEAK_RR_VALUE,.intensity = DEFAULT_AVERAGE_TRUE_RPEAK_INTENSITY};
+	initAvgCircArray(&RecentRR, AVERAGE_NUMBER_MEMBERS, 0, DEFAULT_RPEAK_RR_VALUE);
+	Peak defaultPeak = {.RR = DEFAULT_RPEAK_RR_VALUE,.intensity = DEFAULT_AVERAGE_RPEAK_INTENSITY};
 	initPeakAvgCircArray(&trueRPeaks, AVERAGE_NUMBER_MEMBERS,0, defaultPeak);
 }
 
-//TODO write description
+/* Moves numberToBeMoved elements after indexNewStart in allPeaks, to the beginning of the array.
+ * It also subtracts RRValueUpdate from peaks RR values*/
 void movePeaksBackwardsWithRRUpdate(short indexNewStart, short numberToBeMoved, unsigned short RRValueUpdate){
 	for(int i = 0; i < numberToBeMoved; i++){
 		allPeaks[i] = allPeaks[i + indexNewStart];
@@ -116,7 +109,6 @@ static void recordNewProperRPeak(Peak newPeak){
 	insertAvgCircData(&RecentRR, newPeak.RR);
 	RR_AVERAGE2 = getAvgCircAverageValue(&RecentRR_OK);
 	RR_AVERAGE1 = getAvgCircAverageValue(&RecentRR);
-	/*TODO remember the update of calculation of the values below*/
 	RR_Low = (23 * RR_AVERAGE2) / 25; /*23/25= 0.92*/
 	RR_High = (29 * RR_AVERAGE2) / 25; /*29/25= 1.16*/
 	RR_Miss = (5 * RR_AVERAGE2) / 3; /*83/50 = 1.66*/
@@ -143,7 +135,6 @@ static char checkSearchback(Peak peakToCheck){
 	Spkf = (3 * Spkf + peakToCheck.intensity) / 4;
 	insertAvgCircData(&RecentRR, peakToCheck.RR);
 	RR_AVERAGE1 = getAvgCircAverageValue(&RecentRR);
-	//TODO make it so they are all divided with a power of two, because they allows optimization to bitshift when writing assembler
 	RR_Low = 23 * RR_AVERAGE1 / 25; /*23/25= 0.92*/
 	RR_High = 29 * RR_AVERAGE1 / 25; /*29/25= 1.16*/
 	RR_Miss = 83 * RR_AVERAGE1 / 50; /*83/50 = 1.66*/
@@ -186,6 +177,10 @@ static char passThreshold1(unsigned short intensity){
 	} else return 1;
 }
 
+/* Given an index indexNewRPeak corresponding to a newly registrated R-peak in allPeaks,
+ * it updates indexAllPeaks so that when all the elements after the elements
+ * after indexNewRPeak are moved to the beginning, it is correct.
+ * It the moves the elements back and updates their values*/
 static void searchbackArrayUpdate(int indexNewRPeak){
 	//Updates indexAllPeaks:
 	indexAllPeaks -= (indexNewRPeak+1);
@@ -198,8 +193,7 @@ static void searchbackArrayUpdate(int indexNewRPeak){
 	movePeaksBackwardsWithRRUpdate(indexNewRPeak+1,indexAllPeaks,allPeaks[indexNewRPeak].RR);
 }
 
-/* Activates the searchback procedure, in the case that a Peak is found with an intensity above THRESHOLD1,
- * and an RR value above RR_MISS. It will (*)TODO update description and comments*/
+/* Activates the searchback procedure ((*)TODO write comment)*/
 static char searchBack(){
 	char hasFoundNewPeak = 0;
 	for(int i = indexAllPeaks-1; i < indexAllPeaks; i++){
@@ -312,12 +306,12 @@ char getNewRPeaksFoundCount(){
 
 /*Resets all the data in RPeakFinder to it's initial values. For testing purposes*/
 void resetRPeakFinder(){
-	Spkf = 4500;
-	Npkf = 700;
-	Threshold1 = 1650;
-	Threshold2 = 825;
-	RR_AVERAGE1 = DEFAULT_AVERAGE_TRUE_RPEAK_RR_VALUE;
-	RR_AVERAGE2 = DEFAULT_TRUE_RPEAK_RR_VALUE;
+	Spkf = DEFAULT_AVERAGE_RPEAK_INTENSITY;
+	Npkf = DEFAULT_AVERAGE_NOICEPEAK_INTENSITY;
+	Threshold1 = 1875;
+	Threshold2 = 938;
+	RR_AVERAGE1 = DEFAULT_RPEAK_RR_VALUE;
+	RR_AVERAGE2 = DEFAULT_RPEAK_RR_VALUE;
 	RR_Low = 138;
 	RR_High = 173;
 	RR_Miss = 249;
@@ -329,11 +323,12 @@ void resetRPeakFinder(){
 	//allPeaks dosen't need to be reseted.
 }
 
-unsigned short getPulse()
-{
-	return MILISECONDS_PER_MINUTE / getPeakAvgCircValue(&trueRPeaks);
+/*Gets the pulse of the person, calculated from the average over the latest 8 peaks*/
+unsigned short getPulse(){
+	//There are 4 milliseconds per mesaurements (1/250=0.004), thus one have the following pulse
+	return MILISECONDS_PER_MINUTE / (getPeakAvgCircAverageValue(&trueRPeaks)*4);
 }
-
+/*Frees the memory used by the different circular arrays used i rPeakfinder*/
 void freeRPeakFinder(){
 	freeAvgCirc(&RecentRR);
 	freeAvgCirc(&RecentRR_OK);

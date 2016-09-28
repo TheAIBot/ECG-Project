@@ -42,7 +42,9 @@ static clock_t benchmarkLowPassFilter(int* data)
 	int i = 0;
 	for(; i < ECG_10800K_LENGTH; i++)
 	{
-		result += lowPassFilter(data[i], getArrayDataValue(data, i, ECG_10800K_LENGTH, -6), getArrayDataValue(data, i, ECG_10800K_LENGTH, -12));
+		int lowFiler = lowPassFilter(data[i], getArrayDataValue(data, i, ECG_10800K_LENGTH, -6), getArrayDataValue(data, i, ECG_10800K_LENGTH, -12));
+		result += lowFiler;
+
 	}
 	return BENCHMARK_TIME(startTime);
 }
@@ -88,7 +90,8 @@ static clock_t benchmarhWholeFilter(int* data)
 	int i = 0;
 	for(; i < ECG_10800K_LENGTH; i++)
 	{
-		result += filterData(data[i]);
+		unsigned short filteredResult =  filterData(data[i]);
+		result += filteredResult;
 	}
 	return BENCHMARK_TIME(startTime);
 }
@@ -106,9 +109,10 @@ static clock_t benchmarkPeakSearcher(int* data)
 			result += newPeak.RR;
 			//simulate a found RR peak every 150 values
 			if(peakTime >= 150)	{
-				//TODO Wrong. update.
-				//setFoundNewRRPeak();
+				setTimeSinceLastRPeakFound(0);
+				//printf("ad%d\n", peakTime);
 				peakTime = 0;
+
 			}
 		}
 		peakTime++;
@@ -126,9 +130,6 @@ static clock_t benchmarkRPeakFinder(int* data)
 		{
 			Peak newPeak = getNewPeak();
 			if(isRPeak(newPeak)){
-				//TODO verify this is correct
-				//TODO Wrong. update.
-				//setFoundNewRRPeak();
 				result = result + 1;
 			}
 		}
@@ -143,13 +144,9 @@ static clock_t benchmarkWholeScanner(int* data)
 	for(int i = 0; i < ECG_10800K_LENGTH; i++)
 	{
 		unsigned short filteredData = filterData(data[i]);
-		if(foundPeak(filteredData))
-		{
+		if(foundPeak(filteredData)){
 			Peak newPeak = getNewPeak();
 			if(isRPeak(newPeak)){
-				//TODO verify this is correct
-				//TODO Wrong. update.
-				//setFoundNewRRPeak();
 				result = result + 1;
 			}
 		}
@@ -165,7 +162,7 @@ void runBenchmarks()
 		benchmarkXTimes(&benchmarkLowPassFilter, 40, data, "low");
 		benchmarkXTimes(&benchmarkHighPassFilter, 40, data, "high");
 		benchmarkXTimes(&benchmarkDerivativeSquareFilter, 40, data, "derivative square moving window");
-		benchmarkXTimes(&benchmarhWholeFilter, 40, data, "whole");
+		benchmarkXTimes(&benchmarhWholeFilter, 1, data, "whole");
 
 
 		int* filteredData = malloc(ECG_10800K_LENGTH * sizeof(int));

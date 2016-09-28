@@ -8,12 +8,16 @@
 #include "includes/highPassFilter.h"
 #include "includes/sensor.h"
 
+//This method filters the rawData given with previous given values
+//rawData is the data to filter
+//returns the low pass, high pass derivative, squared and moving window filtered result.
 unsigned short filterData(const short rawData)
 {
+	//need to store the last 12 rawData values which is done with this cirkular array
 	insertRawData(rawData);
 
 	/*low pass filter*/
-	int dataLowFiltered = lowPassFilter(rawData, getRawDataValue(-6), GET_RAW_VALUE_X_12);
+	int dataLowFiltered = lowPassFilter(rawData, getRawDataValue(-6), getRawDataValue(-12));
 
 	/*high pass filter*/
 	short dataHighFiltered = highPassFilter(dataLowFiltered, getLowPassValue(-16), GET_LOW_FILTER_VALUE_X_32);
