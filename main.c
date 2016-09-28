@@ -9,9 +9,8 @@ int main(int argc, char *argv[]) {
 	//if no arguments is given then just run
 	//the program normally
 
-	testAll();
 	if (argc == 1) {
-		//runScanner("ECG.txt");
+		runScanner("ECG.txt");
 	} else if (argc == 2 || argc == 3) {
 		if (strcmp(argv[1], "--test") == 0) {
 			testAll();
