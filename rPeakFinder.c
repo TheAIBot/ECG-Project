@@ -223,7 +223,7 @@ static char searchBack(){
 	}
 	//Sets the RR value of the later peaks, to be measured from the last found one.
 	//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1])'s RR time
-	setTimeSinceLastRPeakFound(allPeaks[indexAllPeaks - 1].RR);
+	setTimeSinceLastRPeakFound((indexAllPeaks == 0)? 0 : allPeaks[indexAllPeaks - 1].RR);
 	return hasFoundNewPeak;
 }
 

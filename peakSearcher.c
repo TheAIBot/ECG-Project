@@ -46,11 +46,11 @@ static char isPeak() {
 
 	//is potential peak larger than all values or
 	//is potential peak at the end of a plateau
-	if (last5Values[MIDDLE_INDEX + 2] < potentialPeak
-			&& last5Values[MIDDLE_INDEX + 1] < potentialPeak
-			&& last5Values[MIDDLE_INDEX - 1] <= potentialPeak
-			&& last5Values[MIDDLE_INDEX - 2] <= potentialPeak
-			&& formerDifferentValue < potentialPeak) {
+	if (last5Values[MIDDLE_INDEX + 2] <  potentialPeak &&
+		last5Values[MIDDLE_INDEX + 1] <  potentialPeak &&
+		last5Values[MIDDLE_INDEX - 1] <= potentialPeak &&
+		last5Values[MIDDLE_INDEX - 2] <= potentialPeak &&
+		formerDifferentValue          <  potentialPeak) {
 		return 1;
 	} else {
 		return 0;
@@ -63,7 +63,7 @@ char foundPeak(unsigned short newDataPoint) {
 	timeSinceLastRRPeak++;
 
 	//no need to check if there is a peak if it isn't physically possible for one to be there
-	if (timeSinceLastRRPeak <= MINIMUM_TIME_BETWEEM_RR_PEAKS) { //(*)Change back to MINIMUM_TIME_BETWEEM_RR_PEAKS
+	if (timeSinceLastRRPeak <= MINIMUM_TIME_BETWEEM_RR_PEAKS) {
 		return 0;
 	}
 	//Move the whole array back once so the new data can be inserted at the last index
