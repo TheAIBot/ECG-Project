@@ -1,3 +1,6 @@
+/*Made by the glorious Andreas*/
+
+
 #ifndef HIGHPASSFILTER_H_
 #define HIGHPASSFILTER_H_
 

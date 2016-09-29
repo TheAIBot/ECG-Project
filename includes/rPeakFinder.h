@@ -1,9 +1,4 @@
-/*
- * rPeakFinder.h
- *
- *  Created on: 2016/09/10
- *      Author: jesper
- */
+/*Made by the glorious Jesper*/
 
 #ifndef INCLUDES_RPEAKFINDER_H_
 #define INCLUDES_RPEAKFINDER_H_

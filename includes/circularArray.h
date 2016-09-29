@@ -1,9 +1,4 @@
-/*
- * benchmarkCircularArray.h
- *
- *  Created on: 9 Sep 2016
- *      Author: feynman
- */
+/*Made by the glorious Jesper*/
 
 #ifndef CIRCULARARRAY_H_
 #define CIRCULARARRAY_H_

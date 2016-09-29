@@ -1,9 +1,4 @@
-/*
- * tests.h
- *
- *  Created on: 10 Sep 2016
- *      Author: feynman
- */
+/*Made by the glorious Andeas and Jesper*/
 
 #ifndef TESTS_H_
 #define TESTS_H_

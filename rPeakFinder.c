@@ -9,11 +9,10 @@
 #include "includes/avgCircularArray.h"
 #include "includes/peakAvgCircularArray.h"
 
-
 #define MILISECONDS_PER_MINUTE (1000 * 60)
 #define SIZE_ALL_PEAKS_ARRAY 16
 #define AVERAGE_NUMBER_MEMBERS 8 //Number of members in the average arrays, meaning RecentRR and RecentRR_OK
-#define MISSES_FOR_UNSTABLE 5 //Number of time a peak can be missed before the pulse is unstable (*)
+#define MISSES_FOR_UNSTABLE 5 //Number of time a peak can be missed before the pulse is unstable
 #define DEFAULT_RPEAK_RR_VALUE 150 //The default RR value for a R-peak.
 #define DEFAULT_AVERAGE_RPEAK_INTENSITY 4500 //The average intensity of a true R-peak.
 #define DEFAULT_AVERAGE_NOICEPEAK_INTENSITY 1000 //The average value of a noice peak.
@@ -194,7 +193,7 @@ static void searchbackArrayUpdate(int indexNewRPeak){
 	movePeaksBackwardsWithRRUpdate(indexNewRPeak+1,indexAllPeaks,allPeaks[indexNewRPeak].RR);
 }
 
-/* Activates the searchback procedure ((*)TODO write comment)*/
+/* Activates the searchback procedure*/
 static char searchBack(){
 	char hasFoundNewPeak = 0;
 	for(int i = indexAllPeaks-1; i < indexAllPeaks; i++){
@@ -222,8 +221,9 @@ static char searchBack(){
 		}
 	}
 	//Sets the RR value of the later peaks, to be measured from the last found one.
-	//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1])'s RR time
-	setTimeSinceLastRPeakFound(allPeaks[indexAllPeaks - 1].RR);
+	//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1])'s RR time,
+	//if there is a peak in allPeaks, else to 0;
+	setTimeSinceLastRPeakFound((indexAllPeaks == 0)? 0: allPeaks[indexAllPeaks - 1].RR);
 	return hasFoundNewPeak;
 }
 

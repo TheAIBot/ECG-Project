@@ -1,9 +1,4 @@
-/*
- * derivativeSquareFilter.h
- *
- *  Created on: 7 Sep 2016
- *      Author: feynman
- */
+/*Made by the glorious Andreas*/
 
 #ifndef DERIVATIVESQUAREFILTER_H_
 #define DERIVATIVESQUAREFILTER_H_

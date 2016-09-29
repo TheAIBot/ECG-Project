@@ -63,7 +63,7 @@ char foundPeak(unsigned short newDataPoint) {
 	timeSinceLastRRPeak++;
 
 	//no need to check if there is a peak if it isn't physically possible for one to be there
-	if (timeSinceLastRRPeak <= MINIMUM_TIME_BETWEEM_RR_PEAKS) { //(*)Change back to MINIMUM_TIME_BETWEEM_RR_PEAKS
+	if (timeSinceLastRRPeak <= MINIMUM_TIME_BETWEEM_RR_PEAKS) {
 		return 0;
 	}
 	//Move the whole array back once so the new data can be inserted at the last index
