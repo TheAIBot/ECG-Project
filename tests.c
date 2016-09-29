@@ -13,6 +13,15 @@
 #include "includes/sensor.h"
 #include "includes/peakCircularArray.h"
 
+
+/*
+ * Without these tests the program would crash and burn everytime the program is compiled.
+ * Unfortunatly the price of no bugs is high and many chips and drinks has been sacrificed to the compiler gods.
+ * If you encounter any bugs then a sacrifice to the compiler gods should make it all go away(works 100% of the time 50% of the time).
+ */
+
+
+
 #define TEST_DATA_LENGTH 10000 /* 10.000 */
 #define TEST_DATA_R_PEAK_LENGTH 31
 #define ALLOWED_TIME_DEVIANTION 10

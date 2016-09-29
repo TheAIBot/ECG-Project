@@ -5,6 +5,7 @@
 
 #include "peakAvgCircularArray.h"
 
+//These are made extern so they can be seen by the tests
 extern unsigned short Threshold1;
 extern unsigned short Threshold2;
 
