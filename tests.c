@@ -182,6 +182,7 @@ char testRPeakSearcher(int* data){
 	flushFilterBuffers();
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
 	FILE* writeFile = fopen("test_results/rpeaks_results.txt", "w");
+	FILE* write = fopen("test_results/thresholds.txt", "w");
 	if(file == NULL || writeFile == NULL)	{
 		return 0;
 	}
@@ -227,6 +228,7 @@ char testRPeakSearcher(int* data){
 				}
 			}
 		}
+		fprintf(write, "%d %d\n", Threshold1, Threshold2);
 	}
 	char foundAll = 1;
 	for(int i = 0; i < TEST_DATA_R_PEAK_LENGTH; i++)	{
@@ -247,11 +249,13 @@ char testRPeakSearcher(int* data){
 		printf("Failed to find all peaks\n");
 		free(timesAndMeasurements);
 		fclose(writeFile);
+		fclose(write);
 		return 0;
 	} else 	{
 		printf("Passed r peak searcher test\n");
 		free(timesAndMeasurements);
 		fclose(writeFile);
+		fclose(write);
 		return 1;
 	}
 }

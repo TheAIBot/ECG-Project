@@ -1,9 +1,4 @@
-/*
- * ui.h
- *
- *  Created on: 19 Sep 2016
- *      Author: feynman
- */
+/*Made by the glorious Andreas*/
 
 #ifndef INCLUDES_UI_H_
 #define INCLUDES_UI_H_

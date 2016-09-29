@@ -1,9 +1,4 @@
-/*
- * benchmarks.h
- *
- *  Created on: 9 Sep 2016
- *      Author: feynman
- */
+/*Made by the glorious Andreas*/
 
 #ifndef BENCHMARKS_H_
 #define BENCHMARKS_H_
