@@ -183,7 +183,8 @@ char testRPeakSearcher(int* data){
 	FILE* file = startInputData("verification_files/correct_Rpeak.txt");
 	FILE* writeFile = fopen("test_results/rpeaks_results.txt", "w");
 	FILE* write = fopen("test_results/thresholds.txt", "w");
-	if(file == NULL || writeFile == NULL)	{
+	FILE* writePeaks = fopen("test_results/peaks.txt", "w");
+	if(file == NULL || writeFile == NULL || write == NULL || writePeaks == NULL)	{
 		return 0;
 	}
 
@@ -197,6 +198,7 @@ char testRPeakSearcher(int* data){
 	//printf("started\n");
 	for(int i = 0; i < TEST_DATA_LENGTH; i++){
 		if(foundPeak(data[i]))	{
+			fprintf(writePeaks, "%d\n", i);
 			Peak newPeak = getNewPeak();
 			if (isRPeak(newPeak)){
 				//setFoundNewRRPeak(); Not needed anymore
@@ -222,6 +224,8 @@ char testRPeakSearcher(int* data){
 						printf("Failed to find matching peak for time: %d, measurement: %d\n", newRRPeak.RR + timeSum, newRRPeak.intensity);
 						free(timesAndMeasurements);
 						fclose(writeFile);
+						fclose(write);
+						fclose(writePeaks);
 						return 0;
 					}
 					timeSum += newRRPeak.RR;
@@ -250,12 +254,14 @@ char testRPeakSearcher(int* data){
 		free(timesAndMeasurements);
 		fclose(writeFile);
 		fclose(write);
+		fclose(writePeaks);
 		return 0;
 	} else 	{
 		printf("Passed r peak searcher test\n");
 		free(timesAndMeasurements);
 		fclose(writeFile);
 		fclose(write);
+		fclose(writePeaks);
 		return 1;
 	}
 }
