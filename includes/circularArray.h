@@ -17,17 +17,30 @@
  * or greater than the size of the array.
  *
  * */
+
+#include "peak.h"
+
+union TPeakOrInt
+{
+	Peak peak;
+	int integer;
+};
+
+typedef union TPeakOrInt PeakOrInt;
+
 struct TCircularArray{
 	int size; //The size of the circular array
 	int startIndex; //The index of the current element in the array
-	int* data; //The true array containing the data/different elements.
+	PeakOrInt* data; //The true array containing the data/different elements.
 };
 
 typedef struct TCircularArray CircularArray;
 
 char initCircArray(CircularArray* const circArray, const int size, const int startIndex);
+PeakOrInt getCircArrayPeakOrInt(const CircularArray* circArray, const int offset);
 int getCircArrayValue(const CircularArray* circArray, const int offset);
 int getArrayDataValue(const int data[], const int startIndex, const int arraySize, const int offset);
+void moveCircArrayStartIndex(CircularArray* const circArray);
 void insertCircArrayData(CircularArray* circArray, const int newData);
 void freeCircArray(CircularArray* const circArray);
 

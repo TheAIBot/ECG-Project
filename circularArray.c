@@ -11,7 +11,7 @@
 char initCircArray(CircularArray* const circArray, const int size, const int startIndex){
 	circArray->size = size;
 	circArray->startIndex = startIndex;
-	circArray->data = calloc(size, sizeof(int)); //Allocates space for the elements
+	circArray->data = calloc(size, sizeof(PeakOrInt)); //Allocates space for the elements
 
 	if(circArray->data == NULL)	{
 		fprintf(stderr, "Failed to allocate memory for circular array\n");
@@ -20,13 +20,23 @@ char initCircArray(CircularArray* const circArray, const int size, const int sta
 	return 1;
 }
 
+PeakOrInt getCircArrayPeakOrInt(const CircularArray* circArray, const int offset)
+{
+	int correctIndex = circArray->startIndex + offset;
+	//assumes that offset is always negative or 0
+	if(correctIndex < 0){
+		correctIndex += circArray->size;
+	}
+	return circArray->data[correctIndex];
+}
+
 /* Gets the element in the given circular array (pointer), that has a given offset from the startindex.
  * The offset must be negative, and greater than or equal to minus the size of the circular array.
  *
  * returns The element with the given offset from the current/startindex.
  * */
 int getCircArrayValue(const CircularArray* circArray, const int offset){
-	return getArrayDataValue(circArray->data, circArray->startIndex, circArray->size, offset);
+	return getCircArrayPeakOrInt(circArray, offset).integer;
 }
 
 /* Gets the index to the element in the given circular array (pointer), that has a given offset from the startindex.
@@ -54,11 +64,17 @@ int getArrayDataValue(const int data[], const int startIndex, const int arraySiz
 }
 
 /*Moves one forward in the circular array. If it is at the end, it loops back to the start*/
-static void moveCircArrayStartIndex(CircularArray* const circArray){
+void moveCircArrayStartIndex(CircularArray* const circArray){
 	circArray->startIndex++;
 	if(circArray->startIndex == circArray->size)	{
 		circArray->startIndex = 0;
 	}
+}
+
+void insertCircArrayPeakOrInt(CircularArray* circArray, const PeakOrInt newData)
+{
+	moveCircArrayStartIndex(circArray);
+	circArray->data[circArray->startIndex] = newData;
 }
 
 /*Inserts a new element in a given circular array (pointer), at the position after the current startindex,
@@ -68,8 +84,7 @@ static void moveCircArrayStartIndex(CircularArray* const circArray){
  * const int newData; the element to be inserted.
   */
 void insertCircArrayData(CircularArray* circArray, const int newData){
-	moveCircArrayStartIndex(circArray);
-	circArray->data[circArray->startIndex] = newData;
+	insertCircArrayPeakOrInt(circArray, (PeakOrInt)newData);
 }
 
 /*Frees the memory in the circular array*/

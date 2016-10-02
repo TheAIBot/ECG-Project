@@ -2,6 +2,7 @@
 #define INCLUDES_AVGCIRCULARARRAY_H_
 
 #include "peak.h"
+#include "circularArray.h"
 
 /* A new datastructure, representing a circular array containing integers,
  * that keeps a record of the average of the element in it. It is circular in the sense that when one inserts a new element,
@@ -13,10 +14,8 @@
  *
  * */
 struct TAvgCircularArray {
-	int size;
-	int startIndex; //The current index.
+	CircularArray circArray;
 	int averageSum; //The sum of the value of all the elements in the array.
-	int * data; //The actual array containing the elements.
 };
 
 typedef struct TAvgCircularArray AvgCircularArray;

@@ -8,7 +8,8 @@
 #ifndef INCLUDES_PEAKCIRCULARARRAY_H_
 #define INCLUDES_PEAKCIRCULARARRAY_H_
 
-#include "peak.h"
+//#include "peak.h"
+#include "circularArray.h"
 
 /* A new datastructure, representing a circular array containing Peaks.
  * It is circular in the sense that when one inserts a new element,
@@ -19,13 +20,9 @@
  * or greater than the size of the array.
  *
  * */
-struct TPeakCircularArray{
-	int size;
-	int startIndex;
-	Peak * data;
-};
 
-typedef struct TPeakCircularArray PeakCircularArray;
+
+typedef struct TCircularArray PeakCircularArray;
 
 char initPeakCircArray(PeakCircularArray* const circArray, const int size, const int startIndex);
 Peak getPeakCircArrayValue(const PeakCircularArray* circArray, const int offset);
