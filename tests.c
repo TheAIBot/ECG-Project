@@ -51,7 +51,7 @@ char testLowPassFilter(int* data){
 	}
 
 	CircularArray circArray;
-	if(!initCircArray(&circArray, 13, 0))	{
+	if(!initCircArray(&circArray, 16, 0))	{
 		return 0;
 	}
 
@@ -85,7 +85,7 @@ char testHighPassFilter(int* data)
 	}
 
 	CircularArray circArray;
-	if(!initCircArray(&circArray, 33, 0))
+	if(!initCircArray(&circArray, 64, 0))
 	{
 		return 0;
 	}
@@ -123,7 +123,7 @@ char testDerivSqrFilter(int* data)
 	}
 
 	CircularArray circArray;
-	if(!initCircArray(&circArray, 5, 0))
+	if(!initCircArray(&circArray, 8, 0))
 	{
 		return 0;
 	}
