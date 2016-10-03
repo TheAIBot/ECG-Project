@@ -6,7 +6,7 @@
 #define N 30
 
 static unsigned short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
-static short arrayStartIndex = 0;
+static unsigned short arrayStartIndex = 0;
 static unsigned int totalValue = 0;
 
 //moves the start index of the circular array rawSquare forward.

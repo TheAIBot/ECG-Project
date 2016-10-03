@@ -8,7 +8,7 @@
 #define ALLOWED_ENABLED_BITS_FOR_INDEX (RAW_DATA_SIZE_LOW - 1) // = 0x1F
 
 static int rawLow[RAW_DATA_SIZE_LOW];
-static short arrayStartIndex = 0;
+static unsigned short arrayStartIndex = 0;
 //previous calculated value from lowPassFilter
 static int y_1 = 0;
 //formercy_1 value

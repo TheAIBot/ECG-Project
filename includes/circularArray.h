@@ -29,9 +29,9 @@ union TPeakOrInt
 typedef union TPeakOrInt PeakOrInt;
 
 struct TCircularArray{
-	int size; //The size of the circular array
-	int allowedBitsMask;
-	int startIndex; //The index of the current element in the array
+	unsigned int size; //The size of the circular array
+	unsigned int allowedBitsMask;
+	unsigned int startIndex; //The index of the current element in the array
 	PeakOrInt* data; //The true array containing the data/different elements.
 };
 

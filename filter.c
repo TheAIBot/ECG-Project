@@ -25,8 +25,3 @@ unsigned short filterData(const short rawData)
 	/*derivative, square and moving window filter*/
 	return derivativeSquareMovingWindowFilter(dataHighFiltered, GET_HIGH_PASS_VALUE(X_1_INDEX), GET_HIGH_PASS_VALUE(X_3_INDEX), GET_HIGH_PASS_VALUE(X_4_INDEX));
 }
-
-
-
-
-

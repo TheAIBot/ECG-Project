@@ -5,7 +5,7 @@
 #define ALLOWED_ENABLED_BITS_FOR_INDEX (RAW_DATA_SIZE - 1) // 0x0F
 
 static short rawData[RAW_DATA_SIZE];
-static short arrayStartIndex = 0;
+static unsigned short arrayStartIndex = 0;
 
 //offset is either negative or 0.
 //return a previous low pass value.

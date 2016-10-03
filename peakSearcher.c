@@ -83,9 +83,9 @@ Peak getNewPeak() {
 * unsigned short newValue; the given value.
 * */
 void setTimeSinceLastRPeakFound(unsigned short newValue) {
-timeSinceLastRRPeak = newValue;
+	timeSinceLastRRPeak = newValue;
 }
 
 int getTimeSinceLastRPeakFound() {
-return timeSinceLastRRPeak;
+	return timeSinceLastRRPeak;
 }
