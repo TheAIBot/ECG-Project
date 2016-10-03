@@ -9,7 +9,25 @@
  * const int startIndex; The startindex that the initialized circular array should have.
  * */
 char initCircArray(CircularArray* const circArray, const int size, const int startIndex){
+	switch(size)
+	{
+		case 2:
+		case 4:
+		case 8:
+		case 16:
+		case 32:
+		case 64:
+		case 128:
+			break;
+		default:
+			printf("Circular array is not a power of two but is instead: %d", size);
+			return 0;
+	}
+
+
+
 	circArray->size = size;
+	circArray->allowedBitsMask = size - 1;
 	circArray->startIndex = startIndex;
 	circArray->data = calloc(size, sizeof(PeakOrInt)); //Allocates space for the elements
 
@@ -22,12 +40,7 @@ char initCircArray(CircularArray* const circArray, const int size, const int sta
 
 PeakOrInt getCircArrayPeakOrInt(const CircularArray* circArray, const int offset)
 {
-	int correctIndex = circArray->startIndex + offset;
-	//assumes that offset is always negative or 0
-	if(correctIndex < 0){
-		correctIndex += circArray->size;
-	}
-	return circArray->data[correctIndex];
+	return circArray->data[(circArray->startIndex + offset) & circArray->allowedBitsMask];
 }
 
 /* Gets the element in the given circular array (pointer), that has a given offset from the startindex.
@@ -65,10 +78,7 @@ int getArrayDataValue(const int data[], const int startIndex, const int arraySiz
 
 /*Moves one forward in the circular array. If it is at the end, it loops back to the start*/
 void moveCircArrayStartIndex(CircularArray* const circArray){
-	circArray->startIndex++;
-	if(circArray->startIndex == circArray->size)	{
-		circArray->startIndex = 0;
-	}
+	circArray->startIndex = ++(circArray->startIndex) & circArray->allowedBitsMask;
 }
 
 void insertCircArrayPeakOrInt(CircularArray* circArray, const PeakOrInt newData)
