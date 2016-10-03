@@ -24,8 +24,6 @@ char initCircArray(CircularArray* const circArray, const int size, const int sta
 			return 0;
 	}
 
-
-
 	circArray->size = size;
 	circArray->allowedBitsMask = size - 1;
 	circArray->startIndex = startIndex;
@@ -78,7 +76,8 @@ int getArrayDataValue(const int data[], const int startIndex, const int arraySiz
 
 /*Moves one forward in the circular array. If it is at the end, it loops back to the start*/
 void moveCircArrayStartIndex(CircularArray* const circArray){
-	circArray->startIndex = ++(circArray->startIndex) & circArray->allowedBitsMask;
+	circArray->startIndex++;
+	circArray->startIndex = circArray->startIndex & circArray->allowedBitsMask;
 }
 
 void insertCircArrayPeakOrInt(CircularArray* circArray, const PeakOrInt newData)
