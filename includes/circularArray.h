@@ -42,6 +42,7 @@ PeakOrInt getCircArrayPeakOrInt(const CircularArray* circArray, const int offset
 int getCircArrayValue(const CircularArray* circArray, const int offset);
 int getArrayDataValue(const int data[], const int startIndex, const int arraySize, const int offset);
 void moveCircArrayStartIndex(CircularArray* const circArray);
+void insertCircArrayPeakOrInt(CircularArray* circArray, const PeakOrInt newData);
 void insertCircArrayData(CircularArray* circArray, const int newData);
 void freeCircArray(CircularArray* const circArray);
 
