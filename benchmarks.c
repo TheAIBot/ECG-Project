@@ -174,7 +174,7 @@ void runBenchmarks()
 		benchmarkXTimes(&benchmarkPeakSearcher, 40, filteredData, "peak searcher");
 		initializeRPeakFinder();
 		benchmarkXTimes(&benchmarkRPeakFinder, 40, filteredData, "r peak finder");
-		benchmarkXTimes(&benchmarkWholeScanner, 40, data, "whole scanner");
+		benchmarkXTimes(&benchmarkWholeScanner, 100, data, "whole scanner");
 
 		free(filteredData);
 	}
