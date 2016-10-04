@@ -171,11 +171,12 @@ static char searchBackBackwardsGoer(int indexMiss){
  * */
 static char passThreshold1(unsigned short intensity){
 	if (!(intensity > Threshold1)) { /*If it isn't an R-Peak..*/
-			Npkf = (intensity + 7*Npkf)/8; // More precise (and faster) than NPF = intensity/8 + 7*Npkf/8
-			Threshold1 = Npkf + (Spkf-Npkf)/4;
-			Threshold2 = Threshold1/2;
+			Npkf = (intensity + 7 * Npkf) / 8; // More precise (and faster) than NPF = intensity/8 + 7*Npkf/8
+			Threshold1 = Npkf + (Spkf - Npkf) / 4;
+			Threshold2 = Threshold1 / 2;
 			return 0;
-	} else return 1;
+	}
+	return 1;
 }
 
 /* Given an index indexNewRPeak corresponding to a newly registrated R-peak in allPeaks,
@@ -184,14 +185,14 @@ static char passThreshold1(unsigned short intensity){
  * It the moves the elements back and updates their values*/
 static void searchbackArrayUpdate(int indexNewRPeak){
 	//Updates indexAllPeaks:
-	indexAllPeaks -= (indexNewRPeak+1);
+	indexAllPeaks -= (indexNewRPeak + 1);
 	/*Moves the elements back, so that all the elements in the array (used currently),
 	 *gets moved back so that the element after the one at indexNewRPeak is at position 0.
 	 *It also updates their RR value.
 	 *Since the peak at the given index is now the newest R-peak,
 	 *the later peaks RR value needs to be updated according to this one:
 	 */
-	movePeaksBackwardsWithRRUpdate(indexNewRPeak+1,indexAllPeaks,allPeaks[indexNewRPeak].RR);
+	movePeaksBackwardsWithRRUpdate(indexNewRPeak + 1, indexAllPeaks, allPeaks[indexNewRPeak].RR);
 }
 
 /* Activates the searchback procedure ((*)TODO write comment)*/
@@ -249,7 +250,8 @@ static char rPeakChecks(Peak newPeak){
 			//If it should trigger a searchback.
 			if(newPeak.RR > RR_Miss)	{
 				return searchBack();
-			} else	concurrentMissedRRLOWAndHigh++; //Will be incremented inside searchBack() if necessary.
+			}
+			concurrentMissedRRLOWAndHigh++; //Will be incremented inside searchBack() if necessary.
 		}
 	}
 	return 0;
@@ -260,7 +262,7 @@ static char rPeakChecks(Peak newPeak){
  *Used when allPeaks is filled up and a new element needs to be inserted*/
 static void moveLastPeaksBackInArray(){
 	//No rounding errors when dividing will occur since SIZE_ALL_PEAKS_ARRAY is a power of two.
-	indexAllPeaks = SIZE_ALL_PEAKS_ARRAY/2;
+	indexAllPeaks = SIZE_ALL_PEAKS_ARRAY / 2;
 	memcpy(allPeaks, allPeaks + indexAllPeaks, indexAllPeaks * sizeof(Peak));
 }
 
@@ -327,7 +329,7 @@ void resetRPeakFinder(){
 /*Gets the pulse of the person, calculated from the average over the latest 8 peaks*/
 unsigned short getPulse(){
 	//There are 4 milliseconds per mesaurements (1/250=0.004), thus one have the following pulse
-	return MILISECONDS_PER_MINUTE / (getPeakAvgCircAverageValue(&trueRPeaks)*4);
+	return MILISECONDS_PER_MINUTE / (getPeakAvgCircAverageValue(&trueRPeaks) * 4);
 }
 /*Frees the memory used by the different circular arrays used i rPeakfinder*/
 void freeRPeakFinder(){
