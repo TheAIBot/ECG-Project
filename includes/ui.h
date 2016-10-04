@@ -11,7 +11,7 @@
 #include "peak.h"
 
 void tickUITimer();
-void printAnyWarnings(char isPulseUnstable);
-void printNewestPeakDetails(Peak newPeak, unsigned short pulse);
+void printAnyWarnings(char isPulseUnstable, char showUI);
+void printNewestPeakDetails(Peak newPeak, unsigned short pulse, char showUI);
 
 #endif /* INCLUDES_UI_H_ */

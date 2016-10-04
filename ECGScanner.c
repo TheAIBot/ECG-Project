@@ -9,7 +9,7 @@
 
 #define TIME_BETWEEN_SENSOR_READ_IN_MS 4
 
-void runScannerOnce(int sensorValue)
+void runScannerOnce(int sensorValue, char showUI)
 {
 	unsigned short filteredValue = filterData((sensorValue));
 
@@ -17,14 +17,14 @@ void runScannerOnce(int sensorValue)
 		Peak newPeak = getNewPeak();
 		if(isRPeak(newPeak)){
 			Peak correctPeak = getPeakAvgCircValue(getTrueRPeaksArray(), 0);
-			printNewestPeakDetails(correctPeak, getPulse());
+			printNewestPeakDetails(correctPeak, getPulse(), showUI);
 		}
-		printAnyWarnings(isPulseUnstable());
+		printAnyWarnings(isPulseUnstable(), showUI);
 	}
 	tickUITimer();
 }
 
-void runScanner(char* filepath){
+void runScanner(char* filepath, char showUI){
 	FILE* file = startInputData(filepath);
 	if(file == NULL)	{
 		return;
@@ -38,7 +38,7 @@ void runScanner(char* filepath){
 			break;
 		}
 
-		runScannerOnce(newData);
+		runScannerOnce(newData, showUI);
 	}
 	stopInputData(file);
 	freeRPeakFinder();

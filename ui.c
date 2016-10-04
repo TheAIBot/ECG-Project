@@ -12,21 +12,26 @@ void tickUITimer() {
 	timeSinceStart++;
 }
 
-void printAnyWarnings(char isPulseUnstable) {
-	if (newestPeak.intensity < MINIMUM_INTENSITY) {
-		printf("Warning! Intensity is low\n");
-	}
-	if (isPulseUnstable) {
-		printf("Warning! Pulse is unstable\n");
+void printAnyWarnings(char isPulseUnstable, char showUI) {
+	if(showUI)
+	{
+		if (newestPeak.intensity < MINIMUM_INTENSITY) {
+			printf("Warning! Intensity is low\n");
+		}
+		if (isPulseUnstable) {
+			printf("Warning! Pulse is unstable\n");
+		}
 	}
 }
 
-void printNewestPeakDetails(Peak newPeak, unsigned short pulse) {
+void printNewestPeakDetails(Peak newPeak, unsigned short pulse, char showUI) {
 	newestPeak = newPeak;
 
-	printf("\n\nBpm:       %d\n", pulse);
-	printf("Intensity: %hu\n", newPeak.intensity);
-	printf("RR time:   %hu\n", newPeak.RR);
-	printf("Time:      %d\n", timeSinceStart);
-
+	if(showUI)
+	{
+		printf("\n\nBpm:       %d\n", pulse);
+		printf("Intensity: %hu\n", newPeak.intensity);
+		printf("RR time:   %hu\n", newPeak.RR);
+		printf("Time:      %d\n", timeSinceStart);
+	}
 }
