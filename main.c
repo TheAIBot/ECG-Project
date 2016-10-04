@@ -9,7 +9,6 @@ int main(int argc, char *argv[]) {
 	//if no arguments is given then just run
 	//the program normally
 
-	printf("%d\n", argc);
 	switch(argc)
 	{
 		case 1:

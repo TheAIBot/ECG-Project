@@ -1,4 +1,5 @@
-#include "string.h"
+#include <string.h>
+#include <stdlib.h>
 #include "includes/peakSearcher.h"
 #include "includes/circularArray.h"
 #include "includes/peak.h"
@@ -30,31 +31,18 @@ static char isPeak() {
 	//because the values around is the ncomparedagainst the middle value
 	unsigned short potentialPeak = last5Values[MIDDLE_INDEX];
 
-	//if the intensity is too low then it's not possible for the peak to be an r peak
-	//it's not nessesary to update ormerDifferentValue before this because when potential peak passes this
-	//it will also,the first time, update formerDifferentValue.
-	if (potentialPeak < MINIMUM_ALLOWED_PEAK_INTENSITY) {
-		return 0;
-	}
-
 	//At the end of a plateau this makes sure that the start of the plateau is lower
 	//than potential peak because formerDifferentValue always
 	//holds the last value that was different than potentialPeak
-	if (last5Values[MIDDLE_INDEX - 1] != potentialPeak) {
-		formerDifferentValue = last5Values[MIDDLE_INDEX - 1];
-	}
+	formerDifferentValue = (last5Values[MIDDLE_INDEX - 1] != potentialPeak)? last5Values[MIDDLE_INDEX - 1] : formerDifferentValue;
 
 	//is potential peak larger than all values or
 	//is potential peak at the end of a plateau
-	if (last5Values[MIDDLE_INDEX + 2] < potentialPeak
-			&& last5Values[MIDDLE_INDEX + 1] < potentialPeak
-			&& last5Values[MIDDLE_INDEX - 1] <= potentialPeak
-			&& last5Values[MIDDLE_INDEX - 2] <= potentialPeak
-			&& formerDifferentValue < potentialPeak) {
-		return 1;
-	} else {
-		return 0;
-	}
+	return (last5Values[MIDDLE_INDEX + 2] <  potentialPeak &&
+			last5Values[MIDDLE_INDEX + 1] <  potentialPeak &&
+			last5Values[MIDDLE_INDEX - 1] <= potentialPeak &&
+			last5Values[MIDDLE_INDEX - 2] <= potentialPeak &&
+			formerDifferentValue 		  <  potentialPeak);
 }
 
 //newDataPoint will be a potential peak in MIDDLE_INDEX more times this function has run
@@ -66,6 +54,14 @@ char foundPeak(unsigned short newDataPoint) {
 	if (timeSinceLastRRPeak <= MINIMUM_TIME_BETWEEM_RR_PEAKS) { //(*)Change back to MINIMUM_TIME_BETWEEM_RR_PEAKS
 		return 0;
 	}
+
+	//if the intensity is too low then it's not possible for the peak to be an r peak
+	//it's not nessesary to update ormerDifferentValue before this because when potential peak passes this
+	//it will also,the first time, update formerDifferentValue.
+	if (newDataPoint < MINIMUM_ALLOWED_PEAK_INTENSITY) {
+		return 0;
+	}
+
 	//Move the whole array back once so the new data can be inserted at the last index
 	memcpy(last5Values, last5Values + 1, sizeof(last5Values));
 	last5Values[PEAK_AREA - 1] = newDataPoint;
