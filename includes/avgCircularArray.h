@@ -1,3 +1,5 @@
+/*Made by the glorious Jesper*/
+
 #ifndef INCLUDES_AVGCIRCULARARRAY_H_
 #define INCLUDES_AVGCIRCULARARRAY_H_
 

@@ -1,9 +1,4 @@
-/*
- * ECGScanner.h
- *
- *  Created on: 21 Sep 2016
- *      Author: feynman
- */
+/*Made by the glorious Andreas*/
 
 #ifndef INCLUDES_ECGSCANNER_H_
 #define INCLUDES_ECGSCANNER_H_

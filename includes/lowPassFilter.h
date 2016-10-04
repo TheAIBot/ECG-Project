@@ -1,9 +1,4 @@
-/*
- * lowPassFilter.h
- *
- *  Created on: 7 Sep 2016
- *      Author: feynman
- */
+/*Made by the glorious Andreas*/
 
 #ifndef LOWPASSFILTER_H_
 #define LOWPASSFILTER_H_

@@ -9,11 +9,10 @@
 #include "includes/avgCircularArray.h"
 #include "includes/peakAvgCircularArray.h"
 
-
 #define MILISECONDS_PER_MINUTE (1000 * 60)
 #define SIZE_ALL_PEAKS_ARRAY 16
 #define AVERAGE_NUMBER_MEMBERS 8 //Number of members in the average arrays, meaning RecentRR and RecentRR_OK
-#define MISSES_FOR_UNSTABLE 5 //Number of time a peak can be missed before the pulse is unstable (*)
+#define MISSES_FOR_UNSTABLE 5 //Number of time a peak can be missed before the pulse is unstable
 #define DEFAULT_RPEAK_RR_VALUE 150 //The default RR value for a R-peak.
 #define DEFAULT_AVERAGE_RPEAK_INTENSITY 4500 //The average intensity of a true R-peak.
 #define DEFAULT_AVERAGE_NOICEPEAK_INTENSITY 1000 //The average value of a noice peak.
@@ -33,9 +32,9 @@ static unsigned short Spkf = DEFAULT_AVERAGE_RPEAK_INTENSITY;
 //Represents the average value of a noice peak. Looking at the data, this is approximately the value found, though it vary's quite a bit.
 static unsigned short Npkf = DEFAULT_AVERAGE_NOICEPEAK_INTENSITY;
 //Peaks need to have a higher intensity than Threshold1, to get checked if it is an R-peak, or trigger a searchback.
-static unsigned short Threshold1 =  1875; /*Answers to: Npkf + (Spkf-Npkf)/4*/
+unsigned short Threshold1 =  1875; /*Answers to: Npkf + (Spkf-Npkf)/4*/
 //Peaks found through searchback must have a value above Threshold2 to be able to be recorded as a true R-peak.
-static unsigned short Threshold2 = 938; /*Answers to Threshold1/2, rounded up*/
+unsigned short Threshold2 = 938; /*Answers to Threshold1/2, rounded up*/
 
 
 /*Variables for finding the RR-interval
@@ -195,7 +194,7 @@ static void searchbackArrayUpdate(int indexNewRPeak){
 	movePeaksBackwardsWithRRUpdate(indexNewRPeak + 1, indexAllPeaks, allPeaks[indexNewRPeak].RR);
 }
 
-/* Activates the searchback procedure ((*)TODO write comment)*/
+/* Activates the searchback procedure*/
 static char searchBack(){
 	char hasFoundNewPeak = 0;
 	for(int i = indexAllPeaks-1; i < indexAllPeaks; i++){
@@ -222,9 +221,9 @@ static char searchBack(){
 			}
 		}
 	}
-	//Sets the RR value of the later peaks, to be measured from the last found one.
-	//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1])'s RR time
-	setTimeSinceLastRPeakFound(allPeaks[indexAllPeaks - 1].RR);
+	//Sets it to the latest peak found (allPeaks[indexAllPeaksForSearchback-1])'s RR time,
+	//if there is a peak in allPeaks, else to 0;
+	setTimeSinceLastRPeakFound((indexAllPeaks == 0)? 0: allPeaks[indexAllPeaks - 1].RR);
 	return hasFoundNewPeak;
 }
 

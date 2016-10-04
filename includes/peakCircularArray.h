@@ -1,9 +1,4 @@
-/*
- * peakCircularArray.h
- *
- *  Created on: 2016/09/20
- *      Author: jesper
- */
+/*Made by the glorious Jesper. Totally not duplicate code of the other circular arrays*/
 
 #ifndef INCLUDES_PEAKCIRCULARARRAY_H_
 #define INCLUDES_PEAKCIRCULARARRAY_H_

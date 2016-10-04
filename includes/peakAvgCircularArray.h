@@ -1,3 +1,6 @@
+/*Made by the glorious Jesper*/
+
+
 #ifndef INCLUDES_AVGPEAKCIRCULARARRAY_H_
 #define INCLUDES_AVGPEAKCIRCULARARRAY_H_
 
