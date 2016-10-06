@@ -2,8 +2,9 @@
 
 #include <string.h>
 
-#define RAW_DATA_SIZE_DERIVATIVE 30
-#define N 30
+#define RAW_DATA_SIZE_DERIVATIVE 32
+#define ALLOWED_ENABLED_BITS_FOR_INDEX (RAW_DATA_SIZE_DERIVATIVE - 1) // 0x0F
+#define N 32
 
 static unsigned short rawSquare[RAW_DATA_SIZE_DERIVATIVE];
 static unsigned short arrayStartIndex = 0;
@@ -14,16 +15,11 @@ static unsigned int totalValue = 0;
 static void moveArrayStartIndex()
 {
 	arrayStartIndex++;
-	if(arrayStartIndex == RAW_DATA_SIZE_DERIVATIVE)
-	{
-		arrayStartIndex = 0;
-	}
+	arrayStartIndex &= ALLOWED_ENABLED_BITS_FOR_INDEX;
 }
 
 unsigned short derivativeSquareMovingWindowFilter(const short x, const short x_1, const short x_3, const short x_4)
 {
-	moveArrayStartIndex();
-
 	//derivate filter equation
 	unsigned short newY = (2 * x + x_1 - x_3 - 2 * x_4) / 8;
 	//unsigned int newY = (2 * x + x_1 - x_3 - 2 * x_4);
@@ -31,9 +27,8 @@ unsigned short derivativeSquareMovingWindowFilter(const short x, const short x_1
 	//square filter equation
 	unsigned short squared = newY * newY;
 
-	//The sum of an array can be calculated with the equation (totalSum + newValue - OldValue) / Length.
-	//totalSum is zero to begin with.
-	//oldValue is equal to the value at the index that the new value will occupy.
+	moveArrayStartIndex();
+
 	unsigned short lastSquaredValue = rawSquare[arrayStartIndex];
 	rawSquare[arrayStartIndex] = squared;
 

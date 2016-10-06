@@ -26,15 +26,15 @@
 #define TEST_DATA_R_PEAK_LENGTH 31
 #define ALLOWED_TIME_DEVIANTION 10
 #define ALLOWED_MEASUREMENT_DEVIATION 300
-#define ALLOWED_FILTER_DEVIATION 0
+#define ALLOWED_MWI_DEVIATION 600
 
-char isFilterCorrect(int filterOutput, FILE* file, char* filterName)
+char isFilterCorrect(int filterOutput, FILE* file, char* filterName, int allowedErrorMargin)
 {
 	if(file != NULL)
 	{
 		int expectedOutput = getNextData(file);
-		if(expectedOutput + ALLOWED_FILTER_DEVIATION < filterOutput ||
-		   expectedOutput - ALLOWED_FILTER_DEVIATION > filterOutput)
+		if(expectedOutput + allowedErrorMargin < filterOutput ||
+		   expectedOutput - allowedErrorMargin > filterOutput)
 		{
 			fprintf(stderr, "wrong output from %s filter: Given %hd != %hd Expected\n", filterName, filterOutput, expectedOutput);
 			return 0;
@@ -67,7 +67,7 @@ char testLowPassFilter(int* data){
 	for(int i = 0; i < TEST_DATA_LENGTH; i++)	{
 		insertCircArrayData(&circArray, data[i]);
 		int dataLowFiltered = lowPassFilter(data[i], getCircArrayValue(&circArray, -6), getCircArrayValue(&circArray, -12));
-		if(!isFilterCorrect(dataLowFiltered, file, "low"))		{
+		if(!isFilterCorrect(dataLowFiltered, file, "low", 0))		{
 			stopInputData(file);
 			freeCircArray(&circArray);
 			fclose(writeFile);
@@ -104,7 +104,7 @@ char testHighPassFilter(int* data)
 		insertCircArrayData(&circArray, data[i]);
 
 		int dataLowFiltered = highPassFilter(data[i], getCircArrayValue(&circArray, -16), getCircArrayValue(&circArray, -32));
-		if(!isFilterCorrect(dataLowFiltered, file, "high"))
+		if(!isFilterCorrect(dataLowFiltered, file, "high", 0))
 		{
 			stopInputData(file);
 			freeCircArray(&circArray);
@@ -125,6 +125,7 @@ char testDerivSqrFilter(int* data)
 	resetDerSqrMwiFilter();
 	FILE* file = startInputData("verification_files/x_mwi_div_after.txt");
 	FILE* writeFile = fopen("test_results/dersqrmwi_results.txt", "w");
+	getNextData(file);
 	if(file == NULL ||
 	   writeFile == NULL)
 	{
@@ -137,12 +138,12 @@ char testDerivSqrFilter(int* data)
 		return 0;
 	}
 
-	for(int i = 0; i < TEST_DATA_LENGTH; i++)
+	for(int i = 0; i < TEST_DATA_LENGTH - 1; i++)
 	{
 		insertCircArrayData(&circArray, data[i]);
 
 		short mwiFiltered = derivativeSquareMovingWindowFilter(data[i], getCircArrayValue(&circArray, -1), getCircArrayValue(&circArray, -3), getCircArrayValue(&circArray, -4));
-		if(!isFilterCorrect(mwiFiltered, file, "derivative square moving window"))
+		if(!isFilterCorrect(mwiFiltered, file, "derivative square moving window", ALLOWED_MWI_DEVIATION))
 		{
 			stopInputData(file);
 			freeCircArray(&circArray);
@@ -162,6 +163,7 @@ char testWholeFilter(int* data){
 	flushFilterBuffers();
 	FILE* file = startInputData("verification_files/x_mwi_div_after.txt");
 	FILE* writeFile = fopen("test_results/wholefilter_results.txt", "w");
+	getNextData(file);
 	if(file == NULL ||
 	   writeFile == NULL)
 	{
@@ -172,7 +174,7 @@ char testWholeFilter(int* data){
 	{
 
 		int dataLowFiltered = filterData(data[i]);
-		if(!isFilterCorrect(dataLowFiltered, file, "whole"))
+		if(!isFilterCorrect(dataLowFiltered, file, "whole", ALLOWED_MWI_DEVIATION))
 		{
 			stopInputData(file);
 			fclose(writeFile);
